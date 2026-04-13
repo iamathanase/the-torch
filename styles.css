@@ -292,6 +292,7 @@ button {
   justify-content: center;
   overflow: hidden;
   margin-top: 60px;
+  background: linear-gradient(135deg, rgba(29, 124, 58, 0.7) 0%, rgba(26, 58, 82, 0.7) 100%), url('homeImage.jpg') center/cover no-repeat;
 }
 
 .hero-background {
@@ -325,6 +326,7 @@ button {
 .hero-element {
   position: absolute;
   z-index: 0;
+  display: none;
 }
 
 .hero-element.circle1 {
