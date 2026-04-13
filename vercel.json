@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "builds": [],
-  "public": "front",
-  "cleanUrls": true
+  "buildCommand": "echo 'Static site ready'",
+  "outputDirectory": "front"
 }
 
 
