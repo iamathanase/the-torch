@@ -6,18 +6,29 @@
 config.local.php
 .htaccess
 
-# Database backups
+# Database backups  
 database/backups/
 *.sql
 
 # Logs
-logs/
 *.log
+logs/
 
 # Uploads and temporary files
-front/uploads/
-back/uploads/
+uploads/
 temp/
+.DS_Store
+node_modules/
+
+# Vercel
+.vercel/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 tmp/
 
 # IDE and Editor files
