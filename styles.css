@@ -521,24 +521,44 @@ button {
 
 .feature-card {
   background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e9 100%);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 2rem;
   border: 2px solid #c8e6c9;
-  transition: var(--transition-slow);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeInUp 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.4s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-10px);
   box-shadow: 0 20px 50px rgba(29, 124, 58, 0.25);
   border-color: var(--primary);
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
 }
 
+.feature-card:hover::before {
+  transform: translate(20px, 20px);
+}
+
 .feature-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
 }
 
 .feature-card:hover .feature-icon {
@@ -567,10 +587,10 @@ button {
 
 .service-card {
   position: relative;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  transition: var(--transition-slow);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 250px;
   display: flex;
   align-items: flex-end;
@@ -657,20 +677,45 @@ button {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   padding: 3rem 2rem;
-  border-radius: 12px;
+  border-radius: 16px;
   margin-bottom: 3rem;
   animation: fadeInUp 0.8s ease-out;
+  box-shadow: 0 8px 30px rgba(29, 124, 58, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.dashboard-header:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(29, 124, 58, 0.3);
 }
 
 .dashboard-header h2 {
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-header p {
   font-size: 1.1rem;
   opacity: 0.9;
+  position: relative;
+  z-index: 1;
 }
 
 /* Stats Grid */
@@ -684,15 +729,29 @@ button {
 .stat-card {
   background: linear-gradient(135deg, #1d7c3a 0%, #2eab52 100%);
   border: 2px solid #1a5f2f;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 2rem;
-  transition: var(--transition-slow);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeInUp 0.8s ease-out;
   color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .stat-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-10px);
   box-shadow: 0 20px 50px rgba(29, 124, 58, 0.4);
   border-color: #f39c12;
 }
@@ -717,15 +776,22 @@ button {
 /* Table Styling */
 .table-container {
   background: linear-gradient(135deg, #f5f9f5 0%, #e8f5e9 100%);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   border: 2px solid #81c784;
   animation: fadeInUp 0.8s ease-out;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.table-container:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .table-container table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .table-container thead {
@@ -741,15 +807,22 @@ button {
   text-transform: uppercase;
   font-size: 0.9rem;
   letter-spacing: 0.5px;
+  transition: all 0.3s ease;
 }
 
 .table-container td {
   padding: 1.5rem;
   border-bottom: 1px solid #c8e6c9;
+  transition: all 0.3s ease;
+}
+
+.table-container tbody tr {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .table-container tbody tr:hover {
-  background: #c8e6c9;
+  background: linear-gradient(135deg, rgba(200, 230, 201, 0.5) 0%, rgba(184, 220, 192, 0.5) 100%);
+  transform: translateX(4px);
 }
 
 .badge {
@@ -758,6 +831,11 @@ button {
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.badge:hover {
+  transform: scale(1.05);
 }
 
 .badge-success {
@@ -1004,7 +1082,7 @@ select,
 textarea {
   background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e9 100%);
   border: 2px solid #81c784;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 0.75rem;
   color: var(--text-dark);
   transition: var(--transition);
@@ -1021,6 +1099,249 @@ textarea:focus {
   border-color: #1d7c3a;
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
   box-shadow: 0 0 0 3px rgba(29, 124, 58, 0.1);
+}
+
+/* ========================================
+   ENHANCED SMOOTHNESS & EDGES
+   ======================================== */
+
+/* Better scrolling and general smoothness */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Improved border radius consistency */
+.feature-card,
+.stat-card,
+.monitor-card,
+.resource-card,
+.qa-item,
+.auth-box {
+  border-radius: 14px;
+}
+
+button,
+.btn,
+.tab-btn,
+.read-more-btn,
+.like-btn,
+input[type="button"],
+input[type="submit"] {
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Smooth focus states for accessibility */
+button:focus,
+.btn:focus,
+.tab-btn:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Card hover effects with smooth transitions */
+.feature-card,
+.stat-card,
+.monitor-card,
+.resource-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.feature-card:hover,
+.stat-card:hover,
+.monitor-card:hover,
+.resource-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(29, 124, 58, 0.15);
+}
+
+/* Smooth link transitions */
+a {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better text selection */
+::selection {
+  background: rgba(29, 124, 58, 0.2);
+  color: #1d7c3a;
+}
+
+::-moz-selection {
+  background: rgba(29, 124, 58, 0.2);
+  color: #1d7c3a;
+}
+
+/* Smooth placeholder styling */
+::placeholder {
+  color: #b0bec5;
+  opacity: 1;
+  transition: color 0.3s ease;
+}
+
+:focus::placeholder {
+  color: #95a5a6;
+}
+
+/* Edge smoothing for images */
+img {
+  border-radius: 12px;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
+}
+
+/* Smooth table styling */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+tbody tr {
+  transition: all 0.3s ease;
+}
+
+/* Smooth list styling */
+ul, ol {
+  transition: all 0.3s ease;
+}
+
+li {
+  transition: all 0.3s ease;
+}
+
+/* Improved section transitions */
+.section {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth gradient overlays */
+.hero-overlay,
+.Auth-background,
+.card-image::after {
+  transition: all 0.3s ease;
+}
+
+/* Enhanced animations */
+@keyframes smoothSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes smoothFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes smoothPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes smoothBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Smooth transitions for interactive elements */
+.btn:active,
+.tab-btn:active,
+button:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Enhanced modal smoothness */
+.modal {
+  backdrop-filter: blur(4px);
+}
+
+/* Smooth loading states */
+@keyframes smoothLoad {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.resource-grid > * {
+  animation: smoothLoad 0.6s ease-out forwards;
+}
+
+/* Better hover states for text */
+a:hover {
+  color: var(--primary);
+}
+
+/* Smooth transition for shadows */
+.shadow-smooth {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow-smooth:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Edge smoothing for boxes */
+.box {
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
 }
 
 /* ========================================
@@ -1089,6 +1410,16 @@ textarea:focus {
   .nav-menu {
     display: none;
   }
+
+  /* Improved edge radius for mobile */
+  .feature-card,
+  .stat-card,
+  .monitor-card,
+  .resource-card,
+  .qa-item,
+  .auth-box {
+    border-radius: 12px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1111,6 +1442,7 @@ textarea:focus {
   .btn {
     width: 100%;
     justify-content: center;
+    border-radius: 10px;
   }
 
   .products-grid {
@@ -1120,6 +1452,22 @@ textarea:focus {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Mobile optimized border radius */
+  .feature-card,
+  .stat-card,
+  .monitor-card,
+  .resource-card,
+  .qa-item,
+  .auth-box {
+    border-radius: 10px;
+  }
+
+  input,
+  select,
+  textarea {
+    border-radius: 10px;
+  }
 }
 
 /* ========================================
@@ -1127,7 +1475,7 @@ textarea:focus {
    ======================================== */
 
 .fade-in {
-  animation: fadeIn 0.6s ease-out;
+  animation: smoothFadeIn 0.6s ease-out;
 }
 
 .scale-in {
@@ -1143,7 +1491,7 @@ textarea:focus {
 }
 
 .pulse {
-  animation: pulse 2s ease-in-out infinite;
+  animation: smoothPulse 2s ease-in-out infinite;
 }
 
 .float {
@@ -1158,6 +1506,7 @@ textarea:focus {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
+  border-radius: 14px;
 }
 
 .text-center {
@@ -1176,21 +1525,8 @@ textarea:focus {
   display: none;
 }
 
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+/* Smooth transitions for all elements */
+* {
+  scroll-behavior: smooth;
 }
 
