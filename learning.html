@@ -478,10 +478,10 @@
             <!-- Resource Tabs -->
             <div class="resource-tabs">
                 <button class="tab-btn active" onclick="filterResources('all')">All Resources</button>
-                <button class="tab-btn" onclick="filterResources('video')">📹 Videos</button>
-                <button class="tab-btn" onclick="filterResources('article')">📰 Articles</button>
-                <button class="tab-btn" onclick="filterResources('guide')">📖 Guides</button>
-                <button class="tab-btn" onclick="filterResources('tutorial')">🎓 Tutorials</button>
+                <button class="tab-btn" onclick="filterResources('video')">Videos</button>
+                <button class="tab-btn" onclick="filterResources('article')">Articles</button>
+                <button class="tab-btn" onclick="filterResources('guide')">Guides</button>
+                <button class="tab-btn" onclick="filterResources('tutorial')">Tutorials</button>
             </div>
 
             <!-- Resources Grid -->
@@ -661,7 +661,7 @@
             </div>
 
             <div class="footer-bottom">
-                <p>&copy; 2024 FarmDialogue Ghana. All rights reserved. | Connecting Africa's Agricultural Future</p>
+                <p>&copy; 2026 FarmDialogue Ghana. All rights reserved. | Connecting Africa's Agricultural Future</p>
             </div>
         </div>
     </footer>
@@ -677,7 +677,7 @@
                 category: 'Agriculture Basics',
                 title: 'Modern Planting Techniques for African Crops',
                 description: 'Learn the latest methods for planting maize, cassava, and yams with optimal spacing and depth.',
-                emoji: '🌱',
+                emoji: '',
                 readTime: '15 min',
                 likes: 324,
                 views: '2.3K',
@@ -701,7 +701,7 @@
                 category: 'Soil Management',
                 title: 'Building Healthy Soil for Better Harvests',
                 description: 'Comprehensive guide to understanding soil composition and improving soil fertility naturally.',
-                emoji: '🌍',
+                emoji: '',
                 readTime: '12 min',
                 likes: 567,
                 views: '4.1K',
@@ -726,7 +726,7 @@
                 category: 'Water Management',
                 title: 'Complete Guide to Drip Irrigation Systems',
                 description: 'Step-by-step guide to installing and maintaining efficient irrigation for water conservation.',
-                emoji: '💧',
+                emoji: '',
                 readTime: '18 min',
                 likes: 892,
                 views: '6.2K',
@@ -762,7 +762,7 @@
                 category: 'Pest Control',
                 title: 'Natural Pest Control Without Chemicals',
                 description: 'Learn eco-friendly methods to protect your crops from pests and diseases.',
-                emoji: '🐛',
+                emoji: '',
                 readTime: '14 min',
                 likes: 445,
                 views: '3.8K',
@@ -797,7 +797,7 @@
                 category: 'Crop Planning',
                 title: 'Choosing the Right Crops for Your Climate',
                 description: 'Data-driven approach to selecting profitable crops suited to your region and season.',
-                emoji: '🌾',
+                emoji: '',
                 readTime: '13 min',
                 likes: 623,
                 views: '5.4K',
@@ -832,7 +832,7 @@
                 category: 'Nutrition',
                 title: 'Organic Fertilizers: Making Your Own Compost',
                 description: 'Cost-effective methods to create nutrient-rich fertilizer from farm waste.',
-                emoji: '♻️',
+                emoji: '',
                 readTime: '11 min',
                 likes: 734,
                 views: '5.9K',
@@ -867,7 +867,7 @@
                 category: 'Equipment',
                 title: 'Essential Farm Tools Review & Maintenance',
                 description: 'Expert review of must-have farming equipment and how to maintain them for longevity.',
-                emoji: '🛠️',
+                emoji: '',
                 readTime: '16 min',
                 likes: 356,
                 views: '2.7K',
@@ -901,7 +901,7 @@
                 category: 'Market Analysis',
                 title: 'March 2024 Market Prices & Trends',
                 description: 'Current commodity prices and market forecast for the next 3 months.',
-                emoji: '📈',
+                emoji: '',
                 readTime: '9 min',
                 likes: 512,
                 views: '3.2K',
@@ -1051,8 +1051,8 @@
             document.getElementById('modalTitle').textContent = resource.title;
             document.getElementById('modalMeta').innerHTML = `
                 <span>${resource.category}</span> • 
-                <span>📖 ${resource.readTime}</span> • 
-                <span>❤️ ${resource.likes} likes</span>
+                <span>${resource.readTime}</span> • 
+                <span>${resource.likes} likes</span>
             `;
             document.getElementById('modalBody').innerHTML = resource.content;
             document.getElementById('resourceModal').classList.add('show');

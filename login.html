@@ -3,257 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to FarmDialogue - Empowering African Farmers">
     <title>Login - FarmDialogue</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .auth-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #1d7c3a 0%, #0d4a1f 50%, #1a3a52 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Animated background elements */
-        .auth-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .auth-blob {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(46, 204, 113, 0.1);
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .blob-1 {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            right: -100px;
-        }
-
-        .blob-2 {
-            width: 250px;
-            height: 250px;
-            bottom: -80px;
-            left: -80px;
-            animation: float 10s ease-in-out infinite 2s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-30px); }
-        }
-        
-        .auth-box {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(46, 204, 113, 0.2);
-            width: 100%;
-            max-width: 420px;
-            position: relative;
-            z-index: 10;
-            animation: slideInUp 0.6s ease-out;
-            border: 1px solid rgba(46, 204, 113, 0.1);
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .auth-box h1 {
-            text-align: center;
-            color: #1d7c3a;
-            margin-bottom: 0.5rem;
-            font-size: 2rem;
-            font-weight: 800;
-        }
-
-        .auth-subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.6rem;
-            color: #2c3e50;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 0.95rem 1.1rem;
-            border: 2px solid #ecf0f1;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            background: #f8f9fa;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: #1d7c3a;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(29, 124, 58, 0.1);
-        }
-
-        .form-group input::placeholder {
-            color: #b0bec5;
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .remember-me input {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: #1d7c3a;
-        }
-
-        .remember-me label {
-            color: #7f8c8d;
-            cursor: pointer;
-            margin: 0;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        .forgot-password {
-            text-align: right;
-            margin-bottom: 1.5rem;
-        }
-
-        .forgot-password a {
-            color: #1d7c3a;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .forgot-password a:hover {
-            color: #0d4a1f;
-            text-decoration: underline;
-        }
-        
-        .btn-login {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #1d7c3a 0%, #0d4a1f 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(29, 124, 58, 0.4);
-        }
-
-        .btn-login:active {
-            transform: translateY(0px);
-        }
-        
-        .auth-links {
-            text-align: center;
-            margin-top: 2rem;
-            font-size: 0.95rem;
-            color: #7f8c8d;
-        }
-        
-        .auth-links a {
-            color: #1d7c3a;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        
-        .auth-links a:hover {
-            color: #0d4a1f;
-            text-decoration: underline;
-        }
-        
-        .divider {
-            text-align: center;
-            margin: 1.5rem 0;
-            color: #95a5a6;
-        }
-    </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-background">
-            <div class="auth-blob blob-1"></div>
-            <div class="auth-blob blob-2"></div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <h1>FarmDialogue</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="learning.html" class="nav-link">Learning</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="login.html" class="nav-link active">Login</a></li>
+            </ul>
         </div>
+    </nav>
 
-        <div class="auth-box">
-            <h1>🌾 FarmDialogue</h1>
-            <p class="auth-subtitle">Smart Farm Management Platform</p>
+    <!-- Login Section -->
+    <div class="login-container">
+        <div class="login-box">
+            <div class="modal-header" style="text-align: center; border: none; margin-bottom: 2rem;">
+                <h2 style="font-size: 2rem; color: var(--primary);">Welcome Back</h2>
+                <p style="color: var(--text-light); font-size: 1rem; margin-top: 0.5rem;">Access your FarmDialogue account</p>
+            </div>
             
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <form class="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="your@email.com">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter your password">
-                </div>
-                
-                <div class="remember-me">
-                    <input type="checkbox" id="rememberMe" name="rememberMe">
-                    <label for="rememberMe">Keep me logged in</label>
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
                 </div>
 
-                <div class="forgot-password">
-                    <a href="#">Forgot password?</a>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
                 </div>
-                
-                <button type="submit" class="btn-login">Sign In</button>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Keep me logged in</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">Sign In</button>
+
+                <div style="text-align: center; margin-top: 1rem;">
+                    <a href="#" style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">Forgot your password?</a>
+                </div>
             </form>
-            
-            <div class="auth-links">
-                <p>Don't have an account? <a href="register.html">Create one now</a></p>
+
+            <div class="register-link">
+                <p style="margin: 0; color: var(--text-light);">New to FarmDialogue?</p>
+                <a href="register.html" style="color: var(--primary); font-weight: 700; font-size: 1rem;">Create an account</a>
             </div>
         </div>
     </div>
