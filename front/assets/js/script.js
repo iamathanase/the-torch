@@ -101,7 +101,13 @@ function logout() {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userRole');
         localStorage.removeItem('userId');
-        window.location.href = 'index.html';
+        const pathname = window.location.pathname;
+        const homePath = pathname.includes('/pages/archive/')
+            ? '../../index.html'
+            : pathname.includes('/pages/')
+                ? '../index.html'
+                : 'index.html';
+        window.location.href = homePath;
     }
 }
 

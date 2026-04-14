@@ -114,7 +114,7 @@ Excludes unnecessary files from being deployed:
 - Verify CSS and JS paths are correct (use relative paths)
 
 **Issue: API calls fail**
-- Backend is hosted separately (update API endpoints in `front/script.js`)
+- Backend is hosted separately (update API endpoints in `front/assets/js/script.js`)
 - Use CORS to allow requests from Vercel domain
 
 ---
@@ -126,7 +126,7 @@ Add to Vercel Dashboard → Settings → Environment Variables:
 API_BACKEND_URL=https://your-php-hosting.com
 ```
 
-Then use in `front/script.js`:
+Then use in `front/assets/js/script.js`:
 ```javascript
 const API_URL = process.env.API_BACKEND_URL;
 ```
@@ -143,7 +143,7 @@ const API_URL = process.env.API_BACKEND_URL;
    - **Option D:** AWS Lambda with PHP
 
 2. Update API endpoints in frontend:
-   - Edit `front/script.js`
+  - Edit `front/assets/js/script.js`
    - Change API URLs to point to your backend domain
 
 ### Database
