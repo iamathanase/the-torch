@@ -3,39 +3,31 @@
   "builds": [
     {
       "src": "back/server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "front/**/*.{html,css,js,png,jpg,jpeg,gif,svg,json}",
-      "use": "@vercel/static"
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "nodeVersion": "18.x"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/api/.*",
       "dest": "back/server.js"
     },
     {
-      "src": "/pages/(.*)",
-      "methods": ["GET"],
-      "dest": "/front/pages/$1"
+      "src": "/pages/.*",
+      "dest": "/front/pages/",
+      "methods": ["GET"]
     },
     {
-      "src": "/assets/(.*)",
-      "methods": ["GET"],
-      "dest": "/front/assets/$1"
+      "src": "/assets/.*",
+      "dest": "/front/assets/",
+      "methods": ["GET"]
     },
     {
-      "src": "/(.*\\.(?:html|css|js|json|png|jpg|jpeg|gif|svg|ico|webp))",
+      "src": "/(.*)",
       "dest": "/front/$1"
-    },
-    {
-      "src": "/index.html",
-      "dest": "/front/index.html"
-    },
-    {
-      "src": "/",
-      "dest": "/front/index.html"
     }
   ],
   "env": {
