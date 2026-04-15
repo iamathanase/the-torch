@@ -729,7 +729,7 @@
 
     <script src="../assets/js/script.js"></script>
     <script>
-        // Dashboard animations and interactivity
+        // Dashboard initialization - redirect to role-based dashboard
         document.addEventListener('DOMContentLoaded', function() {
             // Check authentication - allow demo mode if ?demo=true or on localhost
             const authStatus = checkAuthStatus();
@@ -748,16 +748,19 @@
                 location.reload();
             }
 
-            // Animate card values on load
-            animateCardValues();
+            // Redirect to role-based dashboard
+            const userRole = authStatus.userRole || 'farmer';
+            const dashboardMap = {
+                'farmer': 'farmer-dashboard.html',
+                'customer': 'customer-dashboard.html',
+                'vendor': 'vendor-dashboard.html',
+                'admin': 'admin-dashboard.html',
+                'enthusiast': 'enthusiast-dashboard.html'
+            };
+            const dashboardUrl = dashboardMap[userRole] || 'farmer-dashboard.html';
+            window.location.href = dashboardUrl;
         });
-
-        function animateCardValues() {
-            const cards = document.querySelectorAll('.monitor-card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-            });
-        }
+    </script>
 
         function addNewListing() {
             alert('Creating new listing... (Feature coming soon)');

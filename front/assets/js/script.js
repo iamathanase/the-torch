@@ -343,9 +343,18 @@ async function handleLogin(event) {
             
             showToast('Login successful. Redirecting...', 'success', { duration: 2200 });
             
-            // Redirect after brief delay for notification
+            // Redirect after brief delay based on user role
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                const userRole = authData.userRole || 'farmer';
+                const dashboardMap = {
+                    'farmer': 'pages/farmer-dashboard.html',
+                    'customer': 'pages/customer-dashboard.html',
+                    'vendor': 'pages/vendor-dashboard.html',
+                    'admin': 'pages/admin-dashboard.html',
+                    'enthusiast': 'pages/enthusiast-dashboard.html'
+                };
+                const dashboardUrl = dashboardMap[userRole] || 'pages/farmer-dashboard.html';
+                window.location.href = dashboardUrl;
             }, 500);
         } else {
             showToast(data.message || 'Login failed. Please check your credentials.', 'error');

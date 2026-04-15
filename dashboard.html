@@ -182,14 +182,14 @@
 
     <script src="script.js"></script>
     <script>
-        // Dashboard initialization
+        // Dashboard initialization - redirect to role-based dashboard
         document.addEventListener('DOMContentLoaded', function() {
             const authStatus = checkAuthStatus();
             const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
             const isDemoMode = new URLSearchParams(location.search).get('demo') === 'true';
             
             if (!authStatus.isAuthenticated && !isLocalhost && !isDemoMode) {
-                window.location.href = 'login.html';
+                window.location.href = 'front/pages/login.html';
             }
             
             if (isLocalhost && !authStatus.isAuthenticated) {
@@ -198,6 +198,18 @@
                 localStorage.setItem('userId', '1');
                 location.reload();
             }
+            
+            // Redirect to role-based dashboard
+            const userRole = authStatus.userRole || 'farmer';
+            const dashboardMap = {
+                'farmer': 'front/pages/farmer-dashboard.html',
+                'customer': 'front/pages/customer-dashboard.html',
+                'vendor': 'front/pages/vendor-dashboard.html',
+                'admin': 'front/pages/admin-dashboard.html',
+                'enthusiast': 'front/pages/enthusiast-dashboard.html'
+            };
+            const dashboardUrl = dashboardMap[userRole] || 'front/pages/farmer-dashboard.html';
+            window.location.href = dashboardUrl;
         });
     </script>
 </body>
