@@ -276,7 +276,8 @@ function logout() {
 
 // API call helper function
 async function apiCall(endpoint, method = 'GET', data = null) {
-    const baseURL = 'http://localhost:5000/api/';
+    // Use relative URL for API calls - works on both localhost and Vercel
+    const baseURL = '/api/';
     const token = localStorage.getItem('authToken');
     
     const options = {
@@ -319,7 +320,7 @@ async function handleLogin(event) {
     submitButton.disabled = true;
     
     try {
-        const response = await fetch('http://localhost:5000/api/auth/login', {
+        const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -376,7 +377,7 @@ async function handleContactForm(event) {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/contact', {
+        const response = await fetch('/api/contact', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
