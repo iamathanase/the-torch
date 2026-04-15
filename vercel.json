@@ -12,12 +12,31 @@
       "dest": "api/index.js"
     },
     {
+      "src": "/(.*\\.(?:js|css|json|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2))",
+      "dest": "/front/$1",
+      "headers": {
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
       "src": "/assets/(.*)",
       "dest": "/front/assets/$1"
     },
     {
-      "src": "/(.*)",
+      "src": "/pages/(.*)",
+      "dest": "/front/pages/$1"
+    },
+    {
+      "src": "/(.*\\.html)",
       "dest": "/front/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/front/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/front/index.html"
     }
   ],
   "env": {
