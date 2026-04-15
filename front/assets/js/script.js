@@ -347,13 +347,13 @@ async function handleLogin(event) {
             setTimeout(() => {
                 const userRole = authData.userRole || 'farmer';
                 const dashboardMap = {
-                    'farmer': 'pages/farmer-dashboard.html',
-                    'customer': 'pages/customer-dashboard.html',
-                    'vendor': 'pages/vendor-dashboard.html',
-                    'admin': 'pages/admin-dashboard.html',
-                    'enthusiast': 'pages/enthusiast-dashboard.html'
+                    'farmer': 'farmer-dashboard.html',
+                    'customer': 'customer-dashboard.html',
+                    'vendor': 'vendor-dashboard.html',
+                    'admin': 'admin-dashboard.html',
+                    'enthusiast': 'enthusiast-dashboard.html'
                 };
-                const dashboardUrl = dashboardMap[userRole] || 'pages/farmer-dashboard.html';
+                const dashboardUrl = dashboardMap[userRole] || 'farmer-dashboard.html';
                 window.location.href = dashboardUrl;
             }, 500);
         } else {
