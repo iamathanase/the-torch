@@ -1,35 +1,50 @@
 {
   "version": 2,
+  "buildCommand": "echo 'build step'",
+  "outputDirectory": "front",
   "builds": [
     {
       "src": "back/server.js",
       "use": "@vercel/node",
       "config": {
         "maxLambdaSize": "50mb",
-        "nodeVersion": "24.x"
+        "nodeVersion": "24.x",
+        "includeFiles": "back/**"
       }
     }
   ],
   "routes": [
     {
-      "src": "/api/.*",
+      "src": "/api/(.*)",
       "dest": "back/server.js"
     },
     {
-      "src": "/pages/.*",
-      "dest": "/front/pages/",
-      "methods": ["GET"]
+      "src": "/assets/(.*)",
+      "dest": "/front/assets/$1"
     },
     {
-      "src": "/assets/.*",
-      "dest": "/front/assets/",
-      "methods": ["GET"]
+      "src": "/pages/(.*)\\.html",
+      "dest": "/front/pages/$1.html"
+    },
+    {
+      "src": "/(.*)\\.html",
+      "dest": "/front/$1.html"
+    },
+    {
+      "src": "/(.*)\\.css",
+      "dest": "/front/$1.css"
+    },
+    {
+      "src": "/(.*)\\.js",
+      "dest": "/front/$1.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/front/$1"
+      "dest": "/front/index.html",
+      "methods": ["GET"]
     }
   ],
+  "framework": "html",
   "env": {
     "NODE_ENV": "production"
   }
