@@ -276,8 +276,8 @@ function logout() {
 
 // API call helper function
 async function apiCall(endpoint, method = 'GET', data = null) {
-    // Use relative URL for API calls - works on both localhost and Vercel
-    const baseURL = '/api/';
+    // Backend API URL
+    const baseURL = 'https://thetorchbackend.vercel.app/api/';
     const token = localStorage.getItem('authToken');
     
     const options = {
@@ -320,7 +320,7 @@ async function handleLogin(event) {
     submitButton.disabled = true;
     
     try {
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch('https://thetorchbackend.vercel.app/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -377,7 +377,7 @@ async function handleContactForm(event) {
     }
 
     try {
-        const response = await fetch('/api/contact', {
+        const response = await fetch('https://thetorchbackend.vercel.app/api/contact', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
