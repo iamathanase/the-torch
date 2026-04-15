@@ -614,6 +614,55 @@ button {
   line-height: 1.6;
 }
 
+/* Team Member Cards */
+.team-member-card {
+  text-align: center;
+}
+
+.team-image-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto 1rem;
+  width: 120px;
+  height: 120px;
+}
+
+.team-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  transition: var(--transition);
+}
+
+.linkedin-hover-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(29, 124, 58, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-decoration: none;
+}
+
+.team-image-wrapper:hover .linkedin-hover-link {
+  opacity: 1;
+}
+
+.team-image-wrapper:hover img {
+  filter: brightness(0.6);
+}
+
 /* ========================================
    PRODUCTS PAGE
    ======================================== */
