@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Vendor Dashboard - The Torch</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <img src="../assets/images/logo.png" alt="The Torch Logo" style="height: 50px; width: 50px; border-radius: 50%; margin-right: 0.75rem; display: inline-block; vertical-align: middle; object-fit: cover;">
+                <h1 style="display: inline-block; margin: 0;">The Torch</h1>
+            </div>
+            <div class="search-bar-container" id="search-container">
+                <input type="text" id="global-search" class="search-bar" placeholder="Search..." aria-label="Search">
+                <button type="button" id="search-btn" class="search-btn" aria-label="Search"><span class="search-icon">🔍</span></button>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="vendor-dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="vendor-products.html" class="nav-link">Products</a></li>
+                <li><a href="vendor-orders.html" class="nav-link">Orders</a></li>
+                <li><a href="vendor-settings.html" class="nav-link active">Settings</a></li>
+                <li><button onclick="logoutVendor()" class="btn-login" id="auth-link">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="settings-container">
+        <!-- Sidebar Navigation -->
+        <aside class="settings-sidebar">
+            <div class="settings-nav">
+                <button class="settings-nav-item active" onclick="switchTab('profile')">
+                    <span class="nav-icon">👤</span> Profile Information
+                </button>
+                <button class="settings-nav-item" onclick="switchTab('business')">
+                    <span class="nav-icon">🏢</span> Business Details
+                </button>
+                <button class="settings-nav-item" onclick="switchTab('payments')">
+                    <span class="nav-icon">💳</span> Payment Methods
+                </button>
+                <button class="settings-nav-item" onclick="switchTab('notifications')">
+                    <span class="nav-icon">🔔</span> Notifications
+                </button>
+                <button class="settings-nav-item" onclick="switchTab('security')">
+                    <span class="nav-icon">🔐</span> Security
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Settings Content -->
+        <main class="settings-main">
+            <!-- Profile Information Tab -->
+            <section id="profile-tab" class="settings-tab active">
+                <div class="tab-header">
+                    <h1>Profile Information</h1>
+                    <p>Manage your personal account details</p>
+                </div>
+
+                <form class="settings-form" onsubmit="saveProfile(event)">
+                    <div class="form-section">
+                        <h3>Personal Details</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first-name">First Name</label>
+                                <input type="text" id="first-name" value="Kwame" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last-name">Last Name</label>
+                                <input type="text" id="last-name" value="Mensah" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" value="kwame@equip.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" value="+233-24-123-4567" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profile-pic">Profile Picture</label>
+                            <div class="file-upload">
+                                <input type="file" id="profile-pic" accept="image/*">
+                                <label for="profile-pic" class="file-upload-label">Choose Image</label>
+                            </div>
+                            <small>PNG, JPG up to 5MB</small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <button type="button" class="btn-secondary" onclick="resetForm('profile')">Cancel</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Business Details Tab -->
+            <section id="business-tab" class="settings-tab">
+                <div class="tab-header">
+                    <h1>Business Details</h1>
+                    <p>Update your business information</p>
+                </div>
+
+                <form class="settings-form" onsubmit="saveBusiness(event)">
+                    <div class="form-section">
+                        <h3>Business Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="business-name">Business Name</label>
+                            <input type="text" id="business-name" value="Kwame's Equipment Hub" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="business-type">Business Type</label>
+                            <select id="business-type" required>
+                                <option value="equipment">Equipment Supplier</option>
+                                <option value="tools">Tools & Hardware</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="business-desc">Business Description</label>
+                            <textarea id="business-desc" rows="4" required>Premium agricultural equipment supplier serving farmers across Ghana. We provide quality solar pumps, irrigation systems, and soil testing equipment.</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="store-logo">Store Logo</label>
+                            <div class="file-upload">
+                                <input type="file" id="store-logo" accept="image/*">
+                                <label for="store-logo" class="file-upload-label">Choose Logo</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Business Address</h3>
+                        
+                        <div class="form-group">
+                            <label for="street">Street Address</label>
+                            <input type="text" id="street" value="123 Equipment Street" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" value="Accra" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="region">Region</label>
+                                <input type="text" id="region" value="Greater Accra" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <input type="text" id="country" value="Ghana" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="postal">Postal Code</label>
+                                <input type="text" id="postal" value="00233" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <button type="button" class="btn-secondary" onclick="resetForm('business')">Cancel</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Payment Methods Tab -->
+            <section id="payments-tab" class="settings-tab">
+                <div class="tab-header">
+                    <h1>Payment Methods</h1>
+                    <p>Manage bank accounts and payment information</p>
+                </div>
+
+                <form class="settings-form" onsubmit="savePayments(event)">
+                    <div class="form-section">
+                        <h3>Bank Account Details</h3>
+                        <p class="section-desc">Your earnings will be transferred to this account</p>
+                        
+                        <div class="form-group">
+                            <label for="bank-name">Bank Name</label>
+                            <input type="text" id="bank-name" placeholder="e.g., Ghana Commercial Bank" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="account-holder">Account Holder Name</label>
+                            <input type="text" id="account-holder" placeholder="Full name on bank account" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="account-number">Account Number</label>
+                            <input type="text" id="account-number" placeholder="Your bank account number" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="branch-code">Branch Code</label>
+                                <input type="text" id="branch-code" placeholder="Branch code">
+                            </div>
+                            <div class="form-group">
+                                <label for="swift-code">SWIFT Code</label>
+                                <input type="text" id="swift-code" placeholder="SWIFT code (optional)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Mobile Money (Optional)</h3>
+                        
+                        <div class="form-group">
+                            <label for="momo-provider">Mobile Money Provider</label>
+                            <select id="momo-provider">
+                                <option value="">Select Provider</option>
+                                <option value="mtn">MTN Mobile Money</option>
+                                <option value="vodafone">Vodafone Cash</option>
+                                <option value="airteltigo">AirtelTigo Money</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="momo-number">Mobile Money Number</label>
+                            <input type="tel" id="momo-number" placeholder="0XX XXX XXXX">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Payment Details</button>
+                        <button type="button" class="btn-secondary" onclick="resetForm('payments')">Cancel</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Notifications Tab -->
+            <section id="notifications-tab" class="settings-tab">
+                <div class="tab-header">
+                    <h1>Notification Preferences</h1>
+                    <p>Control how and when you receive notifications</p>
+                </div>
+
+                <form class="settings-form" onsubmit="saveNotifications(event)">
+                    <div class="form-section">
+                        <h3>Email Notifications</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <h4>New Orders</h4>
+                                    <p>Notify me when customers place new orders</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <h4>Order Status Updates</h4>
+                                    <p>Notify me when order status changes</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <h4>Low Stock Alerts</h4>
+                                    <p>Alert me when product inventory is low</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <h4>Payment Notifications</h4>
+                                    <p>Notify me when payments are received</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Communication Preferences</h3>
+                        
+                        <div class="toggle-group">
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <h4>Marketing Emails</h4>
+                                    <p>Receive promotional content and platform updates</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <h4>Weekly Reports</h4>
+                                    <p>Receive weekly sales and performance reports</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Preferences</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Security Tab -->
+            <section id="security-tab" class="settings-tab">
+                <div class="tab-header">
+                    <h1>Security Settings</h1>
+                    <p>Protect your account and data</p>
+                </div>
+
+                <div class="settings-form">
+                    <div class="form-section">
+                        <h3>Change Password</h3>
+                        
+                        <form onsubmit="changePassword(event)">
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <input type="password" id="current-password" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input type="password" id="new-password" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm Password</label>
+                                <input type="password" id="confirm-password" required>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">Update Password</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Two-Factor Authentication</h3>
+                        <p class="section-desc">Add an extra layer of security to your account</p>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <h4>SMS Authentication</h4>
+                                <p>Receive a code via SMS when logging in</p>
+                                <p class="status enabled">● Enabled</p>
+                            </div>
+                            <button type="button" class="btn-secondary" onclick="toggleSMS()">Disable</button>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Active Sessions</h3>
+                        <p class="section-desc">Manage your active login sessions</p>
+                        
+                        <div class="session-item">
+                            <div class="session-info">
+                                <h4>Current Session</h4>
+                                <p>Chrome on Windows • Accra, Ghana</p>
+                                <p class="session-time">Last active: Just now</p>
+                            </div>
+                            <span class="badge-active">Active</span>
+                        </div>
+
+                        <div class="session-item">
+                            <div class="session-info">
+                                <h4>Mobile Login</h4>
+                                <p>Safari on iOS • Accra, Ghana</p>
+                                <p class="session-time">Last active: 2 hours ago</p>
+                            </div>
+                            <button type="button" class="btn-secondary btn-sm" onclick="logoutSession()">Logout</button>
+                        </div>
+                    </div>
+
+                    <div class="form-section danger-zone">
+                        <h3>Danger Zone</h3>
+                        
+                        <div class="danger-item">
+                            <div class="danger-info">
+                                <h4>Delete Account</h4>
+                                <p>Permanently delete your account and all associated data</p>
+                            </div>
+                            <button type="button" class="btn-danger" onclick="deleteAccount()">Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <style>
+        :root {
+            --primary: #1d7c3a;
+            --secondary: #27ae60;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --text-dark: #2c3e50;
+            --text-light: #95a5a6;
+            --border: #ecf0f1;
+            --bg-light: #f8f9fa;
+        }
+
+        .settings-container {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f7 100%);
+        }
+
+        .settings-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .settings-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .settings-nav-item {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-left: 3px solid transparent;
+        }
+
+        .settings-nav-item:hover {
+            background: var(--bg-light);
+            color: var(--primary);
+        }
+
+        .settings-nav-item.active {
+            background: rgba(29, 124, 58, 0.05);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+
+        .settings-main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1000px;
+        }
+
+        .settings-tab {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .settings-tab.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tab-header {
+            margin-bottom: 2rem;
+        }
+
+        .tab-header h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            color: var(--text-dark);
+        }
+
+        .tab-header p {
+            margin: 0.5rem 0 0 0;
+            color: var(--text-light);
+        }
+
+        .settings-form {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-section h3 {
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .section-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(29, 124, 58, 0.1);
+        }
+
+        .file-upload {
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-light);
+            border: 2px dashed var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--primary);
+            background: rgba(29, 124, 58, 0.05);
+        }
+
+        .toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toggle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-info h4 {
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .toggle-info p {
+            margin: 0.25rem 0 0 0;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .security-item,
+        .session-item {
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .security-info h4,
+        .session-info h4 {
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .security-info p,
+        .session-info p {
+            margin: 0.25rem 0 0 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .status {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .status.enabled {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .session-time {
+            font-size: 0.8rem !important;
+        }
+
+        .badge-active {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .danger-zone {
+            border-top: 2px solid var(--danger);
+            padding-top: 1.5rem;
+        }
+
+        .danger-item {
+            padding: 1rem;
+            background: rgba(231, 76, 60, 0.05);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .danger-info h4 {
+            margin: 0;
+            color: var(--danger);
+        }
+
+        .danger-info p {
+            margin: 0.25rem 0 0 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-primary,
+        .btn-secondary,
+        .btn-danger {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #ddd;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1024px) {
+            .settings-container {
+                flex-direction: column;
+            }
+
+            .settings-sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                position: relative;
+                top: 0;
+            }
+
+            .settings-nav {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .settings-nav-item {
+                white-space: nowrap;
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .security-item,
+            .session-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .settings-main {
+                padding: 1rem;
+            }
+
+            .settings-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+
+    <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/search.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                setTimeout(() => window.location.href = 'login.html', 500);
+                return;
+            }
+
+            initializeSearchBar();
+        });
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.settings-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active from all nav items
+            document.querySelectorAll('.settings-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+
+            // Mark nav item as active
+            event.target.closest('.settings-nav-item').classList.add('active');
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const data = {
+                firstName: document.getElementById('first-name').value,
+                lastName: document.getElementById('last-name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value
+            };
+            alert('Profile information saved successfully!');
+            console.log('Saving profile:', data);
+        }
+
+        function saveBusiness(e) {
+            e.preventDefault();
+            const data = {
+                businessName: document.getElementById('business-name').value,
+                businessType: document.getElementById('business-type').value,
+                description: document.getElementById('business-desc').value,
+                address: {
+                    street: document.getElementById('street').value,
+                    city: document.getElementById('city').value,
+                    region: document.getElementById('region').value,
+                    country: document.getElementById('country').value,
+                    postal: document.getElementById('postal').value
+                }
+            };
+            alert('Business details saved successfully!');
+            console.log('Saving business:', data);
+        }
+
+        function savePayments(e) {
+            e.preventDefault();
+            const data = {
+                bank: {
+                    name: document.getElementById('bank-name').value,
+                    accountHolder: document.getElementById('account-holder').value,
+                    accountNumber: document.getElementById('account-number').value,
+                    branchCode: document.getElementById('branch-code').value,
+                    swiftCode: document.getElementById('swift-code').value
+                },
+                mobileMoney: {
+                    provider: document.getElementById('momo-provider').value,
+                    number: document.getElementById('momo-number').value
+                }
+            };
+            alert('Payment details saved successfully!');
+            console.log('Saving payments:', data);
+        }
+
+        function saveNotifications(e) {
+            e.preventDefault();
+            alert('Notification preferences saved successfully!');
+        }
+
+        function changePassword(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+
+            if (newPass !== confirmPass) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            alert('Password changed successfully!');
+            e.target.reset();
+        }
+
+        function resetForm(tab) {
+            document.querySelector(`#${tab}-tab form`).reset();
+        }
+
+        function toggleSMS() {
+            alert('SMS authentication toggled');
+        }
+
+        function logoutSession() {
+            alert('Session logged out successfully');
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                alert('Account deletion request submitted');
+            }
+        }
+
+        function logoutVendor() {
+            if (confirm('Sign out?')) {
+                ['authToken', 'userRole', 'userId', 'user', 'cart'].forEach(key => localStorage.removeItem(key));
+                setTimeout(() => window.location.href = '../index.html', 100);
+            }
+        }
+    </script>
+</body>
+</html>
