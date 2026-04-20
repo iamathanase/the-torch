@@ -1716,10 +1716,6 @@
             }, 1000);
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-        }
-
         function logoutVendor() {
             if (confirm('Sign out?')) {
                 ['authToken', 'userRole', 'userId', 'user', 'cart'].forEach(key => localStorage.removeItem(key));
