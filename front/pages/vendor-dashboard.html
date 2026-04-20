@@ -44,12 +44,14 @@
             position: sticky;
             top: 0;
             height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
             margin-bottom: 2.5rem;
             padding-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
@@ -58,46 +60,60 @@
         .brand-icon {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--success) 100%);
-            border-radius: 8px;
+            background: linear-gradient(135deg, #1d7c3a 0%, #27ae60 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
+            color: white;
+            flex-shrink: 0;
         }
 
         .brand-text h2 {
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 700;
             margin: 0;
+            color: var(--text-primary);
         }
 
         .brand-text p {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
             margin: 0.25rem 0 0 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .nav-section {
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
+            flex: 1;
+        }
+
+        .nav-section:last-of-type {
+            margin-bottom: 0;
+            margin-top: auto;
         }
 
         .nav-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
-            font-weight: 600;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.25rem;
+            font-weight: 700;
         }
 
         .nav-menu {
             list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
         .nav-item {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0;
         }
 
         .nav-link {
@@ -108,19 +124,24 @@
             color: var(--text-secondary);
             text-decoration: none;
             border-radius: 8px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
         }
 
         .nav-link:hover {
             background: rgba(29, 124, 58, 0.1);
-            color: var(--primary);
+            color: #27ae60;
+            padding-left: 1.25rem;
         }
 
         .nav-link.active {
-            background: var(--primary);
-            color: white;
+            background: rgba(29, 124, 58, 0.15);
+            color: #1d7c3a;
             font-weight: 600;
+            border-left: 3px solid #1d7c3a;
+            padding-left: calc(1rem - 3px);
         }
 
         .nav-icon {
@@ -129,6 +150,45 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .user-section {
+            background: rgba(29, 124, 58, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1d7c3a 0%, #27ae60 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .user-info h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
         }
 
         /* MAIN CONTENT */
@@ -228,7 +288,7 @@
         }
 
         .hero-section {
-            background: linear-gradient(135deg, rgba(29, 124, 58, 0.15) 0%, rgba(46, 204, 113, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(29, 124, 58, 0.15) 0%, rgba(39, 174, 96, 0.08) 100%);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 2rem;
@@ -241,12 +301,14 @@
         .hero-image {
             width: 120px;
             height: 120px;
-            background: linear-gradient(135deg, var(--primary), var(--success));
+            background: linear-gradient(135deg, #1d7c3a, #27ae60);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
         }
 
         .hero-content h2 {
@@ -281,6 +343,8 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
+            color: #1d7c3a;
+            font-weight: 600;
         }
 
         .hero-stat-content {
@@ -337,6 +401,8 @@
             align-items: center;
             justify-content: center;
             font-size: 1.75rem;
+            color: #1d7c3a;
+            font-weight: 600;
         }
 
         .metric-change {
@@ -592,11 +658,14 @@
             align-items: center;
             justify-content: center;
             font-size: 1.25rem;
+            color: #1d7c3a;
             flex-shrink: 0;
+            font-weight: 600;
         }
 
         .alert-item.warning .alert-icon {
             background: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
         }
 
         .alert-content {
@@ -667,54 +736,62 @@
         <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
             <div class="brand">
-                <div class="brand-icon">🌾</div>
+                <div class="brand-icon">T</div>
                 <div class="brand-text">
                     <h2>The Torch</h2>
-                    <p>Vendor Hub</p>
+                    <p>Ghana</p>
                 </div>
             </div>
 
             <nav class="nav-section">
-                <div class="nav-label">Main</div>
+                <div class="nav-label">Menu</div>
                 <ul class="nav-menu">
                     <li class="nav-item">
                         <a href="vendor-dashboard.html" class="nav-link active">
-                            <span class="nav-icon">📊</span>
+                            <span class="nav-icon">⊞</span>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="vendor-products.html" class="nav-link">
-                            <span class="nav-icon">📦</span>
+                            <span class="nav-icon">◻</span>
                             <span>Products</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="vendor-orders.html" class="nav-link">
-                            <span class="nav-icon">🛒</span>
+                            <span class="nav-icon">⊟</span>
                             <span>Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="vendor-settings.html" class="nav-link">
+                            <span class="nav-icon">⚙</span>
+                            <span>Settings</span>
                         </a>
                     </li>
                 </ul>
             </nav>
 
             <nav class="nav-section">
-                <div class="nav-label">Other</div>
+                <div class="nav-label">Account</div>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="vendor-settings.html" class="nav-link">
-                            <span class="nav-icon">⚙️</span>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="#" class="nav-link" onclick="logoutVendor(); return false;">
-                            <span class="nav-icon">🚪</span>
+                            <span class="nav-icon">↪</span>
                             <span>Logout</span>
                         </a>
                     </li>
                 </ul>
             </nav>
+
+            <div class="user-section">
+                <div class="user-avatar" id="userInitial">V</div>
+                <div class="user-info">
+                    <h3 id="userName">Vendor</h3>
+                    <p id="userEmail">vendor@torch.com</p>
+                </div>
+            </div>
         </aside>
         </aside>
 
@@ -734,8 +811,8 @@
                         <span class="live-dot"></span>
                         <span>Live Data</span>
                     </div>
-                    <button class="icon-btn" onclick="refreshData()">🔄</button>
-                    <button class="icon-btn">🔔</button>
+                    <button class="icon-btn" onclick="refreshData()">⟲</button>
+                    <button class="icon-btn">⊕</button>
                 </div>
             </header>
 
@@ -743,28 +820,28 @@
             <div class="content">
                 <!-- HERO SECTION -->
                 <div class="hero-section">
-                    <div class="hero-image">🌾</div>
+                    <div class="hero-image">T</div>
                     <div style="flex: 1;">
                         <div class="hero-content">
                             <h2 id="heroTitle">Welcome back, Vendor!</h2>
                             <p>Track your agricultural products, manage orders, and monitor sales performance in real-time. Your business metrics are below.</p>
                             <div class="hero-stats">
                                 <div class="hero-stat">
-                                    <div class="hero-stat-icon">📈</div>
+                                    <div class="hero-stat-icon">▲</div>
                                     <div class="hero-stat-content">
                                         <div class="hero-stat-value" id="monthGrowth">18.6%</div>
                                         <div class="hero-stat-label">Growth</div>
                                     </div>
                                 </div>
                                 <div class="hero-stat">
-                                    <div class="hero-stat-icon">📍</div>
+                                    <div class="hero-stat-icon">◎</div>
                                     <div class="hero-stat-content">
                                         <div class="hero-stat-value">3 Zones</div>
                                         <div class="hero-stat-label">Coverage</div>
                                     </div>
                                 </div>
                                 <div class="hero-stat">
-                                    <div class="hero-stat-icon">✅</div>
+                                    <div class="hero-stat-icon">✓</div>
                                     <div class="hero-stat-content">
                                         <div class="hero-stat-value">42 Active</div>
                                         <div class="hero-stat-label">Products</div>
@@ -779,7 +856,7 @@
                 <div class="metrics-grid">
                     <div class="metric-card">
                         <div class="metric-header">
-                            <div class="metric-icon">📦</div>
+                            <div class="metric-icon">▦</div>
                             <div class="metric-change" id="inventoryChange">↑ 12%</div>
                         </div>
                         <div class="metric-label">Product Inventory</div>
@@ -793,7 +870,7 @@
 
                     <div class="metric-card">
                         <div class="metric-header">
-                            <div class="metric-icon">💰</div>
+                            <div class="metric-icon">◉</div>
                             <div class="metric-change" id="revenueChange">↑ 22.4%</div>
                         </div>
                         <div class="metric-label">Total Revenue</div>
@@ -807,7 +884,7 @@
 
                     <div class="metric-card">
                         <div class="metric-header">
-                            <div class="metric-icon">🛒</div>
+                            <div class="metric-icon">⊞</div>
                             <div class="metric-change" id="ordersChange">↑ 18.6%</div>
                         </div>
                         <div class="metric-label">Orders Processed</div>
@@ -821,7 +898,7 @@
 
                     <div class="metric-card">
                         <div class="metric-header">
-                            <div class="metric-icon">⭐</div>
+                            <div class="metric-icon">★</div>
                             <div class="metric-change">↑ 3.8%</div>
                         </div>
                         <div class="metric-label">Customer Rating</div>
@@ -852,8 +929,8 @@
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
-                                <h3>Performance</h3>
-                                <p class="chart-subtitle">Overall health score</p>
+                                <h3>Performance Score</h3>
+                                <p class="chart-subtitle">Overall health index</p>
                             </div>
                         </div>
                         <div class="health-score">
@@ -930,7 +1007,7 @@
 
                         <div id="alertsContainer">
                             <div class="alert-item">
-                                <div class="alert-icon">📦</div>
+                                <div class="alert-icon">▦</div>
                                 <div class="alert-content">
                                     <div class="alert-title">Low Stock: Solar Water Pump</div>
                                     <div class="alert-time">⏱ 30 mins ago</div>
@@ -938,7 +1015,7 @@
                             </div>
 
                             <div class="alert-item warning">
-                                <div class="alert-icon">⚙️</div>
+                                <div class="alert-icon">⚙</div>
                                 <div class="alert-content">
                                     <div class="alert-title">Inventory running low (8 units remaining)</div>
                                     <div class="alert-time">⏱ 2h ago</div>
@@ -946,7 +1023,7 @@
                             </div>
 
                             <div class="alert-item">
-                                <div class="alert-icon">✅</div>
+                                <div class="alert-icon">✓</div>
                                 <div class="alert-content">
                                     <div class="alert-title">Drip Kit batch AB-042 restocked successfully</div>
                                     <div class="alert-time">⏱ 5h ago</div>
@@ -954,7 +1031,7 @@
                             </div>
 
                             <div class="alert-item">
-                                <div class="alert-icon">💰</div>
+                                <div class="alert-icon">◉</div>
                                 <div class="alert-content">
                                     <div class="alert-title">New payment received - ₵2,450 from Order #8247</div>
                                     <div class="alert-time">⏱ 1d ago</div>
@@ -980,6 +1057,9 @@
             
             const userData = JSON.parse(user);
             document.getElementById('heroTitle').textContent = `Welcome back, ${userData.firstName}!`;
+            document.getElementById('userName').textContent = userData.firstName + ' ' + userData.lastName;
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('userInitial').textContent = userData.firstName.charAt(0).toUpperCase();
             
             initChart();
             startLiveUpdates();
@@ -1056,9 +1136,10 @@
 
         function refreshData() {
             updateMetrics();
-            document.querySelector('.icon-btn').style.animation = 'spin 1s linear';
+            const btn = event.target;
+            btn.style.animation = 'spin 1s linear';
             setTimeout(() => {
-                document.querySelector('.icon-btn').style.animation = '';
+                btn.style.animation = '';
             }, 1000);
         }
 
