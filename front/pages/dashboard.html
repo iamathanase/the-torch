@@ -13,12 +13,16 @@
             <div class="navbar-logo">
                 <h1>The Torch</h1>
             </div>
+            <div class="search-bar-container" id="search-container">
+                <input type="text" id="global-search" class="search-bar" placeholder="Search products, guides..." aria-label="Search">
+                <button type="button" id="search-btn" class="search-btn" aria-label="Search"><span class="search-icon">🔍</span></button>
+            </div>
             <ul class="nav-menu">
                 <li><a href="../index.html" class="nav-link">Home</a></li>
                 <li><a href="learning.html" class="nav-link">Learning</a></li>
                 <li><a href="products.html" class="nav-link">Products</a></li>
                 <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
-                <li><button onclick="logout()" class="btn-login" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Logout</button></li>
+                <li><button onclick="logout()" class="btn-login" id="auth-link" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Logout</button></li>
             </ul>
         </div>
     </nav>
@@ -783,6 +787,7 @@
             }
         }
     </script>
+    <script src="../assets/js/search.js"></script>
 </body>
 </html>
 

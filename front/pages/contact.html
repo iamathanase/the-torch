@@ -15,13 +15,17 @@
                 <img src="../assets/images/logo.png" alt="The Torch Logo" style="height: 50px; width: 50px; border-radius: 50%; margin-right: 0.75rem; display: inline-block; vertical-align: middle; object-fit: cover;">
                 <h1 style="display: inline-block; margin: 0;">The Torch</h1>
             </div>
+            <div class="search-bar-container" id="search-container" style="display: none;">
+                <input type="text" id="global-search" class="search-bar" placeholder="Search products, guides..." aria-label="Search">
+                <button type="button" id="search-btn" class="search-btn" aria-label="Search"><span class="search-icon">🔍</span></button>
+            </div>
             <ul class="nav-menu">
                 <li><a href="../index.html" class="nav-link">Home</a></li>
                 <li><a href="products.html" class="nav-link">Products</a></li>
                 <li><a href="learning.html" class="nav-link">Learn</a></li>
                 <li><a href="about.html" class="nav-link">About</a></li>
                 <li><a href="contact.html" class="nav-link active">Contact</a></li>
-                <li><a href="login.html" class="btn-login">Sign In</a></li>
+                <li><a href="login.html" class="btn-login" id="auth-link">Sign In</a></li>
             </ul>
             <button class="menu-toggle">☰</button>
         </div>
@@ -161,6 +165,7 @@
     </footer>
 
     <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/search.js"></script>
 </body>
 </html>
 
