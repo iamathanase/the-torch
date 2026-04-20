@@ -630,7 +630,7 @@
             margin-bottom: 1.5rem;
         }
 
-        .alerts-title h3 {
+        .alerts-title {
             font-size: 1.1rem;
             font-weight: 700;
             margin: 0;
@@ -786,6 +786,9 @@
             .hamburger {
                 display: block;
                 margin-right: 1rem;
+                padding: 0.5rem;
+                font-size: 1.75rem;
+                color: var(--text-primary);
             }
 
             .header-left {
@@ -916,6 +919,17 @@
                 font-size: 0.7rem;
             }
 
+            .hamburger {
+                display: block !important;
+                margin-right: 1rem;
+                padding: 0.5rem;
+            }
+
+            .header {
+                padding: 0.75rem;
+                gap: 1rem;
+            }
+
             .hero-section {
                 padding: 1.5rem;
             }
@@ -958,8 +972,31 @@
             }
 
             .zones-section {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .zone-item {
+                padding: 0.75rem;
+            }
+
+            .zone-name {
+                font-size: 0.8rem;
+            }
+
+            .zone-value {
+                font-size: 1.25rem;
+            }
+
+            .alerts-section {
+                padding: 1rem;
+            }
+
+            .alerts-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                margin-bottom: 1rem;
             }
 
             .zone-item {
@@ -968,17 +1005,6 @@
 
             .zone-value {
                 font-size: 1.25rem;
-            }
-
-            .alert-item {
-                padding: 0.75rem;
-                gap: 0.75rem;
-            }
-
-            .alert-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 1.1rem;
             }
 
             .alert-title {
@@ -1019,6 +1045,11 @@
             .score-number {
                 font-size: 2.2rem;
             }
+
+            /* Stack zones and alerts grid on tablets */
+            .content > div[style*="grid-template-columns: 1fr 2fr"] {
+                --grid-cols: 1 !important;
+            }
         }
 
         /* Extra Small Phones (< 480px) */
@@ -1047,7 +1078,10 @@
             }
 
             .hamburger {
-                font-size: 1.25rem;
+                display: block !important;
+                font-size: 1.5rem;
+                padding: 0.25rem;
+                margin-right: 0.5rem;
             }
 
             .content {
@@ -1466,7 +1500,7 @@
                 </div>
 
                 <!-- MANGROVE COVERAGE & ALERTS GRID -->
-                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 2rem; align-items: start;">
                     <!-- ZONES BREAKDOWN -->
                     <div class="chart-card">
                         <div class="chart-header">
