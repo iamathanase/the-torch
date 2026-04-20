@@ -337,6 +337,16 @@ async function handleLogin(event) {
             localStorage.setItem('userRole', authData.userRole);
             localStorage.setItem('userId', authData.userId);
             
+            // Store user object with full user data for search.js and other modules
+            const userData = {
+                firstName: authData.firstName || 'User',
+                lastName: authData.lastName || '',
+                email: email,
+                userId: authData.userId,
+                userRole: authData.userRole
+            };
+            localStorage.setItem('user', JSON.stringify(userData));
+            
             if (rememberMe) {
                 localStorage.setItem('rememberEmail', email);
             }
