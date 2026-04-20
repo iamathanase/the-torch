@@ -185,11 +185,56 @@
         .btn-secondary { background: rgba(29, 124, 58, 0.1); color: #1d7c3a; }
         .btn-secondary:hover { background: rgba(29, 124, 58, 0.2); }
 
-        @media (max-width: 768px) {
-            .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1199px) {
+            .dashboard-container { grid-template-columns: 240px 1fr; }
+            .sidebar { padding: 1.5rem 1rem; }
             .settings-grid { grid-template-columns: 1fr; }
-            .settings-sidebar { display: none; }
+            .settings-sidebar { position: static; height: auto; }
+        }
+
+        @media (max-width: 1023px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { display: none; position: fixed; left: 0; top: 0; width: 260px; height: 100vh; z-index: 1000; box-shadow: 2px 0 12px rgba(0,0,0,0.3); }
+            .sidebar.open { display: flex; }
+            .hamburger { display: block; }
+            .header { padding: 1rem; }
+            .content { padding: 1rem; }
+            .settings-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 767px) {
+            .sidebar { width: 100%; max-height: 80vh; padding: 1rem; }
+            .brand { margin-bottom: 1.5rem; }
+            .brand-icon { width: 40px; height: 40px; }
+            .nav-link { padding: 0.7rem; font-size: 0.85rem; }
+            .user-info h3 { font-size: 0.85rem; }
+            .header { padding: 0.75rem; flex-direction: column; gap: 0.5rem; }
+            .header-title h1 { font-size: 1.2rem; }
+            .content { padding: 0.75rem; }
+            .page-title { font-size: 1.3rem; }
+            .settings-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .settings-sidebar { height: auto; display: block; }
+            .settings-nav button { padding: 0.75rem; }
+            .settings-content { padding: 1.5rem; }
+        }
+
+        @media (max-width: 479px) {
+            .sidebar { width: 100%; padding: 0.75rem; }
+            .nav-link span:last-child { display: none; }
+            .brand-icon { width: 36px; height: 36px; font-size: 1rem; }
+            .header { padding: 0.5rem; }
+            .header-title h1 { font-size: 1rem; }
+            .content { padding: 0.5rem; }
+            .page-title { font-size: 1.1rem; }
+            .settings-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+            .settings-sidebar { margin-bottom: 1rem; }
+            .settings-nav button { padding: 0.6rem 0.75rem; font-size: 0.85rem; }
+            .settings-content { padding: 0.75rem; }
+            .settings-section h3 { font-size: 0.95rem; }
+            .form-label { font-size: 0.85rem; }
+            .form-input { padding: 0.6rem; font-size: 0.85rem; }
+            .btn { padding: 0.6rem 1rem; font-size: 0.8rem; }
         }
     </style>
 </head>
