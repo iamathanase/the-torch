@@ -830,25 +830,37 @@
         }
     </style>
 
-    <script src="../assets/js/search.js"></script>
     <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/search.js"></script>
     <script>
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', () => {
-            checkAuthStatus();
+            // Check if authenticated before loading dashboard
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            
+            // Debug logging
+            console.log('Dashboard Auth Check:', { 
+                hasToken: !!token, 
+                hasUser: !!user,
+                tokenLength: token ? token.length : 0
+            });
+            
+            // If not authenticated, redirect to login with a small delay to allow page load
+            if (!token || !user) {
+                console.warn('Not authenticated, redirecting to login');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 500);
+                return;
+            }
+            
+            // Authenticated - proceed with dashboard initialization
             loadDashboardData();
             initializeCharts();
             startLiveUpdates();
+            initializeSearchBar(); // Initialize search from search.js
         });
-
-        function checkAuthStatus() {
-            const token = localStorage.getItem('authToken');
-            if (!token) {
-                window.location.href = 'login.html';
-                return false;
-            }
-            return true;
-        }
 
         function loadDashboardData() {
             document.getElementById('total-revenue').textContent = '₵' + (Math.floor(Math.random() * 10000) + 40000).toLocaleString();
@@ -912,12 +924,17 @@
 
         function logoutVendor() {
             if (confirm('Sign out?')) {
+                // Clear all auth-related data
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('userRole');
                 localStorage.removeItem('userId');
                 localStorage.removeItem('user');
                 localStorage.removeItem('cart');
-                window.location.href = '../index.html';
+                
+                // Ensure logout is complete before redirecting
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 100);
             }
         }
 
