@@ -3,77 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders - Vendor Dashboard - The Torch</title>
+    <title>Orders - Vendor Dashboard</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --dark-bg: #0f1419;
+            --card-bg: #1a1f2e;
+            --primary: #1d7c3a;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --border-color: #2a3142;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b8c1;
+        }
+
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--dark-bg); color: var(--text-primary); }
+        .dashboard-container { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+        .sidebar {
+            background: rgba(26, 31, 46, 0.95);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); }
+        .brand-icon { width: 48px; height: 48px; background: linear-gradient(135deg, #1d7c3a 0%, #27ae60 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; color: white; }
+        .brand-text h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-primary); }
+        .brand-text p { font-size: 0.7rem; color: var(--text-secondary); margin: 0.25rem 0 0 0; text-transform: uppercase; }
+
+        .nav-section { margin-bottom: 3rem; flex: 1; }
+        .nav-section:last-of-type { margin-bottom: 0; margin-top: auto; }
+        .nav-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 1.25rem; font-weight: 700; }
+        .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 1rem; padding: 0.875rem 1rem; color: var(--text-secondary); text-decoration: none; border-radius: 8px; transition: all 0.3s ease; font-size: 0.95rem; font-weight: 500;
+        }
+
+        .nav-link:hover { background: rgba(29, 124, 58, 0.1); color: #27ae60; }
+        .nav-link.active { background: rgba(29, 124, 58, 0.15); color: #1d7c3a; border-left: 3px solid #1d7c3a; }
+        .nav-icon { width: 20px; height: 20px; font-size: 1rem; }
+
+        .user-section { background: rgba(29, 124, 58, 0.1); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+        .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #1d7c3a 0%, #27ae60 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; }
+        .user-info h3 { font-size: 0.9rem; font-weight: 600; margin: 0; color: var(--text-primary); }
+        .user-info p { font-size: 0.75rem; color: var(--text-secondary); margin: 0.25rem 0 0 0; }
+
+        .main-content { overflow-y: auto; background: var(--dark-bg); }
+
+        .header {
+            background: rgba(26, 31, 46, 0.5);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title h1 { font-size: 1.5rem; font-weight: 700; margin: 0; }
+        .header-title p { font-size: 0.9rem; color: var(--text-secondary); margin: 0.25rem 0 0 0; }
+
+        .content { padding: 2rem; max-width: 1600px; }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; }
+
+        .orders-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input, .filter-select {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+        }
+
+        .search-input::placeholder { color: var(--text-secondary); }
+
+        .orders-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th {
+            background: rgba(29, 124, 58, 0.1);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .orders-table tbody tr:hover {
+            background: rgba(29, 124, 58, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-pending { background: rgba(243, 156, 18, 0.2); color: #f39c12; }
+        .badge-processing { background: rgba(52, 152, 219, 0.2); color: #3498db; }
+        .badge-shipped { background: rgba(155, 89, 182, 0.2); color: #9b59b6; }
+        .badge-delivered { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #1d7c3a;
+            cursor: pointer;
+            margin-right: 1rem;
+            font-weight: 600;
+        }
+
+        .action-btn:hover { color: #27ae60; }
+
+        @media (max-width: 768px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="navbar-logo">
-                <img src="../assets/images/logo.png" alt="The Torch Logo" style="height: 50px; width: 50px; border-radius: 50%; margin-right: 0.75rem; display: inline-block; vertical-align: middle; object-fit: cover;">
-                <h1 style="display: inline-block; margin: 0;">The Torch</h1>
-            </div>
-            <div class="search-bar-container" id="search-container" style="display:none;">
-                <input type="text" id="global-search" class="search-bar" placeholder="Search orders..." aria-label="Search">
-                <button type="button" id="search-btn" class="search-btn" aria-label="Search"><span class="search-icon">🔍</span></button>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="vendor-dashboard.html" class="nav-link">Dashboard</a></li>
-                <li><a href="vendor-products.html" class="nav-link">Products</a></li>
-                <li><a href="vendor-orders.html" class="nav-link active">Orders</a></li>
-                <li><a href="vendor-settings.html" class="nav-link">Settings</a></li>
-                <li><button onclick="logoutVendor()" class="btn-login" id="auth-link">Logout</button></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="vendor-page-container">
-        <!-- Header -->
-        <header class="page-header">
-            <div class="header-content">
-                <h1>Order Management</h1>
-                <p>Track and manage all customer orders</p>
-            </div>
-            <div class="header-actions">
-                <input type="text" id="search-order" class="search-input" placeholder="Search by Order ID or Customer...">
-            </div>
-        </header>
-
-        <!-- Filters -->
-        <section class="filters-section">
-            <div class="filter-group">
-                <label for="status-filter">Status:</label>
-                <select id="status-filter" onchange="filterOrders()">
-                    <option value="">All Orders</option>
-                    <option value="pending">Pending</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="date-filter">Date Range:</label>
-                <select id="date-filter" onchange="filterOrders()">
-                    <option value="">All Time</option>
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
-                </select>
-            </div>
-        </section>
-
-        <!-- Orders Table -->
-        <section class="content-section">
-            <div class="section-card">
-                <div class="card-header">
-                    <h2>Orders</h2>
-                    <span class="order-count" id="order-count">Loading...</span>
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">T</div>
+                <div class="brand-text">
+                    <h2>The Torch</h2>
+                    <p>Ghana</p>
                 </div>
-                
-                <div class="table-responsive">
-                    <table class="orders-table" id="orders-table">
+            </div>
+
+            <nav class="nav-section">
+                <div class="nav-label">Menu</div>
+                <ul class="nav-menu">
+                    <li><a href="vendor-dashboard.html" class="nav-link"><span class="nav-icon">⊞</span> Dashboard</a></li>
+                    <li><a href="vendor-products.html" class="nav-link"><span class="nav-icon">◻</span> Products</a></li>
+                    <li><a href="vendor-orders.html" class="nav-link active"><span class="nav-icon">⊟</span> Orders</a></li>
+                    <li><a href="vendor-settings.html" class="nav-link"><span class="nav-icon">⚙</span> Settings</a></li>
+                </ul>
+            </nav>
+
+            <nav class="nav-section">
+                <div class="nav-label">Account</div>
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link" onclick="logoutVendor(); return false;"><span class="nav-icon">↪</span> Logout</a></li>
+                </ul>
+            </nav>
+
+            <div class="user-section">
+                <div class="user-avatar" id="userInitial">V</div>
+                <div class="user-info">
+                    <h3 id="userName">Vendor</h3>
+                    <p id="userEmail">vendor@torch.com</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="header-title" style="margin-bottom: 0;">Orders</h1>
+                    <p class="header-title" style="margin: 0.5rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem; font-weight: 400;">Track and manage customer orders</p>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h2 class="page-title">Order Management</h2>
+                </div>
+
+                <div class="orders-controls">
+                    <input type="text" class="search-input" placeholder="Search by Order ID or Customer..." style="flex: 1;">
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Pending</option>
+                        <option>Processing</option>
+                        <option>Shipped</option>
+                        <option>Delivered</option>
+                    </select>
+                </div>
+
+                <div class="orders-section">
+                    <table class="orders-table">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
@@ -85,671 +231,70 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="orders-tbody">
-                            <!-- Populated by JavaScript -->
+                        <tbody>
+                            <tr>
+                                <td><strong>#ORD-8247</strong></td>
+                                <td>John Mensah</td>
+                                <td>Solar Pump × 2</td>
+                                <td>₵25,000</td>
+                                <td>Apr 15</td>
+                                <td><span class="badge badge-delivered">Delivered</span></td>
+                                <td><button class="action-btn">View</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#ORD-8246</strong></td>
+                                <td>Mary Osei</td>
+                                <td>Drip Kit × 1</td>
+                                <td>₵2,800</td>
+                                <td>Apr 14</td>
+                                <td><span class="badge badge-shipped">Shipped</span></td>
+                                <td><button class="action-btn">View</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#ORD-8245</strong></td>
+                                <td>Kwame Asante</td>
+                                <td>Soil Kit × 3</td>
+                                <td>₵2,550</td>
+                                <td>Apr 13</td>
+                                <td><span class="badge badge-processing">Processing</span></td>
+                                <td><button class="action-btn">View</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#ORD-8244</strong></td>
+                                <td>Ama Boateng</td>
+                                <td>Fertilizer × 5</td>
+                                <td>₵2,250</td>
+                                <td>Apr 12</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                                <td><button class="action-btn">View</button></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </section>
-    </div>
-
-    <!-- Order Detail Modal -->
-    <div class="modal" id="order-detail-modal">
-        <div class="modal-content modal-lg">
-            <div class="modal-header">
-                <h2 id="detail-order-id">Order Details</h2>
-                <button class="modal-close" onclick="closeOrderDetail()">×</button>
-            </div>
-            <div class="modal-body" id="order-detail-body">
-                <!-- Populated by JavaScript -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeOrderDetail()">Close</button>
-                <button class="btn-primary" id="update-status-btn" onclick="updateOrderStatus()">Update Status</button>
-            </div>
         </div>
     </div>
-
-    <!-- Status Update Modal -->
-    <div class="modal" id="status-update-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Update Order Status</h2>
-                <button class="modal-close" onclick="closeStatusModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <p>Update status for <strong id="status-order-id">Order #ORD-8247</strong></p>
-                <div class="form-group">
-                    <label for="new-status">New Status:</label>
-                    <select id="new-status">
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="tracking-number">Tracking Number (Optional):</label>
-                    <input type="text" id="tracking-number" placeholder="Enter tracking number...">
-                </div>
-                <div class="form-group">
-                    <label for="status-note">Notes:</label>
-                    <textarea id="status-note" placeholder="Add any notes..." rows="3"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeStatusModal()">Cancel</button>
-                <button class="btn-primary" onclick="confirmStatusUpdate()">Update</button>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        :root {
-            --primary: #1d7c3a;
-            --secondary: #27ae60;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --text-dark: #2c3e50;
-            --text-light: #95a5a6;
-            --border: #ecf0f1;
-            --bg-light: #f8f9fa;
-        }
-
-        .vendor-page-container {
-            min-height: calc(100vh - 70px);
-            padding: 2rem;
-            background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f7 100%);
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .page-header {
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 2rem;
-        }
-
-        .header-content h1 {
-            margin: 0;
-            font-size: 2rem;
-            color: var(--text-dark);
-        }
-
-        .header-content p {
-            margin: 0.5rem 0 0 0;
-            color: var(--text-light);
-        }
-
-        .header-actions {
-            flex: 1;
-            max-width: 400px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            background: white;
-        }
-
-        .filters-section {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .filter-group select {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: white;
-            cursor: pointer;
-        }
-
-        .content-section {
-            margin-bottom: 2rem;
-        }
-
-        .section-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-header h2 {
-            margin: 0;
-            font-size: 1.25rem;
-        }
-
-        .order-count {
-            background: var(--bg-light);
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        .orders-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .orders-table thead {
-            background: var(--bg-light);
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .orders-table th {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .orders-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .orders-table tbody tr:hover {
-            background: rgba(29, 124, 58, 0.03);
-        }
-
-        .order-id {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.35rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background: rgba(241, 196, 15, 0.15);
-            color: #d68910;
-        }
-
-        .status-processing {
-            background: rgba(52, 152, 219, 0.15);
-            color: #2874a6;
-        }
-
-        .status-shipped {
-            background: rgba(155, 89, 182, 0.15);
-            color: #7d3c98;
-        }
-
-        .status-delivered {
-            background: rgba(46, 204, 113, 0.15);
-            color: #27ae60;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-action {
-            padding: 0.4rem 0.8rem;
-            border: 1px solid var(--border);
-            background: white;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-action:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-lg {
-            max-width: 700px;
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h2 {
-            margin: 0;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
-        .modal-footer {
-            padding: 1.5rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-        }
-
-        .btn-primary,
-        .btn-secondary {
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--secondary);
-        }
-
-        .btn-secondary {
-            background: var(--border);
-            color: var(--text-dark);
-        }
-
-        .btn-secondary:hover {
-            background: #ddd;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-
-        .order-detail-item {
-            background: var(--bg-light);
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-
-        .detail-label {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .detail-value {
-            color: var(--text-light);
-        }
-
-        @media (max-width: 768px) {
-            .page-header {
-                flex-direction: column;
-            }
-
-            .orders-table {
-                font-size: 0.85rem;
-            }
-
-            .orders-table th,
-            .orders-table td {
-                padding: 0.75rem 0.5rem;
-            }
-        }
-    </style>
 
     <script src="../assets/js/script.js"></script>
     <script>
-        // Sample order data
-        let vendorOrders = [
-            {
-                id: 'ORD-8247',
-                customer: 'Kwame Asante',
-                items: 'Solar Pump × 2',
-                amount: 25000,
-                date: '2026-04-20',
-                status: 'delivered',
-                details: {
-                    email: 'kwame@example.com',
-                    phone: '+233-24-123-4567',
-                    address: 'Accra, Ghana',
-                    items: [
-                        { name: 'Solar Water Pump', qty: 2, price: 12500 }
-                    ],
-                    total: 25000,
-                    notes: 'Delivered successfully'
-                }
-            },
-            {
-                id: 'ORD-8248',
-                customer: 'Ama Osei',
-                items: 'Drip Irrigation Kit × 1, Soil Tester × 3',
-                amount: 18500,
-                date: '2026-04-19',
-                status: 'shipped',
-                details: {
-                    email: 'ama@example.com',
-                    phone: '+233-27-456-7890',
-                    address: 'Kumasi, Ghana',
-                    items: [
-                        { name: 'Drip Irrigation Kit', qty: 1, price: 8500 },
-                        { name: 'Soil Testing Equipment', qty: 3, price: 3333.33 }
-                    ],
-                    total: 18500,
-                    notes: 'In transit'
-                }
-            },
-            {
-                id: 'ORD-8249',
-                customer: 'Kofi Mensah',
-                items: 'Solar Pump × 1',
-                amount: 12500,
-                date: '2026-04-18',
-                status: 'processing',
-                details: {
-                    email: 'kofi@example.com',
-                    phone: '+233-50-234-5678',
-                    address: 'Takoradi, Ghana',
-                    items: [
-                        { name: 'Solar Water Pump', qty: 1, price: 12500 }
-                    ],
-                    total: 12500,
-                    notes: 'Being prepared for shipment'
-                }
-            },
-            {
-                id: 'ORD-8250',
-                customer: 'Abena Boateng',
-                items: 'Irrigation Kit × 2, Soil Tester × 1',
-                amount: 20300,
-                date: '2026-04-17',
-                status: 'pending',
-                details: {
-                    email: 'abena@example.com',
-                    phone: '+233-54-789-0123',
-                    address: 'Cape Coast, Ghana',
-                    items: [
-                        { name: 'Drip Irrigation Kit', qty: 2, price: 8500 },
-                        { name: 'Soil Testing Equipment', qty: 1, price: 3333.33 }
-                    ],
-                    total: 20300,
-                    notes: 'Awaiting payment confirmation'
-                }
-            }
-        ];
-
-        let currentOrderDetail = null;
-
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('authToken');
             const user = localStorage.getItem('user');
-            
             if (!token || !user) {
-                setTimeout(() => window.location.href = 'login.html', 500);
+                window.location.href = 'login.html';
                 return;
             }
-
-            loadOrders();
             
-            document.getElementById('search-order').addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
-                const filtered = vendorOrders.filter(order => 
-                    order.id.toLowerCase().includes(query) || 
-                    order.customer.toLowerCase().includes(query)
-                );
-                renderOrders(filtered);
-            });
+            const userData = JSON.parse(user);
+            document.getElementById('userName').textContent = userData.firstName + ' ' + userData.lastName;
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('userInitial').textContent = userData.firstName.charAt(0).toUpperCase();
         });
-
-        function loadOrders() {
-            renderOrders(vendorOrders);
-            document.getElementById('order-count').textContent = `${vendorOrders.length} Orders`;
-        }
-
-        function renderOrders(orders) {
-            const tbody = document.getElementById('orders-tbody');
-            tbody.innerHTML = orders.map(order => `
-                <tr>
-                    <td><span class="order-id">${order.id}</span></td>
-                    <td>${order.customer}</td>
-                    <td>${order.items}</td>
-                    <td>₵${order.amount.toLocaleString()}</td>
-                    <td>${new Date(order.date).toLocaleDateString()}</td>
-                    <td><span class="status-badge status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action" onclick="viewOrderDetail('${order.id}')">View</button>
-                            <button class="btn-action" onclick="openStatusUpdate('${order.id}')">Update</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function filterOrders() {
-            const statusFilter = document.getElementById('status-filter').value;
-            const dateFilter = document.getElementById('date-filter').value;
-            
-            let filtered = vendorOrders;
-
-            if (statusFilter) {
-                filtered = filtered.filter(order => order.status === statusFilter);
-            }
-
-            if (dateFilter) {
-                const today = new Date();
-                filtered = filtered.filter(order => {
-                    const orderDate = new Date(order.date);
-                    if (dateFilter === 'today') return orderDate.toDateString() === today.toDateString();
-                    if (dateFilter === 'week') return (today - orderDate) / (1000 * 60 * 60 * 24) <= 7;
-                    if (dateFilter === 'month') return (today - orderDate) / (1000 * 60 * 60 * 24) <= 30;
-                    return true;
-                });
-            }
-
-            renderOrders(filtered);
-        }
-
-        function viewOrderDetail(orderId) {
-            const order = vendorOrders.find(o => o.id === orderId);
-            if (!order) return;
-
-            currentOrderDetail = order;
-            document.getElementById('detail-order-id').textContent = `Order ${order.id}`;
-            
-            const itemsHtml = order.details.items.map(item => `
-                <div class="detail-row">
-                    <span class="detail-label">${item.name} × ${item.qty}</span>
-                    <span class="detail-value">₵${item.price.toLocaleString()}</span>
-                </div>
-            `).join('');
-
-            const detailHtml = `
-                <div class="order-detail-item">
-                    <div class="detail-row">
-                        <span class="detail-label">Order ID</span>
-                        <span class="detail-value">${order.id}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Customer</span>
-                        <span class="detail-value">${order.customer}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Email</span>
-                        <span class="detail-value">${order.details.email}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Phone</span>
-                        <span class="detail-value">${order.details.phone}</span>
-                    </div>
-                </div>
-
-                <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Order Items</h3>
-                <div class="order-detail-item">
-                    ${itemsHtml}
-                    <div class="detail-row" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd; font-weight: 700;">
-                        <span class="detail-label">Total</span>
-                        <span class="detail-value">₵${order.details.total.toLocaleString()}</span>
-                    </div>
-                </div>
-
-                <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Status</h3>
-                <div class="order-detail-item">
-                    <div class="detail-row">
-                        <span class="detail-label">Current Status</span>
-                        <span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Order Date</span>
-                        <span class="detail-value">${new Date(order.date).toLocaleDateString()}</span>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('order-detail-body').innerHTML = detailHtml;
-            document.getElementById('order-detail-modal').classList.add('active');
-        }
-
-        function closeOrderDetail() {
-            document.getElementById('order-detail-modal').classList.remove('active');
-            currentOrderDetail = null;
-        }
-
-        function openStatusUpdate(orderId) {
-            const order = vendorOrders.find(o => o.id === orderId);
-            if (!order) return;
-
-            currentOrderDetail = order;
-            document.getElementById('status-order-id').textContent = `Order ${order.id}`;
-            document.getElementById('new-status').value = order.status;
-            document.getElementById('tracking-number').value = '';
-            document.getElementById('status-note').value = '';
-
-            closeOrderDetail();
-            document.getElementById('status-update-modal').classList.add('active');
-        }
-
-        function closeStatusModal() {
-            document.getElementById('status-update-modal').classList.remove('active');
-        }
-
-        function confirmStatusUpdate() {
-            if (!currentOrderDetail) return;
-
-            const newStatus = document.getElementById('new-status').value;
-            const trackingNumber = document.getElementById('tracking-number').value;
-            const note = document.getElementById('status-note').value;
-
-            const orderIndex = vendorOrders.findIndex(o => o.id === currentOrderDetail.id);
-            if (orderIndex >= 0) {
-                vendorOrders[orderIndex].status = newStatus;
-                if (trackingNumber) vendorOrders[orderIndex].details.trackingNumber = trackingNumber;
-                if (note) vendorOrders[orderIndex].details.notes = note;
-            }
-
-            renderOrders(vendorOrders);
-            closeStatusModal();
-            alert('Order status updated successfully!');
-        }
 
         function logoutVendor() {
             if (confirm('Sign out?')) {
                 ['authToken', 'userRole', 'userId', 'user', 'cart'].forEach(key => localStorage.removeItem(key));
-                setTimeout(() => window.location.href = '../index.html', 100);
+                window.location.href = '../index.html';
             }
         }
     </script>
