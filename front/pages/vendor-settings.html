@@ -406,6 +406,16 @@
             event.target.classList.add('active');
         }
 
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.remove('open');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('authToken');
             const user = localStorage.getItem('user');
@@ -423,6 +433,23 @@
             document.getElementById('firstName').value = userData.firstName;
             document.getElementById('lastName').value = userData.lastName;
             document.getElementById('emailField').value = userData.email;
+
+            // Close sidebar when clicking on a nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => closeSidebar());
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                const sidebar = document.getElementById('sidebar');
+                const hamburger = document.querySelector('.hamburger');
+                if (window.innerWidth <= 1023) {
+                    if (sidebar && hamburger && !sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            });
         });
 
         function logoutVendor() {

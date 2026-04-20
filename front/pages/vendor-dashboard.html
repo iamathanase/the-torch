@@ -48,6 +48,23 @@
             flex-direction: column;
         }
 
+        /* Mobile backdrop overlay */
+        .sidebar::before {
+            content: '';
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .sidebar.open::before {
+            display: block;
+        }
+
         .brand {
             display: flex;
             align-items: center;
@@ -1532,8 +1549,31 @@
 
     <script src="../assets/js/script.js"></script>
     <script>
-        // Check Authentication
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.remove('open');
+        }
+
+        // Close sidebar when clicking on a nav link
         document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', closeSidebar);
+            });
+            
+            // Close sidebar when clicking on backdrop (small screen only)
+            const sidebar = document.getElementById('sidebar');
+            sidebar.addEventListener('click', (e) => {
+                if (e.target === sidebar || (e.target.tagName === 'A' && e.target.classList.contains('nav-link'))) {
+                    closeSidebar();
+                }
+            });
+
             const token = localStorage.getItem('authToken');
             const user = localStorage.getItem('user');
             if (!token || !user) {
@@ -1549,6 +1589,19 @@
             
             initChart();
             startLiveUpdates();
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            
+            // Only close on small screens
+            if (window.innerWidth <= 1023) {
+                if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
         });
 
         // Initialize Revenue Chart

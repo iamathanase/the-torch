@@ -337,7 +337,34 @@
             document.getElementById('userName').textContent = userData.firstName + ' ' + userData.lastName;
             document.getElementById('userEmail').textContent = userData.email;
             document.getElementById('userInitial').textContent = userData.firstName.charAt(0).toUpperCase();
+
+            // Close sidebar when clicking on a nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => closeSidebar());
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                const sidebar = document.getElementById('sidebar');
+                const hamburger = document.querySelector('.hamburger');
+                if (window.innerWidth <= 1023) {
+                    if (sidebar && hamburger && !sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            });
         });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.remove('open');
+        }
 
         function logoutVendor() {
             if (confirm('Sign out?')) {
