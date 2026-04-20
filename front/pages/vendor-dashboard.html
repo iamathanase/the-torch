@@ -1583,15 +1583,40 @@
 
     <script src="../assets/js/script.js"></script>
     <script>
+        // Define critical functions first - MUST be defined before DOM is ready
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
+            if (sidebar) {
+                sidebar.classList.toggle('open');
+            }
         }
 
         function closeSidebar() {
             const sidebar = document.getElementById('sidebar');
-            sidebar.classList.remove('open');
+            if (sidebar) {
+                sidebar.classList.remove('open');
+            }
         }
+
+        function refreshData() {
+            updateMetrics();
+            const btn = event.target;
+            if (btn) {
+                btn.style.animation = 'spin 1s linear';
+                setTimeout(() => {
+                    btn.style.animation = '';
+                }, 1000);
+            }
+        }
+
+        function logoutVendor() {
+            if (confirm('Sign out?')) {
+                ['authToken', 'userRole', 'userId', 'user', 'cart'].forEach(key => localStorage.removeItem(key));
+                window.location.href = '../index.html';
+            }
+        }
+
+        // All other functions and event handlers
 
         // Close sidebar when clicking on a nav link
         document.addEventListener('DOMContentLoaded', () => {
@@ -1705,22 +1730,6 @@
             document.getElementById('ordersValue').textContent = metrics.orders;
             document.getElementById('ratingValue').textContent = metrics.rating;
             document.getElementById('scoreNumber').textContent = metrics.score;
-        }
-
-        function refreshData() {
-            updateMetrics();
-            const btn = event.target;
-            btn.style.animation = 'spin 1s linear';
-            setTimeout(() => {
-                btn.style.animation = '';
-            }, 1000);
-        }
-
-        function logoutVendor() {
-            if (confirm('Sign out?')) {
-                ['authToken', 'userRole', 'userId', 'user', 'cart'].forEach(key => localStorage.removeItem(key));
-                window.location.href = '../index.html';
-            }
         }
 
         // Add spin animation
