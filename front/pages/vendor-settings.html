@@ -108,20 +108,6 @@
             transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @media (min-width: 768px) {
-            .settings-grid {
-                grid-template-columns: 220px 1fr;
-                gap: 2rem;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .settings-grid {
-                grid-template-columns: 250px 1fr;
-                gap: 2.5rem;
-            }
-        }
-
         .settings-sidebar {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -130,13 +116,6 @@
             height: fit-content;
             position: static;
             transition: position 0.3s ease, top 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        @media (min-width: 1024px) {
-            .settings-sidebar {
-                position: sticky;
-                top: 100px;
-            }
         }
 
         .settings-sidebar:hover {
@@ -151,23 +130,9 @@
             padding: 0.75rem;
         }
 
-        @media (min-width: 768px) {
-            .settings-nav {
-                grid-template-columns: 1fr;
-                gap: 0;
-                padding: 0;
-            }
-        }
-
         .settings-nav li {
             border-bottom: none;
             transition: all 0.2s ease;
-        }
-
-        @media (min-width: 768px) {
-            .settings-nav li {
-                border-bottom: 1px solid var(--border-color);
-            }
         }
 
         .settings-nav li:last-child {
@@ -188,14 +153,6 @@
             border-radius: 8px;
         }
 
-        @media (min-width: 768px) {
-            .settings-nav button {
-                padding: 1rem;
-                font-size: 1rem;
-                border-radius: 0;
-            }
-        }
-
         .settings-nav button:hover {
             background: rgba(29, 124, 58, 0.1);
             color: #27ae60;
@@ -211,13 +168,6 @@
             padding-left: calc(1rem - 3px);
         }
 
-        @media (max-width: 767px) {
-            .settings-nav button.active {
-                background: rgba(29, 124, 58, 0.2);
-                border-radius: 8px;
-            }
-        }
-
         .settings-content {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -225,18 +175,6 @@
             padding: 1.25rem;
             transition: all 0.3s ease, box-shadow 0.3s ease;
             animation: slideInContent 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @media (min-width: 640px) {
-            .settings-content {
-                padding: 1.5rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .settings-content {
-                padding: 2rem;
-            }
         }
 
         @keyframes slideInContent {
@@ -275,12 +213,6 @@
             color: var(--text-primary);
         }
 
-        @media (min-width: 768px) {
-            .settings-section h3 {
-                font-size: 1.1rem;
-            }
-        }
-
         .form-group {
             margin-bottom: 1.25rem;
             animation: slideUp 0.5s ease-out forwards;
@@ -312,12 +244,6 @@
             font-weight: 500;
             color: var(--text-primary);
             font-size: 0.95rem;
-        }
-
-        @media (min-width: 768px) {
-            .form-label {
-                font-size: 1rem;
-            }
         }
 
         .form-input {
@@ -400,12 +326,6 @@
             border-color: #1d7c3a;
         }
 
-        @media (min-width: 768px) {
-            .profile-picture-container {
-                padding: 1.5rem;
-            }
-        }
-
         .profile-picture-preview {
             width: 120px;
             height: 120px;
@@ -425,207 +345,13 @@
             box-shadow: 0 0 0 4px rgba(29, 124, 58, 0.1);
         }
 
-        @media (min-width: 768px) {
-            .profile-picture-preview {
-                width: 150px;
-                height: 150px;
-            }
-        }
-
         .profile-picture-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        /* ===== RESPONSIVE DESIGN (Mobile-First Approach) ===== */
-        
-        /* Extra Small Devices (320px - 479px) */
-        @media (max-width: 479px) {
-            .sidebar { 
-                width: 100%; 
-                padding: 0.75rem; 
-            }
-            .nav-link span:last-child { 
-                display: none; 
-            }
-            .brand-icon { 
-                width: 36px; 
-                height: 36px; 
-                font-size: 1rem; 
-            }
-            .header { 
-                padding: 0.5rem; 
-            }
-            .header-title h1 { 
-                font-size: 1rem; 
-            }
-            .content { 
-                padding: 0.5rem; 
-            }
-            .page-title { 
-                font-size: 1.1rem; 
-            }
-            .settings-grid { 
-                grid-template-columns: 1fr; 
-                gap: 1rem; 
-            }
-            .settings-sidebar { 
-                margin-bottom: 1rem; 
-            }
-            .settings-nav button { 
-                padding: 0.6rem 0.75rem; 
-                font-size: 0.85rem; 
-            }
-            .settings-content { 
-                padding: 0.75rem; 
-            }
-            .settings-section h3 { 
-                font-size: 0.95rem; 
-            }
-            .form-label { 
-                font-size: 0.85rem; 
-            }
-            .form-input { 
-                padding: 0.6rem; 
-                font-size: 0.85rem; 
-            }
-            .btn { 
-                padding: 0.6rem 1rem; 
-                font-size: 0.8rem; 
-            }
-        }
-
-        /* Small Devices (480px - 767px) */
-        @media (min-width: 480px) and (max-width: 767px) {
-            .sidebar { 
-                width: 100%; 
-                max-height: 80vh; 
-                padding: 1rem; 
-            }
-            .brand { 
-                margin-bottom: 1.5rem; 
-            }
-            .brand-icon { 
-                width: 40px; 
-                height: 40px; 
-            }
-            .nav-link { 
-                padding: 0.7rem; 
-                font-size: 0.85rem; 
-            }
-            .user-info h3 { 
-                font-size: 0.85rem; 
-            }
-            .header { 
-                padding: 0.75rem; 
-                flex-direction: column; 
-                gap: 0.5rem; 
-            }
-            .header-title h1 { 
-                font-size: 1.2rem; 
-            }
-            .content { 
-                padding: 0.75rem; 
-            }
-            .page-title { 
-                font-size: 1.3rem; 
-            }
-            .settings-grid { 
-                grid-template-columns: 1fr; 
-                gap: 1.25rem; 
-            }
-            .settings-sidebar { 
-                height: auto; 
-                display: block; 
-            }
-            .settings-nav button { 
-                padding: 0.75rem; 
-            }
-            .settings-content { 
-                padding: 1.25rem; 
-            }
-            .form-group {
-                animation-delay: 0s;
-                opacity: 1;
-            }
-        }
-
-        /* Medium Devices (768px - 1023px) */
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .dashboard-container { 
-                grid-template-columns: 1fr; 
-            }
-            .sidebar { 
-                display: none; 
-                position: fixed; 
-                left: 0; 
-                top: 0; 
-                width: 260px; 
-                height: 100vh; 
-                z-index: 1000; 
-                box-shadow: 2px 0 12px rgba(0,0,0,0.3); 
-                animation: slideInLeft 0.3s ease-out;
-            }
-            .sidebar.open { 
-                display: flex; 
-            }
-            .hamburger { 
-                display: block; 
-            }
-            .header { 
-                padding: 1rem; 
-            }
-            .content { 
-                padding: 1rem; 
-            }
-            .settings-grid { 
-                grid-template-columns: 1fr; 
-                gap: 1.5rem; 
-            }
-            .page-title { 
-                font-size: 1.5rem; 
-            }
-        }
-
-        @keyframes slideInLeft {
-            from {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Large Devices (1024px - 1199px) */
-        @media (min-width: 1024px) and (max-width: 1199px) {
-            .dashboard-container { 
-                grid-template-columns: 240px 1fr; 
-            }
-            .sidebar { 
-                padding: 1.5rem 1rem; 
-            }
-            .settings-grid { 
-                grid-template-columns: 220px 1fr; 
-                gap: 2rem; 
-            }
-        }
-
-        /* Extra Large Devices (1200px and above) */
-        @media (min-width: 1200px) {
-            .dashboard-container { 
-                grid-template-columns: 280px 1fr; 
-            }
-            .sidebar { 
-                padding: 2rem 1.5rem; 
-            }
-            .settings-grid { 
-                grid-template-columns: 250px 1fr; 
-                gap: 2.5rem; 
-            }
-        }
+        /* All responsive design is now handled by vendor-responsive.css */
 
         /* Hamburger Menu Button */
         .hamburger {
@@ -643,198 +369,6 @@
         .hamburger:hover {
             background: rgba(29, 124, 58, 0.1);
             color: #1d7c3a;
-        }
-
-        @media (max-width: 1023px) {
-            .dashboard-container {
-                grid-template-columns: 260px 1fr;
-            }
-
-            /* SIDEBAR */
-            .sidebar {
-                position: static;
-                width: 260px;
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                padding: 1rem 0.5rem;
-                background: #1a1f2e;
-                color: #cbd5f5;
-                border-right: 1px solid #2a3142;
-                z-index: auto;
-                overflow-y: auto;
-            }
-
-            .sidebar.open {
-                transform: none;
-            }
-
-            /* BRAND */
-            .brand {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                padding: 1rem 0.5rem;
-                border-bottom: 1px solid #2a3142;
-                margin-bottom: 1rem;
-            }
-
-            .brand-icon {
-                background: #1d7c3a;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 8px;
-                font-weight: 700;
-                color: #fff;
-            }
-
-            .brand-text h2 {
-                font-size: 1rem;
-                margin: 0;
-                color: #fff;
-                font-weight: 700;
-            }
-
-            .brand-text p {
-                font-size: 0.7rem;
-                margin: 0.25rem 0 0 0;
-                color: #b0b8c1;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-
-            /* NAV */
-            .nav {
-                flex: 1;
-                overflow-y: auto;
-            }
-
-            /* MENU */
-            .nav-menu {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                display: block;
-            }
-
-            .nav-menu li {
-                display: list-item;
-                list-style: none;
-            }
-
-            /* LINKS */
-            .nav-link {
-                display: block;
-                padding: 0.75rem 1rem;
-                margin: 0.25rem 0.5rem;
-                border-radius: 8px;
-                font-size: 0.9rem;
-                color: #b0b8c1;
-                text-decoration: none;
-                transition: all 0.2s ease;
-            }
-
-            .nav-link:hover {
-                background: rgba(29, 124, 58, 0.1);
-                color: #27ae60;
-            }
-
-            /* ACTIVE */
-            .nav-link.active {
-                background: #ffffff;
-                color: #1d7c3a;
-                font-weight: 600;
-            }
-
-            /* PROFILE */
-            .user-section {
-                margin-top: auto;
-                padding: 1rem 0.5rem;
-                border-top: 1px solid #2a3142;
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-            }
-
-            .user-avatar {
-                width: 40px;
-                height: 40px;
-                background: #ffc107;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                flex-shrink: 0;
-                color: #1a1a1a;
-                font-weight: 700;
-                font-size: 1rem;
-            }
-
-            .user-info {
-                display: flex;
-                flex-direction: column;
-                flex: 1;
-            }
-
-            .user-info h3 {
-                font-size: 0.9rem;
-                margin: 0;
-                color: #ffffff;
-                font-weight: 600;
-            }
-
-            .user-info p {
-                font-size: 0.75rem;
-                margin: 0.25rem 0 0 0;
-                color: #b0b8c1;
-            }
-
-            .sign-out-btn {
-                background: none;
-                border: none;
-                color: #b0b8c1;
-                font-size: 1.2rem;
-                cursor: pointer;
-                transition: color 0.2s ease;
-                padding: 0.5rem;
-                flex-shrink: 0;
-            }
-
-            .sign-out-btn:hover {
-                color: #27ae60;
-            }
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeInMenuLink {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Smooth page transitions */
-        @media (prefers-reduced-motion: no-preference) {
-            * {
-                scroll-behavior: smooth;
-            }
         }
 
         /* Focus visibility for accessibility */
