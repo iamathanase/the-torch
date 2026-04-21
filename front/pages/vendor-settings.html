@@ -560,6 +560,30 @@
             initTheme();
         }
 
+        // Load profile picture function
+        function loadProfilePicture() {
+            const savedProfilePicture = localStorage.getItem('vendor-profile-picture');
+            if (savedProfilePicture) {
+                // Update preview
+                const preview = document.getElementById('profilePicturePreview');
+                if (preview) {
+                    preview.innerHTML = `<img src="${savedProfilePicture}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
+                }
+                
+                // Update sidebar avatar
+                const userInitial = document.getElementById('userInitial');
+                if (userInitial) {
+                    userInitial.innerHTML = `<img src="${savedProfilePicture}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+                }
+                
+                // Show remove button
+                const removeBtn = document.getElementById('removePhotoBtn');
+                if (removeBtn) {
+                    removeBtn.style.display = 'inline-block';
+                }
+            }
+        }
+
         // Profile Picture Upload Handler
         document.getElementById('profilePictureInput')?.addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -573,7 +597,11 @@
                     
                     // Update preview
                     const preview = document.getElementById('profilePicturePreview');
-                    preview.innerHTML = `<img src="${imageData}" alt="Profile Picture">`;
+                    preview.innerHTML = `<img src="${imageData}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
+                    
+                    // Update sidebar avatar immediately
+                    const userInitial = document.getElementById('userInitial');
+                    userInitial.innerHTML = `<img src="${imageData}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
                     
                     // Show remove button
                     document.getElementById('removePhotoBtn').style.display = 'inline-block';
@@ -588,25 +616,24 @@
             const userData = JSON.parse(localStorage.getItem('user'));
             const initial = userData.firstName.charAt(0).toUpperCase();
             
+            // Reset preview to initials
             const preview = document.getElementById('profilePicturePreview');
             preview.innerHTML = `<div id="avatarCircle" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 2rem; font-weight: bold; color: white; background: linear-gradient(135deg, #1d7c3a 0%, #27ae60 100%); border-radius: 12px;">${initial}</div>`;
+            
+            // Reset sidebar avatar to initials
+            const userInitial = document.getElementById('userInitial');
+            userInitial.innerHTML = initial;
+            userInitial.style.background = 'linear-gradient(135deg, #1d7c3a 0%, #27ae60 100%)';
             
             this.style.display = 'none';
         });
 
         // Load profile picture on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedProfilePicture = localStorage.getItem('vendor-profile-picture');
-            if (savedProfilePicture) {
-                const preview = document.getElementById('profilePicturePreview');
-                preview.innerHTML = `<img src="${savedProfilePicture}" alt="Profile Picture">`;
-                document.getElementById('removePhotoBtn').style.display = 'inline-block';
-                
-                // Also update sidebar avatar
-                const userInitial = document.getElementById('userInitial');
-                userInitial.innerHTML = `<img src="${savedProfilePicture}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
-            }
-        });
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadProfilePicture);
+        } else {
+            loadProfilePicture();
+        }
 
         // Save Profile Changes
         function saveProfileChanges() {
