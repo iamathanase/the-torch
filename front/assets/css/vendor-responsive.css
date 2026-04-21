@@ -360,7 +360,18 @@ body {
 /* ========== RESPONSIVE: TABLET (1024px & below) ========== */
 @media (max-width: 1024px) {
     :root {
-        --sidebar-width: clamp(180px, 18vw, 240px);
+        --sidebar-width: clamp(200px, 18vw, 240px);
+    }
+
+    .dashboard-container {
+        grid-template-columns: var(--sidebar-width) 1fr;
+    }
+
+    .sidebar {
+        height: 100vh;
+        overflow-y: auto;
+        position: sticky;
+        top: 0;
     }
 
     .header {
@@ -370,26 +381,37 @@ body {
     .content {
         padding: var(--padding-medium);
     }
+
+    .hamburger {
+        display: none;
+    }
 }
 
 /* ========== RESPONSIVE: LANDSCAPE TABLET (768px - 1024px) ========== */
-@media (max-width: 1024px) and (min-width: 600px) {
+@media (max-width: 1024px) and (min-width: 768px) {
     :root {
-        --sidebar-width: clamp(160px, 15vw, 200px);
+        --sidebar-width: clamp(180px, 18vw, 220px);
     }
 
     .dashboard-container {
         grid-template-columns: var(--sidebar-width) 1fr;
     }
 
+    .sidebar {
+        height: 100vh;
+        overflow-y: auto;
+        position: sticky;
+        top: 0;
+    }
+
     .metrics-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 1rem;
     }
 
     .hero-section {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        text-align: left;
     }
 
     .nav-menu {
@@ -397,34 +419,31 @@ body {
     }
 
     .brand {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
     }
 }
 
 /* ========== RESPONSIVE: SMALL SCREENS (600px - 767px) ========== */
 @media (max-width: 767px) {
     .dashboard-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto 1fr;
+        grid-template-columns: 160px 1fr;
     }
 
     .sidebar {
-        grid-column: 1;
-        grid-row: 2;
-        height: auto;
-        max-height: none;
-        overflow-y: visible;
-        position: static;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-        width: 100%;
+        height: 100vh;
+        overflow-y: auto;
+        position: sticky;
+        top: 0;
+        border-right: 1px solid var(--border-color);
+        border-bottom: none;
+        width: 160px;
         padding: var(--padding-small);
     }
 
     .nav {
         flex: 1;
         min-height: auto;
-        overflow: visible;
+        overflow-y: auto;
     }
 
     .nav-menu {
@@ -433,16 +452,15 @@ body {
     }
 
     .main-content {
-        grid-column: 1;
-        grid-row: 3;
+        overflow-y: auto;
     }
 
     .sidebar.hidden {
-        display: none;
+        display: block;
     }
 
     .hamburger {
-        display: block;
+        display: none;
     }
 
     .header {
@@ -483,18 +501,20 @@ body {
     }
 
     .dashboard-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 140px 1fr;
     }
 
     .sidebar {
-        height: auto;
-        max-height: none;
-        overflow: visible;
+        height: 100vh;
+        overflow-y: auto;
+        position: sticky;
+        top: 0;
+        width: 140px;
     }
 
     .nav {
         flex: 1;
-        overflow: visible;
+        overflow-y: auto;
     }
 
     .nav-menu {
@@ -505,6 +525,50 @@ body {
     .nav-link {
         padding: 0.5rem 0.75rem;
         margin: 0.1rem 0.25rem;
+        font-size: 0.75rem;
+        white-space: normal;
+    }
+
+    .brand {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .brand-icon {
+        width: clamp(32px, 6vw, 36px);
+        height: clamp(32px, 6vw, 36px);
+        font-size: 1rem;
+    }
+
+    .brand-text h2 {
+        font-size: 0.75rem;
+    }
+
+    .brand-text p {
+        font-size: 0.6rem;
+    }
+
+    .user-section {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.65rem;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .sign-out-btn {
+        margin-left: auto;
+    }
+
+    .hamburger {
+        display: none;
     }
 
     .header {
@@ -547,16 +611,6 @@ body {
     .metrics-grid {
         gap: 0.75rem;
     }
-
-    .brand {
-        padding: 0.5rem;
-        gap: 0.5rem;
-    }
-
-    .user-section {
-        padding: 0.5rem;
-        gap: 0.5rem;
-    }
 }
 
 /* ========== RESPONSIVE: PHONE (max-width: 480px) ========== */
@@ -567,31 +621,80 @@ body {
     }
 
     .dashboard-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 120px 1fr;
     }
 
     .sidebar {
-        height: auto;
-        max-height: none;
-        overflow: visible;
-        padding: 0.5rem;
+        height: 100vh;
+        overflow-y: auto;
+        position: sticky;
+        top: 0;
+        width: 120px;
+        padding: 0.35rem 0.25rem;
     }
 
     .nav {
         flex: 1;
-        overflow: visible;
-        min-height: auto;
+        overflow-y: auto;
     }
 
     .nav-menu {
-        gap: 0.2rem;
-        padding: 0.25rem 0;
+        gap: 0.15rem;
+        padding: 0.2rem 0;
     }
 
     .nav-link {
-        padding: 0.5rem 0.75rem;
-        margin: 0.1rem 0.25rem;
+        padding: 0.4rem 0.5rem;
+        margin: 0.08rem 0.15rem;
+        font-size: 0.7rem;
+        white-space: normal;
+        line-height: 1.3;
+    }
+
+    .brand {
+        padding: 0.4rem;
+        gap: 0.4rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .brand-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+    .brand-text h2 {
+        font-size: 0.65rem;
+    }
+
+    .brand-text p {
+        font-size: 0.55rem;
+    }
+
+    .user-section {
+        padding: 0.4rem;
+        gap: 0.3rem;
+    }
+
+    .user-avatar {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+        flex-shrink: 0;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .sign-out-btn {
         font-size: 0.8rem;
+        padding: 0.15rem;
+    }
+
+    .hamburger {
+        display: none;
     }
 
     .header {
@@ -637,23 +740,5 @@ body {
 
     .metrics-grid {
         gap: 0.5rem;
-    }
-
-    .brand-text h2 {
-        font-size: 0.8rem;
-    }
-
-    .user-avatar {
-        width: 28px;
-        height: 28px;
-        font-size: 0.7rem;
-    }
-
-    .user-info h3 {
-        font-size: 0.7rem;
-    }
-
-    .sign-out-btn {
-        font-size: 0.9rem;
     }
 }
