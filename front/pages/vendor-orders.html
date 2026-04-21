@@ -299,51 +299,26 @@
             .nav {
                 flex: 1;
                 overflow-y: auto;
-            }
-
-            /* GROUP */
-            .nav-group {
-                margin-top: 0.5rem;
-            }
-
-            .nav-group-toggle {
-                width: 100%;
-                background: none;
-                border: none;
-                color: #94a3b8;
-                padding: 0.4rem 0.5rem;
-                font-size: 0.75rem;
-                text-transform: uppercase;
                 display: flex;
-                justify-content: space-between;
-                cursor: pointer;
+                flex-direction: column;
             }
 
-            .nav-group-toggle:hover {
-                color: #fff;
-            }
-
-            /* ARROW ANIMATION */
-            .arrow {
-                transition: transform 0.25s ease;
-            }
-
-            .nav-group.open .arrow {
-                transform: rotate(180deg);
-            }
-
-            /* COLLAPSE ANIMATION */
+            /* MENU */
             .nav-menu {
                 list-style: none;
                 padding-left: 0;
                 margin: 0;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
+                display: block;
             }
 
-            .nav-group.open .nav-menu {
-                max-height: 300px;
+            .nav-menu:first-of-type {
+                flex: 1;
+            }
+
+            .logout-menu {
+                margin-top: auto;
+                border-top: 1px solid #1e293b;
+                padding-top: 0.5rem;
             }
 
             /* LINKS */
@@ -502,34 +477,15 @@
 
             <!-- NAV -->
             <nav class="nav">
-
-                <!-- MAIN -->
-                <div class="nav-group open">
-                    <button class="nav-group-toggle">
-                        Main
-                        <span class="arrow">⌄</span>
-                    </button>
-
-                    <ul class="nav-menu">
-                        <li><a href="vendor-dashboard.html" class="nav-link">Dashboard</a></li>
-                        <li><a href="vendor-products.html" class="nav-link">Products</a></li>
-                        <li><a href="vendor-orders.html" class="nav-link active">Orders</a></li>
-                        <li><a href="vendor-settings.html" class="nav-link">Settings</a></li>
-                    </ul>
-                </div>
-
-                <!-- ACCOUNT -->
-                <div class="nav-group">
-                    <button class="nav-group-toggle">
-                        Account
-                        <span class="arrow">⌄</span>
-                    </button>
-
-                    <ul class="nav-menu">
-                        <li><a href="#" class="nav-link" onclick="logoutVendor(); return false;">Logout</a></li>
-                    </ul>
-                </div>
-
+                <ul class="nav-menu">
+                    <li><a href="vendor-dashboard.html" class="nav-link">Dashboard</a></li>
+                    <li><a href="vendor-products.html" class="nav-link">Products</a></li>
+                    <li><a href="vendor-orders.html" class="nav-link active">Orders</a></li>
+                    <li><a href="vendor-settings.html" class="nav-link">Settings</a></li>
+                </ul>
+                <ul class="nav-menu logout-menu">
+                    <li><a href="#" class="nav-link" onclick="logoutVendor(); return false;">Logout</a></li>
+                </ul>
             </nav>
 
             <!-- PROFILE (BOTTOM) -->
@@ -738,14 +694,6 @@
         } else {
             loadProfilePicture();
         }
-
-        // NAV GROUP TOGGLE FUNCTIONALITY
-        document.querySelectorAll(".nav-group-toggle").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const group = btn.parentElement;
-                group.classList.toggle("open");
-            });
-        });
 
         // ACTIVE LINK TRACKING
         document.querySelectorAll(".nav-link").forEach(link => {
