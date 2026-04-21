@@ -346,10 +346,10 @@
                 <div class="settings-grid">
                     <div class="settings-sidebar">
                         <ul class="settings-nav">
-                            <li><button class="active" onclick="showTab('profile')">Profile</button></li>
-                            <li><button onclick="showTab('business')">Business</button></li>
-                            <li><button onclick="showTab('payment')">Payment</button></li>
-                            <li><button onclick="showTab('security')">Security</button></li>
+                            <li><button class="active" onclick="showTab('profile', this)">Profile</button></li>
+                            <li><button onclick="showTab('business', this)">Business</button></li>
+                            <li><button onclick="showTab('payment', this)">Payment</button></li>
+                            <li><button onclick="showTab('security', this)">Security</button></li>
                         </ul>
                     </div>
 
@@ -415,7 +415,7 @@
                                 <label class="form-label">Description</label>
                                 <textarea class="form-input" rows="4" placeholder="Describe your business..."></textarea>
                             </div>
-                            <button class="btn btn-primary">Save Changes</button>
+                            <button class="btn btn-primary" onclick="saveBusinessDetails()">Save Changes</button>
                         </div>
 
                         <!-- Payment Tab -->
@@ -433,7 +433,7 @@
                                 <label class="form-label">Bank Name</label>
                                 <input type="text" class="form-input" placeholder="Your bank">
                             </div>
-                            <button class="btn btn-primary">Save Payment Details</button>
+                            <button class="btn btn-primary" onclick="savePaymentDetails()">Save Payment Details</button>
                         </div>
 
                         <!-- Security Tab -->
@@ -451,8 +451,8 @@
                                 <label class="form-label">Confirm Password</label>
                                 <input type="password" class="form-input" placeholder="Confirm new password">
                             </div>
-                            <button class="btn btn-primary">Change Password</button>
-                            <button class="btn btn-secondary" style="margin-left: 1rem;">Enable 2FA</button>
+                            <button class="btn btn-primary" onclick="changePassword()">Change Password</button>
+                            <button class="btn btn-secondary" style="margin-left: 1rem;" onclick="enable2FA()">Enable 2FA</button>
                         </div>
                     </div>
                 </div>
@@ -463,7 +463,7 @@
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/vendor-dashboard.js"></script>
     <script>
-        function showTab(tabName) {
+        function showTab(tabName, button) {
             // Hide all tabs
             document.querySelectorAll('.settings-section').forEach(tab => {
                 tab.style.display = 'none';
@@ -476,7 +476,7 @@
             document.querySelectorAll('.settings-nav button').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            button.classList.add('active');
         }
 
         function toggleSidebar() {
@@ -679,6 +679,130 @@
                 confirmButtonColor: '#1d7c3a',
                 timer: 2000,
                 timerProgressBar: true
+            });
+        }
+
+        // Save Business Details
+        function saveBusinessDetails() {
+            const businessName = document.querySelectorAll('#business-tab .form-input')[0].value;
+            const businessType = document.querySelectorAll('#business-tab .form-input')[1].value;
+            const description = document.querySelectorAll('#business-tab .form-input')[2].value;
+            
+            if (!businessName || businessType === 'Select type') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields',
+                    text: 'Please fill in all required fields',
+                    confirmButtonColor: '#1d7c3a'
+                });
+                return;
+            }
+            
+            const userData = JSON.parse(localStorage.getItem('user'));
+            userData.businessName = businessName;
+            userData.businessType = businessType;
+            userData.businessDescription = description;
+            localStorage.setItem('user', JSON.stringify(userData));
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved!',
+                text: 'Your business details have been updated successfully!',
+                confirmButtonColor: '#1d7c3a',
+                timer: 2000,
+                timerProgressBar: true
+            });
+        }
+
+        // Save Payment Details
+        function savePaymentDetails() {
+            const accountName = document.querySelectorAll('#payment-tab .form-input')[0].value;
+            const accountNumber = document.querySelectorAll('#payment-tab .form-input')[1].value;
+            const bankName = document.querySelectorAll('#payment-tab .form-input')[2].value;
+            
+            if (!accountName || !accountNumber || !bankName) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields',
+                    text: 'Please fill in all required fields',
+                    confirmButtonColor: '#1d7c3a'
+                });
+                return;
+            }
+            
+            const userData = JSON.parse(localStorage.getItem('user'));
+            userData.accountName = accountName;
+            userData.accountNumber = accountNumber;
+            userData.bankName = bankName;
+            localStorage.setItem('user', JSON.stringify(userData));
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved!',
+                text: 'Your payment details have been updated successfully!',
+                confirmButtonColor: '#1d7c3a',
+                timer: 2000,
+                timerProgressBar: true
+            });
+        }
+
+        // Change Password
+        function changePassword() {
+            const currentPassword = document.querySelectorAll('#security-tab .form-input')[0].value;
+            const newPassword = document.querySelectorAll('#security-tab .form-input')[1].value;
+            const confirmPassword = document.querySelectorAll('#security-tab .form-input')[2].value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields',
+                    text: 'Please fill in all password fields',
+                    confirmButtonColor: '#1d7c3a'
+                });
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Password Mismatch',
+                    text: 'New passwords do not match',
+                    confirmButtonColor: '#1d7c3a'
+                });
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Weak Password',
+                    text: 'Password must be at least 6 characters long',
+                    confirmButtonColor: '#1d7c3a'
+                });
+                return;
+            }
+            
+            // Clear password fields
+            document.querySelectorAll('#security-tab .form-input').forEach(input => input.value = '');
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Your password has been changed successfully!',
+                confirmButtonColor: '#1d7c3a',
+                timer: 2000,
+                timerProgressBar: true
+            });
+        }
+
+        // Enable 2FA
+        function enable2FA() {
+            Swal.fire({
+                icon: 'info',
+                title: '2FA Setup',
+                text: 'Two-Factor Authentication setup will be available soon. Please check back later.',
+                confirmButtonColor: '#1d7c3a',
+                confirmButtonText: 'Understood'
             });
         }
     </script>
