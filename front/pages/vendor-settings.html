@@ -714,8 +714,9 @@
                 margin-bottom: 0.5rem;
             }
 
-            .nav-section:first-of-type {
-                margin-top: 0;
+            .nav-section:last-of-type {
+                margin-top: auto;
+                margin-bottom: 0;
             }
 
             .nav-link {
@@ -742,12 +743,11 @@
             }
 
             .user-section {
-                margin-top: auto;
                 flex-shrink: 0;
-                padding-top: 0.75rem;
-                padding-bottom: 0.5rem;
-                border-top: 1px solid var(--border-color);
+                padding: 0.75rem;
+                margin-top: 0;
                 font-size: 0.75rem;
+                border-bottom: 1px solid var(--border-color);
             }
 
             .user-avatar {
@@ -843,13 +843,6 @@
                 </ul>
             </nav>
 
-            <nav class="nav-section">
-                <div class="nav-label">Account</div>
-                <ul class="nav-menu">
-                    <li><a href="#" class="nav-link" onclick="logoutVendor(); return false;"><span class="nav-icon">↪</span> Logout</a></li>
-                </ul>
-            </nav>
-
             <div class="user-section">
                 <div class="user-avatar" id="userInitial">V</div>
                 <div class="user-info">
@@ -857,6 +850,13 @@
                     <p id="userEmail">vendor@torch.com</p>
                 </div>
             </div>
+
+            <nav class="nav-section">
+                <div class="nav-label">Account</div>
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link" onclick="logoutVendor(); return false;"><span class="nav-icon">↪</span> Logout</a></li>
+                </ul>
+            </nav>
         </aside>
 
         <!-- MAIN CONTENT -->
