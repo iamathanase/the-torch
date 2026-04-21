@@ -315,6 +315,11 @@
                 gap: 0.25rem;
             }
 
+            .nav-item {
+                display: list-item;
+                list-style: none;
+            }
+
             .nav-section {
                 flex-shrink: 0;
                 margin-bottom: 0.5rem;
@@ -471,17 +476,17 @@
             <nav class="nav-section">
                 <div class="nav-label">MAIN</div>
                 <ul class="nav-menu">
-                    <li><a href="vendor-dashboard.html" class="nav-link"><span class="nav-icon">⊞</span> Dashboard</a></li>
-                    <li><a href="vendor-products.html" class="nav-link active"><span class="nav-icon">◻</span> Products</a></li>
-                    <li><a href="vendor-orders.html" class="nav-link"><span class="nav-icon">⊟</span> Orders</a></li>
-                    <li><a href="vendor-settings.html" class="nav-link"><span class="nav-icon">⚙</span> Settings</a></li>
+                    <li class="nav-item"><a href="vendor-dashboard.html" class="nav-link"><span class="nav-icon">⊞</span> Dashboard</a></li>
+                    <li class="nav-item"><a href="vendor-products.html" class="nav-link active"><span class="nav-icon">◻</span> Products</a></li>
+                    <li class="nav-item"><a href="vendor-orders.html" class="nav-link"><span class="nav-icon">⊟</span> Orders</a></li>
+                    <li class="nav-item"><a href="vendor-settings.html" class="nav-link"><span class="nav-icon">⚙</span> Settings</a></li>
                 </ul>
             </nav>
 
             <nav class="nav-section">
                 <div class="nav-label">ACCOUNT</div>
                 <ul class="nav-menu">
-                    <li><a href="#" class="nav-link" onclick="logoutVendor(); return false;"><span class="nav-icon">↪</span> Logout</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link" onclick="logoutVendor(); return false;"><span class="nav-icon">↪</span> Logout</a></li>
                 </ul>
             </nav>
         </aside>
