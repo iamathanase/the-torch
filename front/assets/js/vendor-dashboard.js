@@ -100,6 +100,71 @@ function setupProductsSearch() {
 
 // Open add product modal
 function addProduct() {
+  Swal.fire({
+    title: 'Add Product',
+    html: `
+      <input type="text" id="productName" class="swal2-input" placeholder="Product Name">
+      <select id="productCategory" class="swal2-input" style="display: block; margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; width: 100%; box-sizing: border-box;">
+        <option>Equipment</option>
+        <option>Fertilizer</option>
+      </select>
+      <input type="number" id="productPrice" class="swal2-input" placeholder="Price (₵)" step="0.01">
+      <input type="number" id="productStock" class="swal2-input" placeholder="Stock (units)" min="0">
+    `,
+    confirmButtonText: 'Add Product',
+    showCancelButton: true,
+    preConfirm: () => {
+      const name = document.getElementById('productName').value;
+      const category = document.getElementById('productCategory').value;
+      const price = parseFloat(document.getElementById('productPrice').value);
+      const stock = parseInt(document.getElementById('productStock').value);
+      
+      if (!name) {
+        Swal.showValidationMessage('Please enter product name');
+        return;
+      }
+      if (isNaN(price)) {
+        Swal.showValidationMessage('Please enter valid price');
+        return;
+      }
+      if (isNaN(stock)) {
+        Swal.showValidationMessage('Please enter valid stock');
+        return;
+      }
+      
+      return { name, category, price, stock };
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const { name, category, price, stock } = result.value;
+      const products = getAllProducts();
+      const newId = Math.max(...products.map(p => p.id), 0) + 1;
+      
+      products.push({
+        id: newId,
+        name,
+        category,
+        price,
+        stock,
+        status: 'Active',
+        sales: 0
+      });
+      
+      saveProducts(products);
+      renderProductsTable();
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Product Added',
+        text: `${name} has been added successfully!`,
+        confirmButtonColor: '#1d7c3a'
+      });
+    }
+  });
+}
+
+// Old implementation - keeping structure
+function addProductOld() {
   const name = prompt('Product Name:');
   if (!name) return;
   
@@ -107,10 +172,10 @@ function addProduct() {
   if (!category) return;
   
   const price = parseFloat(prompt('Price (₵):'));
-  if (isNaN(price)) { alert('Invalid price'); return; }
+  if (isNaN(price)) { Swal.fire('Error', 'Invalid price', 'error'); return; }
   
   const stock = parseInt(prompt('Stock (units):'));
-  if (isNaN(stock)) { alert('Invalid stock'); return; }
+  if (isNaN(stock)) { Swal.fire('Error', 'Invalid stock', 'error'); return; }
   
   const products = getAllProducts();
   const newId = Math.max(...products.map(p => p.id), 0) + 1;
@@ -130,41 +195,94 @@ function addProduct() {
   alert('Product added successfully!');
 }
 
-// Edit product
+// Edit product with SweetAlert
 function editProduct(id) {
   const products = getAllProducts();
   const product = products.find(p => p.id === id);
   
   if (!product) return;
   
-  const name = prompt('Product Name:', product.name);
-  if (!name) return;
-  
-  const price = parseFloat(prompt('Price (₵):', product.price));
-  if (isNaN(price)) { alert('Invalid price'); return; }
-  
-  const stock = parseInt(prompt('Stock (units):', product.stock));
-  if (isNaN(stock)) { alert('Invalid stock'); return; }
-  
-  product.name = name;
-  product.price = price;
-  product.stock = stock;
-  
-  saveProducts(products);
-  renderProductsTable();
-  alert('Product updated successfully!');
+  Swal.fire({
+    title: 'Edit Product',
+    html: `
+      <input type="text" id="editProductName" class="swal2-input" placeholder="Product Name" value="${product.name}">
+      <input type="number" id="editProductPrice" class="swal2-input" placeholder="Price (₵)" value="${product.price}" step="0.01" min="0" style="margin-top: 10px;">
+      <input type="number" id="editProductStock" class="swal2-input" placeholder="Stock (units)" value="${product.stock}" min="0" style="margin-top: 10px;">
+    `,
+    confirmButtonText: 'Update',
+    confirmButtonColor: '#1d7c3a',
+    cancelButtonColor: '#e74c3c',
+    showCancelButton: true,
+    preConfirm: () => {
+      const name = document.getElementById('editProductName').value;
+      const price = parseFloat(document.getElementById('editProductPrice').value);
+      const stock = parseInt(document.getElementById('editProductStock').value);
+      
+      if (!name) {
+        Swal.showValidationMessage('Please enter product name');
+        return;
+      }
+      if (isNaN(price) || price < 0) {
+        Swal.showValidationMessage('Please enter valid price');
+        return;
+      }
+      if (isNaN(stock) || stock < 0) {
+        Swal.showValidationMessage('Please enter valid stock');
+        return;
+      }
+      
+      return { name, price, stock };
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const { name, price, stock } = result.value;
+      product.name = name;
+      product.price = price;
+      product.stock = stock;
+      
+      saveProducts(products);
+      renderProductsTable();
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Updated!',
+        text: 'Product has been updated successfully!',
+        confirmButtonColor: '#1d7c3a',
+        timer: 2000,
+        timerProgressBar: true
+      });
+    }
+  });
 }
 
-// Delete product
+// Delete product with SweetAlert
 function deleteProduct(id) {
-  if (!confirm('Are you sure you want to delete this product?')) return;
-  
-  let products = getAllProducts();
-  products = products.filter(p => p.id !== id);
-  
-  saveProducts(products);
-  renderProductsTable();
-  alert('Product deleted successfully!');
+  Swal.fire({
+    title: 'Delete Product?',
+    text: 'This action cannot be undone!',
+    icon: 'warning',
+    confirmButtonText: 'Delete',
+    confirmButtonColor: '#e74c3c',
+    cancelButtonColor: '#1d7c3a',
+    showCancelButton: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      let products = getAllProducts();
+      products = products.filter(p => p.id !== id);
+      
+      saveProducts(products);
+      renderProductsTable();
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Deleted!',
+        text: 'Product has been deleted successfully!',
+        confirmButtonColor: '#1d7c3a',
+        timer: 2000,
+        timerProgressBar: true
+      });
+    }
+  });
 }
 
 // ============================================
@@ -266,17 +384,32 @@ function setupOrdersSearch() {
   }
 }
 
-// View order details
+// View order details with SweetAlert
 function viewOrderDetails(orderId) {
   const orders = getAllOrders();
   const order = orders.find(o => o.id === orderId);
   
   if (!order) return;
   
-  alert(`Order Details:\n\nOrder ID: ${order.id}\nCustomer: ${order.customer}\nItems: ${order.items}\nAmount: ₵${order.amount.toLocaleString()}\nDate: ${order.date}\nStatus: ${order.status}`);
+  Swal.fire({
+    title: 'Order Details',
+    html: `
+      <div style="text-align: left; padding: 20px; background: rgba(29, 124, 58, 0.05); border-radius: 8px;">
+        <p><strong>Order ID:</strong> ${order.id}</p>
+        <p><strong>Customer:</strong> ${order.customer}</p>
+        <p><strong>Items:</strong> ${order.items}</p>
+        <p><strong>Amount:</strong> ₵${order.amount.toLocaleString()}</p>
+        <p><strong>Date:</strong> ${order.date}</p>
+        <p><strong>Status:</strong> <span style="background: rgba(29, 124, 58, 0.2); padding: 4px 8px; border-radius: 4px; color: #1d7c3a; font-weight: bold;">${order.status}</span></p>
+      </div>
+    `,
+    confirmButtonText: 'Close',
+    confirmButtonColor: '#1d7c3a',
+    icon: 'info'
+  });
 }
 
-// Update order status
+// Update order status with SweetAlert
 function updateOrderStatus(orderId) {
   const orders = getAllOrders();
   const order = orders.find(o => o.id === orderId);
@@ -284,17 +417,44 @@ function updateOrderStatus(orderId) {
   if (!order) return;
   
   const statuses = ['Pending', 'Processing', 'Shipped', 'Delivered'];
-  const currentIndex = statuses.indexOf(order.status);
-  const newStatus = prompt(`Current Status: ${order.status}\n\nAvailable Status:\n${statuses.join('\n')}\n\nEnter new status:`);
   
-  if (newStatus && statuses.includes(newStatus)) {
-    order.status = newStatus;
-    saveOrders(orders);
-    renderOrdersTable();
-    alert('Order status updated successfully!');
-  } else if (newStatus) {
-    alert('Invalid status. Please use one of the available options.');
-  }
+  Swal.fire({
+    title: 'Update Order Status',
+    html: `
+      <p style="margin-bottom: 15px;">Current Status: <strong style="color: #1d7c3a;">${order.status}</strong></p>
+      <select id="newStatus" class="swal2-input" style="display: block; padding: 10px; border: 1px solid #ddd; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit;">
+        ${statuses.map(s => `<option value="${s}" ${s === order.status ? 'selected' : ''}>${s}</option>`).join('')}
+      </select>
+    `,
+    confirmButtonText: 'Update',
+    confirmButtonColor: '#1d7c3a',
+    cancelButtonColor: '#e74c3c',
+    showCancelButton: true,
+    preConfirm: () => {
+      const newStatus = document.getElementById('newStatus').value;
+      if (!newStatus) {
+        Swal.showValidationMessage('Please select a status');
+        return;
+      }
+      return newStatus;
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const newStatus = result.value;
+      order.status = newStatus;
+      saveOrders(orders);
+      renderOrdersTable();
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Status Updated!',
+        text: `Order status changed to ${newStatus}!`,
+        confirmButtonColor: '#1d7c3a',
+        timer: 2000,
+        timerProgressBar: true
+      });
+    }
+  });
 }
 
 // ============================================

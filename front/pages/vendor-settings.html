@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Vendor Dashboard</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -525,10 +526,20 @@
         });
 
         function logoutVendor() {
-            if (confirm('Sign out?')) {
-                ['authToken', 'userRole', 'userId', 'user', 'cart'].forEach(key => localStorage.removeItem(key));
-                window.location.href = '../index.html';
-            }
+            Swal.fire({
+                title: 'Sign Out?',
+                text: 'You will be logged out of your account',
+                icon: 'warning',
+                confirmButtonText: 'Yes, Sign Out',
+                confirmButtonColor: '#e74c3c',
+                cancelButtonColor: '#1d7c3a',
+                showCancelButton: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    ['authToken', 'userRole', 'userId', 'user', 'cart'].forEach(key => localStorage.removeItem(key));
+                    window.location.href = '../index.html';
+                }
+            });
         }
 
         // Theme Toggle Functions
@@ -642,7 +653,12 @@
             const phone = document.getElementById('phoneField').value;
             
             if (!firstName || !lastName) {
-                alert('Please fill in all required fields');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields',
+                    text: 'Please fill in all required fields',
+                    confirmButtonColor: '#1d7c3a'
+                });
                 return;
             }
             
@@ -656,7 +672,14 @@
             document.getElementById('userName').textContent = firstName + ' ' + lastName;
             document.getElementById('userInitial').textContent = firstName.charAt(0).toUpperCase();
             
-            alert('Profile updated successfully!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved!',
+                text: 'Your profile has been updated successfully!',
+                confirmButtonColor: '#1d7c3a',
+                timer: 2000,
+                timerProgressBar: true
+            });
         }
     </script>
 </body>
