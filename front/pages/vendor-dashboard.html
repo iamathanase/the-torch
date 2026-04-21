@@ -46,7 +46,7 @@
 
         .dashboard-container {
             display: grid;
-            grid-template-columns: 280px 1fr;
+            grid-template-columns: 260px 1fr;
             min-height: 100vh;
         }
 
@@ -54,7 +54,7 @@
         .sidebar {
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border-color);
-            padding: 2rem 1.5rem;
+            padding: 1rem 0.5rem;
             overflow-y: auto;
             position: sticky;
             top: 0;
@@ -90,10 +90,10 @@
         }
 
         .brand-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #1d7c3a 0%, #27ae60 100%);
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            background: #1d7c3a;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -149,31 +149,25 @@
         }
 
         .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.875rem 1rem;
-            color: var(--text-secondary);
-            text-decoration: none;
+            display: block;
+            padding: 0.75rem 1rem;
+            margin: 0.25rem 0.5rem;
             border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-            font-weight: 500;
-            position: relative;
+            font-size: 0.9rem;
+            color: #b0b8c1;
+            text-decoration: none;
+            transition: all 0.2s ease;
         }
 
         .nav-link:hover {
             background: rgba(29, 124, 58, 0.1);
             color: #27ae60;
-            padding-left: 1.25rem;
         }
 
         .nav-link.active {
-            background: rgba(29, 124, 58, 0.15);
+            background: #ffffff;
             color: #1d7c3a;
             font-weight: 600;
-            border-left: 3px solid #1d7c3a;
-            padding-left: calc(1rem - 3px);
         }
 
         .nav-icon {
@@ -187,10 +181,9 @@
         }
 
         .user-section {
-            background: rgba(29, 124, 58, 0.1);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
+            margin-top: auto;
+            padding: 1rem 0.5rem;
+            border-top: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -199,12 +192,12 @@
         .user-avatar {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #1d7c3a 0%, #27ae60 100%);
-            border-radius: 8px;
+            background: #ffc107;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #1a1a1a;
             font-weight: 700;
             font-size: 1rem;
             flex-shrink: 0;
@@ -221,6 +214,21 @@
             font-size: 0.75rem;
             color: var(--text-secondary);
             margin: 0.25rem 0 0 0;
+        }
+
+        .sign-out-btn {
+            background: none;
+            border: none;
+            color: #b0b8c1;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .sign-out-btn:hover {
+            color: #27ae60;
         }
 
         /* MAIN CONTENT */
@@ -1471,7 +1479,6 @@
                 <button class="sign-out-btn" onclick="logoutVendor()">↪</button>
             </div>
 
-        </aside>
         </aside>
 
         <!-- MAIN CONTENT -->
