@@ -1,7 +1,7 @@
-# FarmDialogue Project Status
+# thetorch Project Status
 
 ## Overview
-- **Project:** FarmDialogue - Agricultural Platform
+- **Project:** thetorch - Agricultural Platform
 - **Version:** 1.0.0
 - **Status:** 🟡 In Active Development
 - **Last Updated:** March 25, 2026
@@ -49,7 +49,7 @@
 ## Project Structure
 
 ```
-farmdialogue/
+thetorch/
 ├── front/                    # Frontend (Responsive Web)
 │   ├── index.html           # Homepage
 │   ├── login.html           # Login page
@@ -124,7 +124,7 @@ farmdialogue/
 1. Clone repository
 2. Create database: `mysql -u root -p < database/schema.sql`
 3. Update `back/config.php` with DB credentials
-4. Access via `http://localhost/farmdialogue/front/`
+4. Access via `http://localhost/thetorch/front/`
 
 ## Performance Targets
 
@@ -228,10 +228,10 @@ farmdialogue/
 
 ## Team Contacts
 
-- **Scrum Master:** [Name] - scrum@farmdialogue.com
-- **Product Owner:** [Name] - product@farmdialogue.com
-- **Tech Lead:** [Name] - tech@farmdialogue.com
-- **QA Lead:** [Name] - qa@farmdialogue.com
+- **Scrum Master:** [Name] - scrum@thetorch.com
+- **Product Owner:** [Name] - product@thetorch.com
+- **Tech Lead:** [Name] - tech@thetorch.com
+- **QA Lead:** [Name] - qa@thetorch.com
 
 ## Resources
 

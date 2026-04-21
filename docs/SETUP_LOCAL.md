@@ -1,4 +1,4 @@
-# FarmDialogue - Local Development Setup Guide
+# thetorch - Local Development Setup Guide
 
 ## Quick Start (Windows)
 
@@ -17,31 +17,31 @@
 4. You should see green checkmarks ✅
 
 #### Step 3: Setup Project
-1. Copy the `farmdialogue` folder to:
+1. Copy the `thetorch` folder to:
    ```
-   C:\xampp\htdocs\farmdialogue
+   C:\xampp\htdocs\thetorch
    ```
 
 #### Step 4: Create Database
 1. Open your browser and go to: `http://localhost/phpmyadmin`
 2. Click **New** on the left sidebar
-3. Enter database name: `farmdialogue`
+3. Enter database name: `thetorch`
 4. Click **Create**
 5. Once created, click the database name
 6. Go to **Import** tab
 7. Click **Choose File** and select:
    ```
-   C:\xampp\htdocs\farmdialogue\database\schema.sql
+   C:\xampp\htdocs\thetorch\database\schema.sql
    ```
 8. Click **Import** (wait for success message)
 
 #### Step 5: Access Application
 Open your browser and visit:
 ```
-http://localhost/farmdialogue/front/
+http://localhost/thetorch/front/
 ```
 
-That's it! You should now see the FarmDialogue homepage. 🎉
+That's it! You should now see the thetorch homepage. 🎉
 
 ---
 
@@ -61,7 +61,7 @@ services:
       - ./:/var/www/html
     environment:
       - MYSQL_HOST=db
-      - MYSQL_DB=farmdialogue
+      - MYSQL_DB=thetorch
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root
 
@@ -69,7 +69,7 @@ services:
     image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=farmdialogue
+      - MYSQL_DATABASE=thetorch
     ports:
       - "3306:3306"
     volumes:
@@ -81,7 +81,7 @@ Then run:
 docker-compose up -d
 ```
 
-Access at: `http://localhost/farmdialogue/front/`
+Access at: `http://localhost/thetorch/front/`
 
 ---
 
@@ -90,9 +90,9 @@ Access at: `http://localhost/farmdialogue/front/`
 Similar to XAMPP:
 1. Download WAMP from: https://www.wampserver.com/
 2. Install and start services
-3. Copy project to `C:\wamp64\www\farmdialogue`
+3. Copy project to `C:\wamp64\www\thetorch`
 4. Setup database via phpMyAdmin at `http://localhost/phpmyadmin`
-5. Access at `http://localhost/farmdialogue/front/`
+5. Access at `http://localhost/thetorch/front/`
 
 ---
 
@@ -100,7 +100,7 @@ Similar to XAMPP:
 
 ### Port 80 Already in Use
 - Change Apache port in XAMPP Control Panel Config
-- Then access at: `http://localhost:8080/farmdialogue/front/`
+- Then access at: `http://localhost:8080/thetorch/front/`
 
 ### Database Connection Error
 - Verify MySQL is running (green checkmark in XAMPP)
@@ -108,7 +108,7 @@ Similar to XAMPP:
   - Host: `localhost`
   - User: `root`
   - Password: `` (empty for default XAMPP)
-  - Database: `farmdialogue`
+  - Database: `thetorch`
 
 ### Cannot Find `localhost/phpmyadmin`
 - Make sure Apache is running
@@ -135,7 +135,7 @@ Similar to XAMPP:
 
 ## What to Test First
 
-1. **Homepage:** `http://localhost/farmdialogue/front/`
+1. **Homepage:** `http://localhost/thetorch/front/`
    - Should see green & blue gradient design
    - Navigation works
 

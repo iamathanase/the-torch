@@ -1,8 +1,8 @@
-# FarmDialogue - Agile & Scrum Documentation
+# thetorch - Agile & Scrum Documentation
 
 ## Project Overview
 
-**Project Name:** FarmDialogue  
+**Project Name:** thetorch  
 **Version:** 1.0.0  
 **Start Date:** March 2026  
 **Status:** Active Development (Sprint 1)  
@@ -32,7 +32,7 @@
 #### US-001: User Registration
 **As a** new user  
 **I want to** create an account  
-**So that** I can access the FarmDialogue platform
+**So that** I can access the thetorch platform
 
 - **Acceptance Criteria:**
   - User can enter first name, last name, email, phone number

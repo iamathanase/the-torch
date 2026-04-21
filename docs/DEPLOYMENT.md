@@ -1,4 +1,4 @@
-# FarmDialogue Deployment Guide
+# thetorch Deployment Guide
 
 ## Deployment Fixed ✅
 
@@ -15,7 +15,7 @@ Error: Command "vite build" exited with 127
 **Root Cause:** 
 - Vercel was trying to build the project as a Node.js/Vite application
 - There was no `package.json` file
-- FarmDialogue is a static HTML/CSS/JS frontend site with PHP backend
+- thetorch is a static HTML/CSS/JS frontend site with PHP backend
 
 **Solution Implemented:**
 1. ✅ Created `package.json` with proper build scripts
@@ -29,7 +29,7 @@ Error: Command "vite build" exited with 127
 ### Frontend (Deployed to Vercel)
 - **Type:** Static HTML/CSS/JavaScript
 - **Directory:** `front/`
-- **Hosting:** Vercel (https://farmdialogue.vercel.app)
+- **Hosting:** Vercel (https://thetorch.vercel.app)
 - **Build:** No build step required
 
 ### Backend (Separate Deployment)
@@ -45,7 +45,7 @@ Error: Command "vite build" exited with 127
 ### Option 1: Automatic Deployment (Recommended)
 1. Push changes to GitHub `main` branch
 2. Vercel automatically builds and deploys
-3. Your site updates at `https://farmdialogue.vercel.app`
+3. Your site updates at `https://thetorch.vercel.app`
 
 ```bash
 git add .
@@ -60,7 +60,7 @@ vercel --prod
 ```
 
 ### Option 3: Redeploy Existing Commit
-Go to Vercel Dashboard → FarmDialogue → Deployments → Click "Redeploy" on existing commit
+Go to Vercel Dashboard → thetorch → Deployments → Click "Redeploy" on existing commit
 
 ---
 
@@ -99,7 +99,7 @@ Excludes unnecessary files from being deployed:
 ## Monitoring & Troubleshooting
 
 ### Check Deployment Status
-1. Go to: https://vercel.com/iamathanase/FarmDialogue
+1. Go to: https://vercel.com/iamathanase/thetorch
 2. Click "Deployments" tab
 3. View build logs for any issues
 
@@ -153,16 +153,16 @@ const API_URL = process.env.API_BACKEND_URL;
 
 ### DNS & Custom Domain
 1. Point domain to Vercel: https://vercel.com/docs/concepts/projects/domains
-2. Frontend: `farmdialogue.example.com` → Vercel
-3. Backend: `api.farmdialogue.example.com` → PHP Hosting
+2. Frontend: `thetorch.example.com` → Vercel
+3. Backend: `api.thetorch.example.com` → PHP Hosting
 
 ---
 
 ## Quick Links
 
-- 🌍 **Live Site:** https://farmdialogue.vercel.app
-- 📦 **GitHub:** https://github.com/iamathanase/FarmDialogue
-- 🚀 **Vercel Dashboard:** https://vercel.com/iamathanase/FarmDialogue
+- 🌍 **Live Site:** https://thetorch.vercel.app
+- 📦 **GitHub:** https://github.com/iamathanase/thetorch
+- 🚀 **Vercel Dashboard:** https://vercel.com/iamathanase/thetorch
 - 📚 **Vercel Docs:** https://vercel.com/docs
 
 ---

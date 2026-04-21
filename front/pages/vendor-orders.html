@@ -419,6 +419,24 @@
         } else {
             initTheme();
         }
+
+        // Load and display profile picture in sidebar
+        function loadProfilePicture() {
+            const savedProfilePicture = localStorage.getItem('vendor-profile-picture');
+            if (savedProfilePicture) {
+                const userInitial = document.getElementById('userInitial');
+                if (userInitial) {
+                    userInitial.innerHTML = `<img src="${savedProfilePicture}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+                }
+            }
+        }
+
+        // Load profile picture when page is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadProfilePicture);
+        } else {
+            loadProfilePicture();
+        }
     </script>
 </body>
 </html>
