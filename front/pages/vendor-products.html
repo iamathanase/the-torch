@@ -285,7 +285,7 @@
             <div class="content">
                 <div class="page-header">
                     <h2 class="page-title">All Products</h2>
-                    <button class="btn btn-primary" onclick="alert('Add Product feature coming soon')">+ Add Product</button>
+                    <button class="btn btn-primary" onclick="addProduct()">+ Add Product</button>
                 </div>
 
                 <div class="products-controls">
@@ -346,6 +346,7 @@
     </div>
 
     <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/vendor-dashboard.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('authToken');
