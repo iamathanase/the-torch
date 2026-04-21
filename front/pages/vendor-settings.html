@@ -714,11 +714,6 @@
                 margin-bottom: 0.5rem;
             }
 
-            .nav-section:last-of-type {
-                margin-top: auto;
-                margin-bottom: 0;
-            }
-
             .nav-link {
                 display: flex;
                 align-items: center;
@@ -740,6 +735,21 @@
 
             .nav-link.active {
                 padding-left: calc(0.6rem - 3px);
+            }
+
+            .nav-menu {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                margin-top: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                flex-grow: 1;
+            }
+
+            .nav-menu li:last-child {
+                margin-top: auto;
             }
 
             .user-section {
@@ -833,16 +843,6 @@
                 </div>
             </div>
 
-            <nav class="nav-section">
-                <div class="nav-label">Menu</div>
-                <ul class="nav-menu">
-                    <li><a href="vendor-dashboard.html" class="nav-link"><span class="nav-icon">⊞</span> Dashboard</a></li>
-                    <li><a href="vendor-products.html" class="nav-link"><span class="nav-icon">◻</span> Products</a></li>
-                    <li><a href="vendor-orders.html" class="nav-link"><span class="nav-icon">⊟</span> Orders</a></li>
-                    <li><a href="vendor-settings.html" class="nav-link active"><span class="nav-icon">⚙</span> Settings</a></li>
-                </ul>
-            </nav>
-
             <div class="user-section">
                 <div class="user-avatar" id="userInitial">V</div>
                 <div class="user-info">
@@ -851,12 +851,13 @@
                 </div>
             </div>
 
-            <nav class="nav-section">
-                <div class="nav-label">Account</div>
-                <ul class="nav-menu">
-                    <li><a href="#" class="nav-link" onclick="logoutVendor(); return false;"><span class="nav-icon">↪</span> Logout</a></li>
-                </ul>
-            </nav>
+            <ul class="nav-menu">
+                <li><a href="vendor-dashboard.html" class="nav-link"><span class="nav-icon">⊞</span> Dashboard</a></li>
+                <li><a href="vendor-products.html" class="nav-link"><span class="nav-icon">◻</span> Products</a></li>
+                <li><a href="vendor-orders.html" class="nav-link"><span class="nav-icon">⊟</span> Orders</a></li>
+                <li><a href="vendor-settings.html" class="nav-link active"><span class="nav-icon">⚙</span> Settings</a></li>
+                <li><a href="#" class="nav-link" onclick="logoutVendor(); return false;"><span class="nav-icon">↪</span> Logout</a></li>
+            </ul>
         </aside>
 
         <!-- MAIN CONTENT -->
