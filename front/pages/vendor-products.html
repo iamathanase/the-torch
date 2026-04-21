@@ -231,12 +231,79 @@
             .action-btn { margin-right: 0.25rem; font-size: 0.75rem; }
             .badge { padding: 0.25rem 0.4rem; font-size: 0.65rem; }
         }
+
+        /* Hamburger Menu Button */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hamburger:hover {
+            background: rgba(29, 124, 58, 0.1);
+            color: #1d7c3a;
+        }
+
+        @media (max-width: 1023px) {
+            .hamburger {
+                display: block;
+            }
+            
+            .sidebar {
+                display: none;
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 260px;
+                height: 100vh;
+                z-index: 1000;
+                box-shadow: 2px 0 12px rgba(0,0,0,0.3);
+                animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .sidebar.open {
+                display: flex;
+            }
+            
+            .sidebar::before {
+                content: '';
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+            
+            .sidebar.open::before {
+                display: block;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
         <!-- SIDEBAR -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="brand">
                 <div class="brand-icon">T</div>
                 <div class="brand-text">
@@ -274,9 +341,12 @@
         <!-- MAIN CONTENT -->
         <div class="main-content">
             <header class="header">
-                <div>
-                    <h1 class="header-title" style="margin-bottom: 0;">Products</h1>
-                    <p class="header-title" style="margin: 0.5rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem; font-weight: 400;">Manage your product inventory</p>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="hamburger" onclick="toggleSidebar()" title="Toggle menu">☰</button>
+                    <div>
+                        <h1 class="header-title" style="margin-bottom: 0;">Products</h1>
+                        <p class="header-title" style="margin: 0.5rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem; font-weight: 400;">Manage your product inventory</p>
+                    </div>
                 </div>
                 <div style="display: flex; gap: 1rem; align-items: center;">
                     <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
