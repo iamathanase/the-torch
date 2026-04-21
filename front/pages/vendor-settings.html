@@ -506,6 +506,28 @@
             document.getElementById('firstName').value = userData.firstName;
             document.getElementById('lastName').value = userData.lastName;
             document.getElementById('emailField').value = userData.email;
+            
+            // Load and populate business details
+            if (userData.businessName) {
+                document.querySelectorAll('#business-tab .form-input')[0].value = userData.businessName;
+            }
+            if (userData.businessType) {
+                document.querySelectorAll('#business-tab .form-input')[1].value = userData.businessType;
+            }
+            if (userData.businessDescription) {
+                document.querySelectorAll('#business-tab .form-input')[2].value = userData.businessDescription;
+            }
+            
+            // Load and populate payment details
+            if (userData.accountName) {
+                document.querySelectorAll('#payment-tab .form-input')[0].value = userData.accountName;
+            }
+            if (userData.accountNumber) {
+                document.querySelectorAll('#payment-tab .form-input')[1].value = userData.accountNumber;
+            }
+            if (userData.bankName) {
+                document.querySelectorAll('#payment-tab .form-input')[2].value = userData.bankName;
+            }
 
             // Close sidebar when clicking on a nav link
             const navLinks = document.querySelectorAll('.nav-link');
