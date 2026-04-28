@@ -1,27 +1,16 @@
-# Project-specific Git configuration
+# Vite
+dist/
+dist-ssr/
+*.local
+
+# Environment
+.env
 .env.local
 .env.*.local
 
-# PHP Configuration  
-config.local.php
-.htaccess
-
-# Database backups  
-database/backups/
-*.sql
-
-# Logs
-*.log
-logs/
-
-# Uploads and temporary files
-uploads/
-temp/
-.DS_Store
+# Dependencies
 node_modules/
-
-# Vercel
-.vercel/
+package-lock.json
 
 # IDE
 .vscode/
@@ -29,24 +18,32 @@ node_modules/
 *.swp
 *.swo
 *~
-tmp/
+*.sublime-workspace
 
-# IDE and Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-Thumbs.db
+# Build
+*.tsbuildinfo
+vite.config.d.ts
+tsconfig.tsbuildinfo
+tsconfig.node.tsbuildinfo
 
-# Node modules (if using build tools)
-node_modules/
-package-lock.json
+# Logs
+*.log
+logs/
 
 # OS files
 .DS_Store
-.gitkeep
+Thumbs.db
+
+# Temp/Backup
+temp/
+tmp/
+new/
+build.log
+dashboard.html
+
+# Vercel
+.vercel/
+.vercelignore
 
 # Environment files
 .env
