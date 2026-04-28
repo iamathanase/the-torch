@@ -60,7 +60,7 @@ html, body {
 
 /* ===== HAMBURGER BUTTON ===== */
 .hamburger {
-    display: block !important;
+    display: block;
     background: none;
     border: none;
     color: var(--text-primary, #ffffff);
