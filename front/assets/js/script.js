@@ -339,7 +339,7 @@ async function handleLogin(event) {
             
             // Store user object with full user data for search.js and other modules
             const userData = {
-                firstName: authData.firstName || 'User',
+                firstName: authData.userName || 'User',
                 lastName: authData.lastName || '',
                 email: email,
                 userId: authData.userId,
@@ -351,7 +351,7 @@ async function handleLogin(event) {
                 localStorage.setItem('rememberEmail', email);
             }
             
-            showToast('Login successful. Redirecting...', 'success', { duration: 2200 });
+            showToast('Login successful. Redirecting to your dashboard...', 'success', { duration: 2200 });
             
             // Redirect after brief delay based on user role
             setTimeout(() => {

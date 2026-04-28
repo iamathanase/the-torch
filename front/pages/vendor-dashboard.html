@@ -5,9 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendor Dashboard - The Torch</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <!-- EARLY AUTH CHECK - Must run before page renders -->
+    <script>
+        (function() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+        })();
+    </script>
     <style>
         :root {
             --primary: #1d7c3a;
@@ -42,40 +54,54 @@
     <div class="dashboard-container">
         <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
+            <!-- Top Section: Brand + Navigation -->
+            <div class="sidebar-top">
+                <!-- BRAND -->
+                <div class="brand">
+                    <div class="brand-icon">T</div>
+                    <div class="brand-text">
+                        <h2>The Torch</h2>
+                        <p>Ghana</p>
+                    </div>
+                </div>
 
-            <!-- BRAND -->
-            <div class="brand">
-                <div class="brand-icon">T</div>
-                <div class="brand-text">
-                    <h2>The Torch</h2>
-                    <p>Ghana</p>
+                <!-- NAV -->
+                <nav class="nav">
+                    <ul class="nav-menu">
+                        <li><a href="vendor-dashboard.html" class="nav-link active">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Dashboard</span>
+                        </a></li>
+                        <li><a href="vendor-products.html" class="nav-link">
+                            <span class="nav-icon">📦</span>
+                            <span class="nav-text">Products</span>
+                        </a></li>
+                        <li><a href="vendor-orders.html" class="nav-link">
+                            <span class="nav-icon">🛒</span>
+                            <span class="nav-text">Orders</span>
+                        </a></li>
+                        <li><a href="vendor-settings.html" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            <span class="nav-text">Settings</span>
+                        </a></li>
+                        <li><a href="#" class="nav-link logout-link" onclick="logoutVendor(); return false;">
+                            <span class="nav-icon">🚪</span>
+                            <span class="nav-text">Sign Out</span>
+                        </a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Bottom Section: User Profile -->
+            <div class="sidebar-bottom">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userInitial">V</div>
+                    <div class="user-info">
+                        <h3 id="userName">Vendor</h3>
+                        <p id="userEmail">vendor@torch.com</p>
+                    </div>
                 </div>
             </div>
-
-            <!-- NAV -->
-            <nav class="nav">
-                <ul class="nav-menu">
-                    <li><a href="vendor-dashboard.html" class="nav-link active">Dashboard</a></li>
-                    <li><a href="vendor-products.html" class="nav-link">Products</a></li>
-                    <li><a href="vendor-orders.html" class="nav-link">Orders</a></li>
-                    <li><a href="vendor-settings.html" class="nav-link">Settings</a></li>
-                </ul>
-            </nav>
-
-            <!-- LOGOUT -->
-            <div class="logout-section">
-                <button class="sign-out-btn" onclick="logoutVendor()">Logout</button>
-            </div>
-
-            <!-- USER INFO -->
-            <div class="user-section">
-                <div class="user-avatar" id="userInitial">V</div>
-                <div class="user-info">
-                    <h3 id="userName">Vendor</h3>
-                    <p id="userEmail">vendor@torch.com</p>
-                </div>
-            </div>
-
         </aside>
 
         <!-- MAIN CONTENT -->

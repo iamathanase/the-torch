@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enthusiast Dashboard - The Torch FarmDialogue</title>
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <title>Enthusiast Dashboard - The Torch FarmDialogue</title>    <!-- EARLY AUTH CHECK - Must run before page renders -->
+    <script>
+        (function() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+        })();
+    </script>    <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/dashboard.css">
 </head>
 <body>
