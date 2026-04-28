@@ -8,6 +8,7 @@ import Overview from '@/pages/dashboard/Overview';
 import Orders from '@/pages/dashboard/Orders';
 import Listings from '@/pages/dashboard/Listings';
 import Messages from '@/pages/dashboard/Messages';
+import Browse from '@/pages/dashboard/Browse';
 import Settings from '@/pages/dashboard/Settings';
 import Users from '@/pages/dashboard/Users';
 import Marketplace from '@/pages/dashboard/Marketplace';
@@ -27,6 +28,7 @@ function App() {
                 <Route path="orders" element={<Orders />} />
                 <Route path="listings" element={<Listings />} />
                 <Route path="messages" element={<Messages />} />
+                <Route path="browse" element={<Browse />} />
                 <Route path="settings" element={<Settings />} />
                 <Route path="users" element={<Users />} />
                 <Route path="marketplace" element={<Marketplace />} />

@@ -111,6 +111,19 @@ export const mockUsers: User[] = [
     status: 'online',
     lastSeen: '2024-04-28T14:28:00',
   },
+  {
+    id: 'ai-001',
+    name: 'FarmDialogue Assistant',
+    email: 'assistant@farmdialogue.com',
+    role: 'ai',
+    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=AIAssistant',
+    verified: true,
+    createdAt: '2024-01-01',
+    status: 'online',
+    lastSeen: '2024-04-28T14:45:00',
+    bio: '🤖 AI Assistant - Help with farming tips, orders, products & more!',
+    isAI: true,
+  },
 ];
 
 export const mockProducts: Product[] = [

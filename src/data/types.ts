@@ -1,6 +1,7 @@
-export type UserRole = 'admin' | 'farmer' | 'vendor' | 'gardener' | 'customer';
+export type UserRole = 'admin' | 'farmer' | 'vendor' | 'gardener' | 'customer' | 'ai';
 export type OnlineStatus = 'online' | 'away' | 'offline';
 export type DeliveryStatus = 'sent' | 'delivered' | 'received' | 'read';
+export type AICategoryContext = 'general' | 'farming' | 'orders' | 'products' | 'learning';
 
 export interface User {
   id: string;
@@ -12,6 +13,8 @@ export interface User {
   createdAt: string;
   lastSeen?: string;
   status?: OnlineStatus;
+  bio?: string;
+  isAI?: boolean;
 }
 
 export interface Product {

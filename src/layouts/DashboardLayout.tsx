@@ -37,11 +37,12 @@ export default function DashboardLayout() {
   const items = [
     { to: "/dashboard", icon: LayoutDashboard, label: "Overview", end: true },
     { to: "/dashboard/marketplace", icon: ShoppingBasket, label: "Browse market" },
+    { to: "/dashboard/browse", icon: Users, label: "Browse people" },
     isSeller && { to: "/dashboard/listings", icon: Package, label: "My listings" },
     { to: "/dashboard/orders", icon: Package, label: "Orders" },
     { to: "/dashboard/messages", icon: MessageSquare, label: "Messages" },
     { to: "/dashboard/learn", icon: BookOpen, label: "Learning hub" },
-    isAdmin && { to: "/dashboard/users", icon: Users, label: "Users" },
+    isAdmin && { to: "/dashboard/users", icon: Users, label: "Manage users" },
     { to: "/dashboard/settings", icon: Settings, label: "Settings" },
   ].filter(Boolean) as { to: string; icon: typeof LayoutDashboard; label: string; end?: boolean }[];
 

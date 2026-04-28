@@ -3,19 +3,30 @@ import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { useOnlineStatus } from "@/context/OnlineStatusContext";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Send, Check, CheckCheck, Clock, Dot } from "lucide-react";
+import { MessageSquare, Send, Check, CheckCheck, Clock, Dot, Zap } from "lucide-react";
 import { Message } from "@/data/types";
-import SendMessageModal from "@/components/modals/SendMessageModal";
+import { useLocation } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function Messages() {
   const { user } = useAuth();
-  const { messages, markMessageAsRead, deleteMessage, updateMessageDeliveryStatus } = useData();
+  const { messages, markMessageAsRead, deleteMessage, updateMessageDeliveryStatus, sendMessage, users } = useData();
   const { isUserOnline } = useOnlineStatus();
-  const [showSendModal, setShowSendModal] = useState(false);
+  const location = useLocation();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  const [newMessageText, setNewMessageText] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   
   const myMessages = messages.filter((m) => m.toId === user!.id || m.fromId === user!.id);
   const unreadMessages = myMessages.filter((m) => !m.read && m.toId === user!.id);
+
+  // Handle direct message from Browse page
+  useEffect(() => {
+    if (location.state?.directMessageUserId) {
+      setSelectedConversationId(location.state.directMessageUserId);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   // Group messages by conversation
   const conversations = myMessages.reduce((acc, msg) => {
@@ -97,34 +108,63 @@ export default function Messages() {
     ? conversations[selectedConversationId]
     : null;
 
+  const selectedUser = selectedConversationId
+    ? users.find(u => u.id === selectedConversationId)
+    : null;
+
+  // Filter conversations based on search
+  const filteredConversations = conversationList.filter(conv =>
+    conv.personName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newMessageText.trim() || !selectedConversationId) {
+      toast.error('Please select a conversation and enter a message');
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const newMsg: Message = {
+      id: String(Date.now()),
+      fromId: user!.id,
+      fromName: user!.name,
+      toId: selectedConversationId,
+      toName: selectedUser?.name || 'Unknown',
+      content: newMessageText.trim(),
+      read: false,
+      deliveryStatus: 'sent',
+      sentAt: now,
+      createdAt: now,
+    };
+
+    sendMessage(newMsg);
+    setNewMessageText('');
+  };
+
   return (
-    <div className="space-y-8 h-screen flex flex-col">
+    <div className="space-y-8 h-full flex flex-col">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="font-display text-4xl font-bold">Messages</h1>
-          <p className="mt-2 text-base text-muted-foreground">Real-time messaging with read receipts and delivery status.</p>
+          <p className="mt-2 text-base text-muted-foreground">Connect with your community. Message anyone directly!</p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="hero" onClick={() => setShowSendModal(true)} className="gap-2">
-            <Send className="h-4 w-4" />
-            Send Message
-          </Button>
-          {unreadMessages.length > 0 && (
-            <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
-              <p className="text-sm font-semibold text-primary">{unreadMessages.length} unread</p>
-            </div>
-          )}
-        </div>
+        {unreadMessages.length > 0 && (
+          <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
+            <p className="text-sm font-semibold text-primary">{unreadMessages.length} unread</p>
+          </div>
+        )}
       </div>
 
       {myMessages.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border bg-card/50 p-12 text-center">
           <MessageSquare className="h-12 w-12 mx-auto opacity-30 mb-4" />
           <p className="text-muted-foreground font-medium">No messages yet.</p>
-          <p className="mt-2 text-sm text-muted-foreground/60">Start by sending a message to someone!</p>
-          <Button variant="hero" onClick={() => setShowSendModal(true)} className="mt-4 gap-2">
+          <p className="mt-2 text-sm text-muted-foreground/60">Visit the Browse page to find users and start messaging!</p>
+          <Button variant="hero" className="mt-4 gap-2">
             <Send className="h-4 w-4" />
-            Send Your First Message
+            Browse Users
           </Button>
         </div>
       ) : (
@@ -132,39 +172,52 @@ export default function Messages() {
           {/* Conversations List */}
           <div className="border border-border rounded-lg bg-card overflow-hidden flex flex-col">
             <div className="p-4 border-b border-border">
-              <h2 className="font-semibold text-lg">Conversations</h2>
+              <h2 className="font-semibold text-lg mb-3">Conversations</h2>
+              <input
+                type="text"
+                placeholder="Search conversations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              />
             </div>
             <div className="overflow-y-auto flex-1">
-              {conversationList.map((conv) => (
-                <button
-                  key={conv.personId}
-                  onClick={() => setSelectedConversationId(conv.personId)}
-                  className={`w-full p-4 border-b border-border/50 text-left hover:bg-muted/50 transition-all ${
-                    selectedConversationId === conv.personId ? 'bg-primary/10 border-l-2 border-l-primary' : ''
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="relative flex-shrink-0">
-                      <img 
-                        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${conv.personName}`}
-                        alt={conv.personName}
-                        className="h-10 w-10 rounded-full"
-                      />
-                      {isUserOnline(conv.personId) && (
-                        <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-card"></div>
+              {filteredConversations.length === 0 ? (
+                <div className="p-4 text-center text-muted-foreground text-sm">
+                  No conversations found
+                </div>
+              ) : (
+                filteredConversations.map((conv) => (
+                  <button
+                    key={conv.personId}
+                    onClick={() => setSelectedConversationId(conv.personId)}
+                    className={`w-full p-4 border-b border-border/50 text-left hover:bg-muted/50 transition-all ${
+                      selectedConversationId === conv.personId ? 'bg-primary/10 border-l-2 border-l-primary' : ''
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="relative flex-shrink-0">
+                        <img 
+                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${conv.personName}`}
+                          alt={conv.personName}
+                          className="h-10 w-10 rounded-full"
+                        />
+                        {isUserOnline(conv.personId) && (
+                          <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-card"></div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm truncate">{conv.personName}</p>
+                        <p className="text-xs text-muted-foreground truncate">{conv.lastMessage.content}</p>
+                        <p className="text-xs text-muted-foreground/60 mt-1">{formatTime(conv.lastMessage.createdAt)}</p>
+                      </div>
+                      {conv.messages.some((m: Message) => !m.read && m.toId === user!.id) && (
+                        <div className="h-2 w-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm truncate">{conv.personName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{conv.lastMessage.content}</p>
-                      <p className="text-xs text-muted-foreground/60 mt-1">{formatTime(conv.lastMessage.createdAt)}</p>
-                    </div>
-                    {conv.messages.some((m: Message) => !m.read && m.toId === user!.id) && (
-                      <div className="h-2 w-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
-                    )}
-                  </div>
-                </button>
-              ))}
+                  </button>
+                ))
+              )}
             </div>
           </div>
 
@@ -192,6 +245,12 @@ export default function Messages() {
                     </p>
                   </div>
                 </div>
+                {selectedUser?.isAI && (
+                  <div className="flex items-center gap-1 text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">
+                    <Zap className="h-3 w-3" />
+                    AI Assistant
+                  </div>
+                )}
               </div>
 
               {/* Messages */}
@@ -234,16 +293,30 @@ export default function Messages() {
                   </div>
                 ))}
               </div>
+
+              {/* Message Input */}
+              <div className="border-t border-border p-4">
+                <form onSubmit={handleSendMessage} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newMessageText}
+                    onChange={(e) => setNewMessageText(e.target.value)}
+                    placeholder="Type a message..."
+                    className="flex-1 px-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  <Button type="submit" variant="hero" size="icon">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </form>
+              </div>
             </div>
           ) : (
             <div className="lg:col-span-2 border border-dashed border-border rounded-lg bg-card/50 flex items-center justify-center">
-              <p className="text-muted-foreground">Select a conversation to view messages</p>
+              <p className="text-muted-foreground">Select a conversation to start messaging</p>
             </div>
           )}
         </div>
       )}
-
-      <SendMessageModal isOpen={showSendModal} onClose={() => setShowSendModal(false)} />
     </div>
   );
 }

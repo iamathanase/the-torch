@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { Product, Order, Message, Lesson, OrderStatus, User, DeliveryStatus } from '@/data/types';
 import { mockProducts, mockOrders, mockMessages, mockLessons, mockUsers } from '@/data/mockData';
+import { generateAIResponse, getAITypingDelay } from '@/utils/aiAssistant';
 
 interface DataContextType {
   // Products
@@ -79,6 +80,32 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setTimeout(() => {
       updateMessageDeliveryStatus(message.id, 'received', new Date().toISOString());
     }, 1500);
+
+    // If message is sent to AI assistant, generate AI response
+    if (message.toId === 'ai-001') {
+      const typingDelay = getAITypingDelay();
+      setTimeout(() => {
+        const aiResponse: Message = {
+          id: String(Date.now() + Math.random()),
+          fromId: 'ai-001',
+          fromName: 'FarmDialogue Assistant',
+          toId: message.fromId,
+          toName: message.fromName,
+          content: generateAIResponse(message.content),
+          read: false,
+          deliveryStatus: 'sent',
+          sentAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+        };
+        
+        setMessages(prev => [...prev, aiResponse]);
+        
+        // Auto-deliver AI response
+        setTimeout(() => {
+          updateMessageDeliveryStatus(aiResponse.id, 'delivered', new Date().toISOString());
+        }, 300);
+      }, typingDelay);
+    }
   }, []);
 
   const markMessageAsRead = useCallback((messageId: string) => {
