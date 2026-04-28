@@ -54,6 +54,57 @@ exports.uploadProfilePicture = async (req, res) => {
 };
 
 /**
+ * @route   POST /api/users/:userId/cover-image
+ * @desc    Upload or update user cover image
+ * @access  Private
+ */
+exports.uploadCoverImage = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!req.file && !req.body.coverImage) {
+      return res.status(400).json({ 
+        status: 400, 
+        message: 'No file or image data provided' 
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ 
+        status: 404, 
+        message: 'User not found' 
+      });
+    }
+
+    // Handle file upload or base64 data
+    if (req.file) {
+      user.coverImage = req.file.path || req.file.filename;
+    } else if (req.body.coverImage) {
+      user.coverImage = req.body.coverImage;
+    }
+
+    await user.save();
+
+    res.json({
+      status: 200,
+      message: 'Cover image updated successfully',
+      data: {
+        userId: user._id,
+        coverImage: user.coverImage
+      }
+    });
+  } catch (error) {
+    console.error('Cover image upload error:', error);
+    res.status(500).json({
+      status: 500,
+      message: 'Error uploading cover image',
+      error: error.message
+    });
+  }
+};
+
+/**
  * @route   GET /api/users/:userId
  * @desc    Get user profile including picture
  * @access  Private

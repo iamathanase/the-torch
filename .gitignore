@@ -66,3 +66,8 @@ cache/
 # Project-specific
 .todo
 notes.md
+
+# Uploads (keep directory structure but ignore uploaded files)
+back/uploads/**/*
+!back/uploads/**/.gitkeep
+!back/uploads/.gitkeep

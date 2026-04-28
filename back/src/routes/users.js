@@ -1,5 +1,5 @@
 const express = require('express');
-const { uploadProfilePicture, getUserProfile, updateUserProfile } = require('../controllers/userController');
+const { uploadProfilePicture, uploadCoverImage, getUserProfile, updateUserProfile } = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -9,6 +9,13 @@ const router = express.Router();
  * @access  Private
  */
 router.post('/:userId/profile-picture', uploadProfilePicture);
+
+/**
+ * @route   POST /api/users/:userId/cover-image
+ * @desc    Upload or update user cover image
+ * @access  Private
+ */
+router.post('/:userId/cover-image', uploadCoverImage);
 
 /**
  * @route   GET /api/users/:userId

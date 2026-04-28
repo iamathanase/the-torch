@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { useOnlineStatus } from "@/context/OnlineStatusContext";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Send, Check, CheckCheck, Clock, Dot, Zap } from "lucide-react";
+import { MessageSquare, Send, Check, CheckCheck, Clock, Dot, Zap, Paperclip } from "lucide-react";
 import { Message } from "@/data/types";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
@@ -16,6 +16,8 @@ export default function Messages() {
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [newMessageText, setNewMessageText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
+  const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
   
   const myMessages = messages.filter((m) => m.toId === user!.id || m.fromId === user!.id);
   const unreadMessages = myMessages.filter((m) => !m.read && m.toId === user!.id);
@@ -120,8 +122,13 @@ export default function Messages() {
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!newMessageText.trim() || !selectedConversationId) {
-      toast.error('Please select a conversation and enter a message');
+    if (!newMessageText.trim() && !attachmentFile) {
+      toast.error('Please enter a message or attach a file');
+      return;
+    }
+
+    if (!selectedConversationId) {
+      toast.error('Please select a conversation');
       return;
     }
 
@@ -137,10 +144,50 @@ export default function Messages() {
       deliveryStatus: 'sent',
       sentAt: now,
       createdAt: now,
+      attachments: attachmentFile ? [{
+        id: `attach-${Date.now()}`,
+        userId: user!.id,
+        fileName: attachmentFile.name,
+        fileSize: attachmentFile.size,
+        fileType: attachmentFile.type,
+        fileUrl: attachmentPreview || '',
+        uploadedAt: now,
+        purpose: 'message',
+      }] : undefined,
+      uploadedAt: new Date().toISOString(),
     };
 
     sendMessage(newMsg);
     setNewMessageText('');
+    setAttachmentFile(null);
+    setAttachmentPreview(null);
+    toast.success('Message sent!');
+  };
+
+  const handleAttachmentSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size exceeds 10MB limit');
+      return;
+    }
+
+    setAttachmentFile(file);
+    
+    // Create preview for images
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setAttachmentPreview(event.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setAttachmentPreview(null);
+    }
+
+    toast.success(`File attached: ${file.name}`);
   };
 
   return (
@@ -268,6 +315,30 @@ export default function Messages() {
                       }`}
                     >
                       <p className="text-sm">{m.content}</p>
+                      {m.attachments && m.attachments.length > 0 && (
+                        <div className="mt-2 space-y-2">
+                          {m.attachments.map((att) => (
+                            <div key={att.id} className="text-xs">
+                              {att.fileType.startsWith('image/') ? (
+                                <img
+                                  src={att.fileUrl}
+                                  alt={att.fileName}
+                                  className="max-w-[200px] h-auto rounded"
+                                />
+                              ) : (
+                                <a
+                                  href={att.fileUrl}
+                                  download={att.fileName}
+                                  className="flex items-center gap-1 underline hover:no-underline"
+                                >
+                                  <Paperclip className="h-3 w-3" />
+                                  {att.fileName}
+                                </a>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                       <div className={`flex items-center gap-1 mt-1 text-xs ${
                         m.fromId === user!.id ? 'text-primary-foreground/70' : 'text-muted-foreground'
                       }`}>
@@ -295,7 +366,40 @@ export default function Messages() {
               </div>
 
               {/* Message Input */}
-              <div className="border-t border-border p-4">
+              <div className="border-t border-border p-4 space-y-3">
+                {attachmentPreview && (
+                  <div className="relative">
+                    <img
+                      src={attachmentPreview}
+                      alt="Attachment preview"
+                      className="w-20 h-20 object-cover rounded-lg border border-border"
+                    />
+                    <button
+                      onClick={() => {
+                        setAttachmentFile(null);
+                        setAttachmentPreview(null);
+                      }}
+                      className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+                {attachmentFile && !attachmentPreview && (
+                  <div className="flex items-center gap-2 p-2 bg-muted rounded-lg text-sm">
+                    <Paperclip className="h-4 w-4" />
+                    <span className="flex-1 truncate">{attachmentFile.name}</span>
+                    <button
+                      onClick={() => {
+                        setAttachmentFile(null);
+                        setAttachmentPreview(null);
+                      }}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
                 <form onSubmit={handleSendMessage} className="flex gap-2">
                   <input
                     type="text"
@@ -304,6 +408,17 @@ export default function Messages() {
                     placeholder="Type a message..."
                     className="flex-1 px-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
+                  <label className="cursor-pointer">
+                    <input
+                      type="file"
+                      onChange={handleAttachmentSelect}
+                      className="hidden"
+                      accept="image/*,.pdf,.doc,.docx"
+                    />
+                    <div className="px-3 py-2 border border-border rounded-lg hover:bg-muted transition-colors">
+                      <Paperclip className="h-5 w-5" />
+                    </div>
+                  </label>
                   <Button type="submit" variant="hero" size="icon">
                     <Send className="h-4 w-4" />
                   </Button>
