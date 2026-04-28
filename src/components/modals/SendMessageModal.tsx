@@ -35,6 +35,7 @@ export default function SendMessageModal({
       return;
     }
 
+    const now = new Date().toISOString();
     const newMessage: Message = {
       id: String(Date.now()),
       fromId: user!.id,
@@ -43,7 +44,9 @@ export default function SendMessageModal({
       toName: recipient.name,
       content: content.trim(),
       read: false,
-      createdAt: new Date().toISOString().split('T')[0],
+      deliveryStatus: 'sent',
+      sentAt: now,
+      createdAt: now,
     };
 
     sendMessage(newMessage);

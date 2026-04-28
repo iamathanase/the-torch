@@ -9,6 +9,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
     createdAt: '2024-01-15',
+    status: 'online',
+    lastSeen: '2024-04-28T14:30:00',
   },
   {
     id: '2',
@@ -18,6 +20,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jane',
     createdAt: '2024-02-20',
+    status: 'online',
+    lastSeen: '2024-04-28T14:35:00',
   },
   {
     id: '3',
@@ -27,6 +31,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Admin',
     createdAt: '2024-01-01',
+    status: 'away',
+    lastSeen: '2024-04-28T13:00:00',
   },
   {
     id: '4',
@@ -36,6 +42,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David',
     createdAt: '2024-03-10',
+    status: 'online',
+    lastSeen: '2024-04-28T14:25:00',
   },
   {
     id: '5',
@@ -45,6 +53,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
     createdAt: '2024-01-20',
+    status: 'offline',
+    lastSeen: '2024-04-28T08:15:00',
   },
   {
     id: '6',
@@ -54,6 +64,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Michael',
     createdAt: '2024-02-10',
+    status: 'online',
+    lastSeen: '2024-04-28T14:40:00',
   },
   {
     id: '7',
@@ -63,6 +75,8 @@ export const mockUsers: User[] = [
     verified: false,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ama',
     createdAt: '2024-04-01',
+    status: 'away',
+    lastSeen: '2024-04-28T12:45:00',
   },
   {
     id: '8',
@@ -72,6 +86,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kwame',
     createdAt: '2024-03-15',
+    status: 'online',
+    lastSeen: '2024-04-28T14:32:00',
   },
   {
     id: '9',
@@ -81,6 +97,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Abena',
     createdAt: '2024-02-05',
+    status: 'offline',
+    lastSeen: '2024-04-28T10:20:00',
   },
   {
     id: '10',
@@ -90,6 +108,8 @@ export const mockUsers: User[] = [
     verified: true,
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Yaw',
     createdAt: '2024-03-20',
+    status: 'online',
+    lastSeen: '2024-04-28T14:28:00',
   },
 ];
 
@@ -444,6 +464,11 @@ export const mockMessages: Message[] = [
     toName: 'John Doe',
     content: 'Hi, do you have more tomatoes available?',
     read: true,
+    deliveryStatus: 'read',
+    sentAt: '2024-04-20T10:30:00',
+    deliveredAt: '2024-04-20T10:30:15',
+    receivedAt: '2024-04-20T10:30:20',
+    readAt: '2024-04-20T10:31:00',
     createdAt: '2024-04-20T10:30:00',
   },
   {
@@ -454,6 +479,11 @@ export const mockMessages: Message[] = [
     toName: 'Jane Smith',
     content: 'Yes! Fresh stock just arrived today.',
     read: true,
+    deliveryStatus: 'read',
+    sentAt: '2024-04-20T11:15:00',
+    deliveredAt: '2024-04-20T11:15:10',
+    receivedAt: '2024-04-20T11:15:15',
+    readAt: '2024-04-20T11:15:45',
     createdAt: '2024-04-20T11:15:00',
   },
   {
@@ -464,6 +494,9 @@ export const mockMessages: Message[] = [
     toName: 'John Doe',
     content: 'Can we discuss bulk ordering?',
     read: false,
+    deliveryStatus: 'delivered',
+    sentAt: '2024-04-21T09:45:00',
+    deliveredAt: '2024-04-21T09:45:12',
     createdAt: '2024-04-21T09:45:00',
   },
   {
@@ -474,6 +507,10 @@ export const mockMessages: Message[] = [
     toName: 'John Doe',
     content: 'Your products are excellent quality. Would like to order again.',
     read: false,
+    deliveryStatus: 'received',
+    sentAt: '2024-04-22T14:20:00',
+    deliveredAt: '2024-04-22T14:20:08',
+    receivedAt: '2024-04-22T14:20:10',
     createdAt: '2024-04-22T14:20:00',
   },
   {
@@ -484,6 +521,11 @@ export const mockMessages: Message[] = [
     toName: 'John Doe',
     content: 'Interested in selling supplies wholesale?',
     read: true,
+    deliveryStatus: 'read',
+    sentAt: '2024-04-21T16:00:00',
+    deliveredAt: '2024-04-21T16:00:10',
+    receivedAt: '2024-04-21T16:00:15',
+    readAt: '2024-04-21T16:02:00',
     createdAt: '2024-04-21T16:00:00',
   },
   {
@@ -494,6 +536,11 @@ export const mockMessages: Message[] = [
     toName: 'Sarah Johnson',
     content: 'We can arrange that. What quantities are you looking for?',
     read: true,
+    deliveryStatus: 'read',
+    sentAt: '2024-04-21T16:30:00',
+    deliveredAt: '2024-04-21T16:30:08',
+    receivedAt: '2024-04-21T16:30:12',
+    readAt: '2024-04-21T16:31:30',
     createdAt: '2024-04-21T16:30:00',
   },
   {
@@ -504,6 +551,9 @@ export const mockMessages: Message[] = [
     toName: 'Michael Chen',
     content: 'When will the watering cans be back in stock?',
     read: false,
+    deliveryStatus: 'delivered',
+    sentAt: '2024-04-22T11:00:00',
+    deliveredAt: '2024-04-22T11:00:09',
     createdAt: '2024-04-22T11:00:00',
   },
   {
@@ -514,6 +564,8 @@ export const mockMessages: Message[] = [
     toName: 'Ama Mensah',
     content: 'We expect new stock by next week.',
     read: false,
+    deliveryStatus: 'sent',
+    sentAt: '2024-04-22T11:45:00',
     createdAt: '2024-04-22T11:45:00',
   },
   {
@@ -524,6 +576,11 @@ export const mockMessages: Message[] = [
     toName: 'Sarah Johnson',
     content: 'Thank you for the fence wire order. Hope it serves you well!',
     read: true,
+    deliveryStatus: 'read',
+    sentAt: '2024-04-20T13:15:00',
+    deliveredAt: '2024-04-20T13:15:07',
+    receivedAt: '2024-04-20T13:15:10',
+    readAt: '2024-04-20T13:16:00',
     createdAt: '2024-04-20T13:15:00',
   },
   {
@@ -534,6 +591,10 @@ export const mockMessages: Message[] = [
     toName: 'Abena Osei',
     content: 'Your peppers are the freshest I have found!',
     read: false,
+    deliveryStatus: 'received',
+    sentAt: '2024-04-22T15:30:00',
+    deliveredAt: '2024-04-22T15:30:11',
+    receivedAt: '2024-04-22T15:30:14',
     createdAt: '2024-04-22T15:30:00',
   },
 ];

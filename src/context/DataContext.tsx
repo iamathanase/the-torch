@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { Product, Order, Message, Lesson, OrderStatus, User } from '@/data/types';
+import { Product, Order, Message, Lesson, OrderStatus, User, DeliveryStatus } from '@/data/types';
 import { mockProducts, mockOrders, mockMessages, mockLessons, mockUsers } from '@/data/mockData';
 
 interface DataContextType {
@@ -20,6 +20,7 @@ interface DataContextType {
   sendMessage: (message: Message) => void;
   markMessageAsRead: (messageId: string) => void;
   deleteMessage: (messageId: string) => void;
+  updateMessageDeliveryStatus: (messageId: string, status: DeliveryStatus, timestamp?: string) => void;
   
   // Lessons
   lessons: Lesson[];
@@ -69,14 +70,49 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   // Message operations
   const sendMessage = useCallback((message: Message) => {
     setMessages(prev => [...prev, message]);
+    
+    // Simulate delivery status progression
+    setTimeout(() => {
+      updateMessageDeliveryStatus(message.id, 'delivered', new Date().toISOString());
+    }, 500);
+    
+    setTimeout(() => {
+      updateMessageDeliveryStatus(message.id, 'received', new Date().toISOString());
+    }, 1500);
   }, []);
 
   const markMessageAsRead = useCallback((messageId: string) => {
-    setMessages(prev => prev.map(m => m.id === messageId ? { ...m, read: true } : m));
+    setMessages(prev => prev.map(m => m.id === messageId ? { 
+      ...m, 
+      read: true,
+      deliveryStatus: 'read',
+      readAt: new Date().toISOString(),
+    } : m));
   }, []);
 
   const deleteMessage = useCallback((messageId: string) => {
     setMessages(prev => prev.filter(m => m.id !== messageId));
+  }, []);
+
+  const updateMessageDeliveryStatus = useCallback((messageId: string, status: DeliveryStatus, timestamp?: string) => {
+    const ts = timestamp || new Date().toISOString();
+    setMessages(prev => prev.map(m => {
+      if (m.id === messageId) {
+        const updated: Message = { ...m, deliveryStatus: status };
+        
+        if (status === 'delivered' && !m.deliveredAt) {
+          updated.deliveredAt = ts;
+        } else if (status === 'received' && !m.receivedAt) {
+          updated.receivedAt = ts;
+        } else if (status === 'read' && !m.readAt) {
+          updated.readAt = ts;
+          updated.read = true;
+        }
+        
+        return updated;
+      }
+      return m;
+    }));
   }, []);
 
   // User operations (admin)
@@ -106,6 +142,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       sendMessage,
       markMessageAsRead,
       deleteMessage,
+      updateMessageDeliveryStatus,
       lessons,
       users,
       addUser,

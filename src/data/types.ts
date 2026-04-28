@@ -1,4 +1,6 @@
 export type UserRole = 'admin' | 'farmer' | 'vendor' | 'gardener' | 'customer';
+export type OnlineStatus = 'online' | 'away' | 'offline';
+export type DeliveryStatus = 'sent' | 'delivered' | 'received' | 'read';
 
 export interface User {
   id: string;
@@ -8,6 +10,8 @@ export interface User {
   avatar?: string;
   verified: boolean;
   createdAt: string;
+  lastSeen?: string;
+  status?: OnlineStatus;
 }
 
 export interface Product {
@@ -50,6 +54,11 @@ export interface Message {
   toName: string;
   content: string;
   read: boolean;
+  deliveryStatus: DeliveryStatus;
+  sentAt: string;
+  deliveredAt?: string;
+  receivedAt?: string;
+  readAt?: string;
   createdAt: string;
 }
 
