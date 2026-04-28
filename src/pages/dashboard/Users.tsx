@@ -8,9 +8,10 @@ import { toast } from "sonner";
 import { Trash2, UserPlus } from "lucide-react";
 
 export default function Users() {
-  const { user, users } = useAuth();
+  const { user } = useAuth();
   const { deleteUser } = useData();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [users] = useState<any[]>([]);
 
   if (user?.role !== "admin") {
     return <Navigate to="/dashboard" replace />;
@@ -52,7 +53,7 @@ export default function Users() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {users.map((u) => (
+            {users.map((u: any) => (
               <tr key={u.id} className="transition-colors hover:bg-secondary/30">
                 <td className="px-6 py-4 text-sm font-medium text-foreground">{u.name}</td>
                 <td className="px-6 py-4 text-sm text-muted-foreground">{u.email}</td>

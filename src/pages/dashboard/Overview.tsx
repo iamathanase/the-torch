@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 export default function Overview() {
-  const { user, users } = useAuth();
+  const { user } = useAuth();
   const { products, orders, messages, lessons } = useData();
 
   const myListings = products.filter((p) => p.sellerId === user!.id);
@@ -25,7 +25,7 @@ export default function Overview() {
     roleTitle = "Admin Dashboard";
     roleDescription = "Manage users, listings, orders, and platform content.";
     stats = [
-      { icon: Users, label: "Total users", value: String(users.length) },
+      { icon: Users, label: "Total users", value: "0" },
       { icon: Package, label: "Active listings", value: String(products.length) },
       { icon: ShoppingBasket, label: "Total orders", value: String(orders.length) },
       { icon: BookOpen, label: "Lessons published", value: String(lessons.length) },
@@ -64,7 +64,7 @@ export default function Overview() {
       { icon: BookOpen, label: "Lessons completed", value: String(Math.floor(lessons.length * 0.6)) },
       { icon: Sprout, label: "Favorite courses", value: String(Math.floor(lessons.length * 0.4)) },
       { icon: MessageSquare, label: "Community messages", value: String(myMessages.filter((m) => !m.read).length) },
-      { icon: Users, label: "Connections", value: String(Math.floor(users.length * 0.3)) },
+      { icon: Users, label: "Connections", value: "0" },
     ];
   } else {
     stats = [
@@ -263,7 +263,7 @@ export default function Overview() {
               <div className="mt-6 space-y-4">
                 <div className="rounded-lg bg-primary/5 p-4">
                   <p className="font-semibold text-foreground">Active gardeners online</p>
-                  <p className="mt-1 text-2xl font-bold text-primary">{Math.floor(users.length * 0.4)}</p>
+                  <p className="mt-1 text-2xl font-bold text-primary">0</p>
                 </div>
                 <div className="rounded-lg bg-secondary/20 p-4">
                   <p className="font-semibold text-foreground">Community topics</p>

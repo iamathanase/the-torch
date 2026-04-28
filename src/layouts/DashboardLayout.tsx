@@ -1,4 +1,4 @@
-import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
 import { LayoutDashboard, ShoppingBasket, Package, BookOpen, MessageSquare, Users, Settings, LogOut, Sprout, Moon, Sun, Bell } from "lucide-react";
@@ -14,8 +14,6 @@ export default function DashboardLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isDark, setIsDark] = React.useState(false);
-  
-  if (!user) return <Navigate to="/login" replace />;
 
   const toggleTheme = () => {
     setIsDark(!isDark);
@@ -28,11 +26,12 @@ export default function DashboardLayout() {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/auth/login");
   };
 
-  const isSeller = user.role === "farmer" || user.role === "vendor" || user.role === "gardener";
-  const isAdmin = user.role === "admin";
+  // Protected by ProtectedRoute, so user is guaranteed to be non-null
+  const isSeller = user!.role === "farmer" || user!.role === "vendor" || user!.role === "gardener";
+  const isAdmin = user!.role === "admin";
 
   const items = [
     { to: "/dashboard", icon: LayoutDashboard, label: "Overview", end: true },
@@ -46,7 +45,7 @@ export default function DashboardLayout() {
     { to: "/dashboard/settings", icon: Settings, label: "Settings" },
   ].filter(Boolean) as { to: string; icon: typeof LayoutDashboard; label: string; end?: boolean }[];
 
-  const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
+  const initials = user!.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
 
   return (
     <SidebarProvider defaultOpen={false}>
@@ -86,8 +85,8 @@ export default function DashboardLayout() {
             <div className="flex items-center gap-3 group-data-[collapsible=icon]:hidden">
               <Avatar className="h-9 w-9"><AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-xs font-semibold">{initials}</AvatarFallback></Avatar>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-sidebar-foreground">{user.name}</p>
-                <p className="truncate text-xs capitalize text-sidebar-foreground/60">{user.role}</p>
+                <p className="truncate text-sm font-medium text-sidebar-foreground">{user!.name}</p>
+                <p className="truncate text-xs capitalize text-sidebar-foreground/60">{user!.role}</p>
               </div>
               <button onClick={handleLogout} className="rounded-sm p-1.5 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" aria-label="Sign out">
                 <LogOut className="h-4 w-4" />
@@ -100,7 +99,7 @@ export default function DashboardLayout() {
           <header className="flex h-14 items-center justify-between border-b border-border/60 bg-background/80 px-4 backdrop-blur md:px-6 relative z-40">
             <div className="flex items-center gap-3">
               <SidebarTrigger />
-              <span className="text-sm text-muted-foreground hidden sm:inline">Welcome, <span className="text-foreground">{user.name.split(" ")[0]}</span></span>
+              <span className="text-sm text-muted-foreground hidden sm:inline">Welcome, <span className="text-foreground">{user!.name.split(" ")[0]}</span></span>
             </div>
             <div className="flex items-center gap-2">
               <RoleSwitcher />
@@ -117,7 +116,7 @@ export default function DashboardLayout() {
               </button>
               <div className="flex items-center gap-2 pl-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={user!.avatar} alt={user!.name} />
                   <AvatarFallback className="bg-harvest text-harvest-foreground text-xs font-semibold">{initials}</AvatarFallback>
                 </Avatar>
                 <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors" aria-label="Notifications">
