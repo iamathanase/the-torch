@@ -8,6 +8,7 @@ import {
   SidebarHeader, SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import RoleSwitcher from "@/components/RoleSwitcher";
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
@@ -101,6 +102,7 @@ export default function DashboardLayout() {
               <span className="text-sm text-muted-foreground hidden sm:inline">Welcome, <span className="text-foreground">{user.name.split(" ")[0]}</span></span>
             </div>
             <div className="flex items-center gap-2">
+              <RoleSwitcher />
               <button 
                 onClick={toggleTheme}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors"

@@ -1,14 +1,33 @@
+import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { BookOpen } from "lucide-react";
 
 export default function Learning() {
+  const { user } = useAuth();
   const { lessons } = useData();
+
+  let pageTitle = "Learning Hub";
+  let pageDescription = "Improve your skills with our courses.";
+
+  if (user?.role === "farmer") {
+    pageTitle = "Farming Academy";
+    pageDescription = "Master farming techniques and agriculture best practices.";
+  } else if (user?.role === "vendor") {
+    pageTitle = "Business Academy";
+    pageDescription = "Grow your equipment business with expert guidance.";
+  } else if (user?.role === "gardener") {
+    pageTitle = "Gardening Masterclass";
+    pageDescription = "Learn advanced gardening techniques and tips.";
+  } else if (user?.role === "customer") {
+    pageTitle = "Learning Hub";
+    pageDescription = "Discover agriculture and farming knowledge.";
+  }
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-4xl font-bold">Learning Hub</h1>
-        <p className="mt-2 text-base text-muted-foreground">Improve your skills with our courses.</p>
+        <h1 className="font-display text-4xl font-bold">{pageTitle}</h1>
+        <p className="mt-2 text-base text-muted-foreground">{pageDescription}</p>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

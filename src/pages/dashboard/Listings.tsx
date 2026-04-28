@@ -1,21 +1,61 @@
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { Button } from "@/components/ui/button";
+import { Product } from "@/data/types";
+import AddProductModal from "@/components/modals/AddProductModal";
+import EditProductModal from "@/components/modals/EditProductModal";
+import { toast } from "sonner";
 
 export default function Listings() {
   const { user } = useAuth();
   const { products, deleteProduct } = useData();
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   
   const myListings = products.filter((p) => p.sellerId === user!.id);
+
+  let pageTitle = "My Listings";
+  let pageDescription = "Manage your products and inventory.";
+  let addButtonText = "+ Add New Listing";
+
+  if (user!.role === "farmer") {
+    pageTitle = "My Farm Products";
+    pageDescription = "Manage your harvest and farm products.";
+    addButtonText = "+ Add Produce";
+  } else if (user!.role === "vendor") {
+    pageTitle = "Equipment Inventory";
+    pageDescription = "Manage your farming equipment and tools.";
+    addButtonText = "+ Add Equipment";
+  } else if (user!.role === "gardener") {
+    pageTitle = "My Gardening Products";
+    pageDescription = "Manage your gardening supplies and products.";
+    addButtonText = "+ Add Product";
+  }
+
+  const handleEdit = (product: Product) => {
+    setEditingProduct(product);
+    setShowEditModal(true);
+  };
+
+  const handleDelete = (productId: string) => {
+    if (confirm("Are you sure you want to delete this product?")) {
+      deleteProduct(productId);
+      toast.success("Product deleted successfully!");
+    }
+  };
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="font-display text-4xl font-bold">My Listings</h1>
-          <p className="mt-2 text-base text-muted-foreground">Manage your products and inventory.</p>
+          <h1 className="font-display text-4xl font-bold">{pageTitle}</h1>
+          <p className="mt-2 text-base text-muted-foreground">{pageDescription}</p>
         </div>
-        <Button variant="hero" className="whitespace-nowrap">+ Add New Listing</Button>
+        <Button variant="hero" className="whitespace-nowrap" onClick={() => setShowAddModal(true)}>
+          {addButtonText}
+        </Button>
       </div>
 
       {myListings.length === 0 ? (
@@ -42,14 +82,26 @@ export default function Listings() {
               </div>
               <div className="border-t border-border/60 p-3">
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">Edit</Button>
-                  <Button variant="destructive" size="sm" className="flex-1" onClick={() => deleteProduct(p.id)}>Delete</Button>
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleEdit(p)}>
+                    Edit
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => handleDelete(p.id)}
+                  >
+                    Delete
+                  </Button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      <AddProductModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
+      <EditProductModal isOpen={showEditModal} onClose={() => setShowEditModal(false)} product={editingProduct} />
     </div>
   );
 }

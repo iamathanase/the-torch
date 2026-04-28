@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { Button } from "@/components/ui/button";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Send } from "lucide-react";
+import SendMessageModal from "@/components/modals/SendMessageModal";
 
 export default function Messages() {
   const { user } = useAuth();
-  const { messages, markMessageAsRead } = useData();
+  const { messages, markMessageAsRead, deleteMessage } = useData();
+  const [showSendModal, setShowSendModal] = useState(false);
   
   const myMessages = messages.filter((m) => m.toId === user!.id || m.fromId === user!.id);
   const unreadMessages = myMessages.filter((m) => !m.read && m.toId === user!.id);
@@ -35,18 +38,28 @@ export default function Messages() {
           <h1 className="font-display text-4xl font-bold">Messages</h1>
           <p className="mt-2 text-base text-muted-foreground">Stay connected with buyers and sellers.</p>
         </div>
-        {unreadMessages.length > 0 && (
-          <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
-            <p className="text-sm font-semibold text-primary">{unreadMessages.length} unread</p>
-          </div>
-        )}
+        <div className="flex gap-3">
+          <Button variant="hero" onClick={() => setShowSendModal(true)} className="gap-2">
+            <Send className="h-4 w-4" />
+            Send Message
+          </Button>
+          {unreadMessages.length > 0 && (
+            <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
+              <p className="text-sm font-semibold text-primary">{unreadMessages.length} unread</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {myMessages.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border bg-card/50 p-12 text-center">
           <MessageSquare className="h-12 w-12 mx-auto opacity-30 mb-4" />
           <p className="text-muted-foreground font-medium">No messages yet.</p>
-          <p className="mt-2 text-sm text-muted-foreground/60">Messages from other users will appear here.</p>
+          <p className="mt-2 text-sm text-muted-foreground/60">Start by sending a message to someone!</p>
+          <Button variant="hero" onClick={() => setShowSendModal(true)} className="mt-4 gap-2">
+            <Send className="h-4 w-4" />
+            Send Your First Message
+          </Button>
         </div>
       ) : (
         <div className="grid gap-4 lg:grid-cols-3">
@@ -71,16 +84,24 @@ export default function Messages() {
                   )}
                 </div>
                 <p className="text-sm leading-relaxed text-foreground">{m.content}</p>
-                {!m.read && (
+                <div className="flex gap-2 mt-2">
+                  {!m.read && (
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => markMessageAsRead(m.id)}
+                    >
+                      Mark read
+                    </Button>
+                  )}
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    onClick={() => markMessageAsRead(m.id)}
-                    className="w-fit"
+                    onClick={() => deleteMessage(m.id)}
                   >
-                    Mark read
+                    Delete
                   </Button>
-                )}
+                </div>
               </div>
             ))}
           </div>
@@ -101,6 +122,8 @@ export default function Messages() {
           </div>
         </div>
       )}
+
+      <SendMessageModal isOpen={showSendModal} onClose={() => setShowSendModal(false)} />
     </div>
   );
 }
