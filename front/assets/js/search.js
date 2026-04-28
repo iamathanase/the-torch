@@ -37,6 +37,16 @@ function initializeSearchBar() {
   const searchBtn = document.getElementById('search-btn');
   const authLink = document.getElementById('auth-link');
 
+  // Clean up incomplete auth data (token without user or vice versa)
+  const token = localStorage.getItem('authToken');
+  const user = localStorage.getItem('user');
+  if ((token && !user) || (!token && user)) {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('user');
+  }
+
   // Show search bar only if user is logged in
   if (isUserLoggedIn()) {
     if (searchContainer) searchContainer.style.display = 'flex';
@@ -60,14 +70,25 @@ function initializeSearchBar() {
       if (user && user.firstName) {
         authLink.textContent = `${user.firstName} ▼`;
         authLink.href = '#';
-        authLink.addEventListener('click', (e) => {
+        authLink.classList.remove('btn-login');
+        authLink.classList.add('nav-link');
+        authLink.onclick = (e) => {
           e.preventDefault();
           showUserMenu();
-        });
+          return false;
+        };
       }
     }
   } else {
+    // Not logged in - hide search and reset auth link to "Sign In"
     if (searchContainer) searchContainer.style.display = 'none';
+    if (authLink) {
+      authLink.textContent = 'Sign In';
+      authLink.href = 'pages/login.html';
+      authLink.classList.add('btn-login');
+      authLink.classList.remove('nav-link');
+      authLink.onclick = null; // Clear any click handlers
+    }
   }
 }
 
@@ -321,10 +342,12 @@ function addToCart(productId, productName, price) {
  */
 function logout() {
   localStorage.removeItem('authToken');
+  localStorage.removeItem('userRole');
+  localStorage.removeItem('userId');
   localStorage.removeItem('user');
   localStorage.removeItem('cart');
   showToast('Logged out successfully', 'success');
-  window.location.href = 'login.html';
+  window.location.href = 'pages/login.html';
 }
 
 /**
