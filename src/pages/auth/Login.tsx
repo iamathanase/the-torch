@@ -224,16 +224,6 @@ export default function Login() {
               </Link>
             </p>
           </div>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 pt-6 border-t border-slate-200">
-            <p className="text-xs text-slate-500 font-semibold mb-2 uppercase">Demo Credentials</p>
-            <div className="space-y-1 text-xs text-slate-600 bg-slate-50 rounded p-3">
-              <p><span className="font-semibold">Admin:</span> admin@thetorch.com / password123</p>
-              <p><span className="font-semibold">Farmer:</span> farmer@thetorch.com / password123</p>
-              <p><span className="font-semibold">Buyer:</span> buyer@thetorch.com / password123</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
