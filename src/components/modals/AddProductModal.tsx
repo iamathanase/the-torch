@@ -4,8 +4,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { Product } from '@/data/types';
 import { toast } from 'sonner';
-import { X } from 'lucide-react';
-import FileUpload from '@/components/FileUpload';
+import { X, Upload, Loader2 } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -15,7 +15,8 @@ interface AddProductModalProps {
 export default function AddProductModal({ isOpen, onClose }: AddProductModalProps) {
   const { user } = useAuth();
   const { addProduct } = useData();
-  const [imagePreview, setImagePreview] = useState<string>('https://images.unsplash.com/photo-1488459716781-6519754d04d5?w=400&h=300&fit=crop');
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -32,8 +33,51 @@ export default function AddProductModal({ isOpen, onClose }: AddProductModalProp
     }));
   };
 
-  const handleFileSelect = (_file: File, preview: string) => {
-    setImagePreview(preview);
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be less than 5MB');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      // Create FormData
+      const formData = new FormData();
+      formData.append('image', file);
+
+      // Upload to backend
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/products/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Upload failed');
+      }
+
+      setImagePreview(data.data.url);
+      toast.success('Image uploaded successfully!');
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -68,7 +112,7 @@ export default function AddProductModal({ isOpen, onClose }: AddProductModalProp
       stock: '',
       category: 'agricultural',
     });
-    setImagePreview('https://images.unsplash.com/photo-1488459716781-6519754d04d5?w=400&h=300&fit=crop');
+    setImagePreview('');
     onClose();
   };
 
@@ -87,13 +131,36 @@ export default function AddProductModal({ isOpen, onClose }: AddProductModalProp
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Product Image</label>
-            <FileUpload
-              onFileSelect={handleFileSelect}
-              accept="image/*"
-              maxSize={5}
-              label="Upload Product Image"
-              preview={imagePreview}
-            />
+            <div className="space-y-2">
+              {imagePreview && (
+                <div className="relative w-full h-48 rounded-lg overflow-hidden border border-border">
+                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  {uploading ? (
+                    <>
+                      <Loader2 className="w-8 h-8 mb-2 text-muted-foreground animate-spin" />
+                      <p className="text-sm text-muted-foreground">Uploading...</p>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">Click to upload image</p>
+                      <p className="text-xs text-muted-foreground">PNG, JPG, WEBP (max 5MB)</p>
+                    </>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  disabled={uploading}
+                />
+              </label>
+            </div>
           </div>
 
           <div>
