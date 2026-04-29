@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "echo 'Building frontend'",
-  "outputDirectory": "front"
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 }
 
 
