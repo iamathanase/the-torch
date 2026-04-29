@@ -1,8 +1,8 @@
-# FarmDialogue Backend Integration Guide
+# The Torch Backend Integration Guide
 
 ## Overview
 
-This document provides complete backend integration requirements for FarmDialogue. The frontend is fully prepared to connect to your backend APIs. All file uploads are sent as base64-encoded data for secure handling.
+This document provides complete backend integration requirements for The Torch. The frontend is fully prepared to connect to your backend APIs. All file uploads are sent as base64-encoded data for secure handling.
 
 ---
 

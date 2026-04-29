@@ -1,6 +1,6 @@
 # 🤝 Collaborator Quick Start Guide
 
-Welcome! This guide will help you get started with the FarmDialogue backend development.
+Welcome! This guide will help you get started with The Torch backend development.
 
 ## 🎯 What's Ready for You
 

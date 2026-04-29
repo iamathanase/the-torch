@@ -1,7 +1,7 @@
 {
   "name": "farmdialogue-ghana",
   "version": "1.0.0",
-  "description": "FarmDialogue Ghana - Agricultural Platform connecting farmers, vendors, and customers",
+  "description": "The Torch - Agricultural Marketplace connecting farmers, vendors, and customers",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -45,6 +45,7 @@
     "react-router-dom": "^6.30.1",
     "recharts": "^2.15.4",
     "sonner": "^1.7.4",
+    "sweetalert2": "^11.26.24",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.25.76"

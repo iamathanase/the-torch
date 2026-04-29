@@ -1,4 +1,4 @@
-# FarmDialogue Dashboard Project Setup
+# The Torch Dashboard Project Setup
 
 ## Project Overview
 React 18 + TypeScript + Vite application with multi-role dashboards (Admin, Seller, Customer), Tailwind CSS, Shadcn UI components, and React Router navigation.

@@ -18,6 +18,11 @@ import Learning from '@/pages/dashboard/Learning';
 import Login from '@/pages/auth/Login';
 import Register from '@/pages/auth/Register';
 import NotFound from '@/pages/NotFound';
+import Home from '@/pages/Home';
+import About from '@/pages/About';
+import BrowsePublic from '@/pages/Browse';
+import LearningPublic from '@/pages/Learning';
+import Contact from '@/pages/Contact';
 
 // Redirect authenticated users away from login/register
 function RedirectIfAuth({ children }: { children: React.ReactNode }) {
@@ -36,6 +41,12 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public Routes */}
+      <Route path="/" element={<Home />} />
+      <Route path="/public/about" element={<About />} />
+      <Route path="/public/browse" element={<BrowsePublic />} />
+      <Route path="/public/learn" element={<LearningPublic />} />
+      <Route path="/public/contact" element={<Contact />} />
+      
       <Route
         path="/auth/login"
         element={
@@ -74,7 +85,6 @@ function AppRoutes() {
       </Route>
 
       {/* Root redirect */}
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />

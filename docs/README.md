@@ -1,6 +1,6 @@
-# 📚 FarmDialogue Documentation
+# 📚 The Torch Documentation
 
-Complete documentation for the FarmDialogue agricultural platform.
+Complete documentation for The Torch agricultural platform.
 
 ## 📖 Table of Contents
 

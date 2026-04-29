@@ -96,14 +96,21 @@ const aiResponses: Record<AICategoryContext, Record<string, string[]>> = {
   },
   general: {
     greeting: [
-      'Hello! I\'m the FarmDialogue Assistant. How can I help you today? 🌾',
+      'Hello! I\'m The Torch Assistant. How can I help you today? 🌾',
       'Welcome! I\'m here to help with farming tips, products, orders, and more!',
       'Hi there! What can I assist you with today?',
     ],
+    account: [
+      'Opening an account on The Torch is easy! Click "Sign Up" at the top right, enter your email, create a password, and you\'re ready to start!',
+      'To create an account: 1) Click "Sign Up", 2) Fill in your details, 3) Verify your email, 4) Set up your profile. You can then browse products or become a seller!',
+      'Joining The Torch takes just a few minutes! Sign up as a buyer to access our marketplace, or as a seller to start listing your agricultural products.',
+      'Visit our Sign Up page to create your account. You\'ll get instant access to browse products, place orders, and connect with the farming community!',
+      'Create your account in minutes! Choose whether you want to buy agricultural products, sell your own, or both. It\'s completely free to join!',
+    ],
     help: [
-      'I can help with: Farming advice, product recommendations, order tracking, learning resources, and general questions.',
-      'Ask me about farming techniques, our products, your orders, or learning opportunities!',
-      'I\'m here to make your FarmDialogue experience better. What do you need?',
+      'I can help with: Farming advice, product recommendations, order tracking, account setup, learning resources, and general questions.',
+      'Ask me about farming techniques, our products, your orders, opening an account, or learning opportunities!',
+      'I\'m here to make your Torch experience better. What do you need?',
     ],
     thanks: [
       'Happy to help! Feel free to ask me anything else you\'d like to know. 😊',
@@ -111,9 +118,9 @@ const aiResponses: Record<AICategoryContext, Record<string, string[]>> = {
       'Glad I could help! Don\'t hesitate to reach out with more questions.',
     ],
     default: [
-      'That\'s an interesting point! Let me know if there\'s anything specific I can help you with.',
-      'I appreciate your input. Is there something I can assist you with?',
-      'Feel free to ask me any questions about farming, products, or your account!',
+      'That\'s great! Is there something specific I can help you with? Feel free to ask about farming, products, orders, or creating an account!',
+      'I appreciate your interest! What would you like to know more about?',
+      'Feel free to ask me any questions about farming, products, your account, or orders!',
     ],
   },
 };
@@ -168,6 +175,17 @@ export function generateAIResponse(userMessage: string): string {
     if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) subcategory = 'greeting';
     else if (lowerMessage.includes('help') || lowerMessage.includes('assist')) subcategory = 'help';
     else if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) subcategory = 'thanks';
+    else if (
+      lowerMessage.includes('account') ||
+      lowerMessage.includes('signup') ||
+      lowerMessage.includes('sign up') ||
+      lowerMessage.includes('register') ||
+      lowerMessage.includes('registration') ||
+      lowerMessage.includes('join') ||
+      lowerMessage.includes('open account') ||
+      lowerMessage.includes('create account')
+    )
+      subcategory = 'account';
   }
 
   // Get response pool and select random response
