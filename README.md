@@ -1,8 +1,6 @@
-# FarmDialogue - Agricultural Platform
+# The Torch - Agricultural Marketplace
 
-> 🚀 **New here?** Start with **[START_HERE.md](START_HERE.md)** for a quick overview!
-
-A comprehensive web application connecting farmers, customers, vendors, and gardening enthusiasts in a unified digital platform.
+A comprehensive web application connecting farmers, customers, vendors, and gardening enthusiasts in a unified digital platform for Ghana's agricultural sector.
 
 ## 🎉 Latest Update: File Upload System Complete!
 
@@ -39,10 +37,8 @@ See **[docs/README.md](docs/README.md)** for complete documentation index
 
 ## Project Structure
 
-See **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)** for complete project organization.
-
 ```
-farmdialogue/
+the-torch/
 ├── src/                           # Frontend (React/TypeScript)
 │   ├── components/
 │   │   ├── FileUpload.tsx         # File upload component ✅
@@ -81,7 +77,7 @@ farmdialogue/
 │   ├── api/                       # API docs
 │   ├── guides/                    # User guides
 │   └── setup/                     # Setup guides
-├── PROJECT_STRUCTURE.md           # Project organization ✅
+├── docs/README.md                 # Documentation index
 └── README.md                      # This file
 ```
 
@@ -154,7 +150,7 @@ farmdialogue/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd farmdialogue
+   cd the-torch
    ```
 
 2. **Backend Setup**
@@ -363,7 +359,7 @@ For issues and questions:
 
 ## License
 
-All rights reserved - FarmDialogue 2026
+All rights reserved - The Torch 2026
 
 ## Changelog
 

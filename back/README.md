@@ -1,6 +1,6 @@
 # The Torch Ghana - Node.js Backend
 
-Node.js/Express/MongoDB backend for the FarmDialogue Ghana agricultural marketplace platform.
+Node.js/Express/MongoDB backend for the The Torch agricultural marketplace platform.
 
 ## Features
 
