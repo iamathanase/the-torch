@@ -56,7 +56,7 @@ const PublicNavbar = ({ hideOnTop = false }: NavbarProps) => {
             to="/"
             className="flex items-center gap-2 hover:scale-105 transition-all duration-300"
           >
-            <img src="/logooo.png" alt="The Torch" className="h-10 w-10" />
+            <img src="/logooo.png" alt="The Torch" className="h-12 w-12" />
             <span className="font-bold text-xl text-slate-900">The Torch</span>
           </Link>
 
