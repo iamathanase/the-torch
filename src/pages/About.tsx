@@ -11,27 +11,31 @@ export default function About() {
   const team = [
     {
       name: 'Athanase Abayo',
-      role: 'Co-Founder & Lead Developer',
+      role: 'Lead Developer',
       bio: 'Passionate about building scalable agricultural solutions',
-      image: '/adelard.png',
+      image: '/athanase.png',
+      linkedin: 'https://www.linkedin.com/in/athanase002/',
     },
     {
       name: 'Adelard Borauzima',
-      role: 'Co-Founder & Business Lead',
+      role: 'Business Lead',
       bio: 'Experienced in agricultural business and community building',
-      image: '/ben.png',
+      image: '/adelard.png',
+      linkedin: 'https://www.linkedin.com/in/adelard-borauzima-a6875b2ab/',
     },
     {
       name: 'Mabity Mambu',
       role: 'Product Manager',
       bio: 'Focused on user experience and product innovation',
       image: '/mambu.png',
+      linkedin: 'https://www.linkedin.com/in/mabinty-mambu-9b53b03a0/',
     },
     {
       name: 'Ben Riak Changdar',
       role: 'Community Manager',
       bio: 'Building and nurturing our farming community',
       image: '/ben.png',
+      linkedin: 'https://www.linkedin.com/in/ben-riak-changdar/',
     },
   ];
 
@@ -135,20 +139,28 @@ export default function About() {
       <section className="py-20 bg-gradient-to-r from-emerald-50 via-green-50 to-teal-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-slate-900 mb-16 animate-slide-down">Meet Our Team</h2>
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-8">
             {team.map((member) => (
-              <div key={member.name} className="bg-slate-50 rounded-xl overflow-hidden hover:shadow-lg transition-all">
-                <div className="h-48 overflow-hidden bg-slate-200">
+              <div key={member.name} className="bg-slate-50 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all duration-300 group">
+                <div className="relative w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden bg-emerald-100 flex items-center justify-center shadow-lg group-hover:shadow-2xl transition-all duration-300">
                   <img 
                     src={member.image} 
                     alt={member.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100"
+                  >
+                    <span className="text-white font-semibold text-sm hover:underline">LinkedIn →</span>
+                  </a>
                 </div>
-                <div className="p-6 text-center">
-                  <h3 className="font-semibold text-slate-900 text-lg mb-1">{member.name}</h3>
-                  <p className="text-green-600 font-semibold text-sm mb-2">{member.role}</p>
-                  <p className="text-slate-600 text-sm">{member.bio}</p>
+                <div className="text-center">
+                  <h3 className="font-bold text-slate-900 text-lg mb-1">{member.name}</h3>
+                  <p className="text-emerald-600 font-semibold text-sm mb-3">{member.role}</p>
+                  <p className="text-slate-600 text-sm leading-relaxed">{member.bio}</p>
                 </div>
               </div>
             ))}

@@ -11,14 +11,14 @@ export default function Browse() {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const products = [
-    { id: 1, name: 'Fresh Tomatoes', price: '₵525/kg', category: 'produce', image: '/ripe tomatoes.jpeg', seller: 'Local Farmers' },
-    { id: 2, name: 'Fresh Carrots', price: '₵420/kg', category: 'produce', image: '/carrots.webp', seller: 'Local Farmers' },
-    { id: 3, name: 'Red Chilli Peppers', price: '₵975/kg', category: 'produce', image: '/red chilli.jpg', seller: 'Spice Growers' },
-    { id: 4, name: 'Fresh Maize', price: '₵330/kg', category: 'grains', image: '/fresh maize.webp', seller: 'Grain Cooperatives' },
-    { id: 5, name: 'Fresh Plantain', price: '₵270/kg', category: 'produce', image: '/fresh plantain.webp', seller: 'Banana Growers' },
-    { id: 6, name: 'Groundnuts', price: '₵630/kg', category: 'crops', image: '/Groundnut.webp', seller: 'Legume Farmers' },
-    { id: 7, name: 'Leafy Greens', price: '₵225/bundle', category: 'produce', image: '/leafy greens.jpeg', seller: 'Vegetable Farmers' },
-    { id: 8, name: 'Mixed Grains', price: '₵570/kg', category: 'grains', image: '/grains.jpeg', seller: 'Grain Cooperatives' },
+    { id: 1, name: 'Fresh Tomatoes', price: '₵250/kg', category: 'produce', image: '/ripe tomatoes.jpeg', seller: 'Local Farmers' },
+    { id: 2, name: 'Fresh Carrots', price: '₵200/kg', category: 'produce', image: '/carrots.webp', seller: 'Local Farmers' },
+    { id: 3, name: 'Red Chilli Peppers', price: '₵500/kg', category: 'produce', image: '/red chilli.jpg', seller: 'Spice Growers' },
+    { id: 4, name: 'Fresh Maize', price: '₵150/kg', category: 'grains', image: '/fresh maize.webp', seller: 'Grain Cooperatives' },
+    { id: 5, name: 'Fresh Plantain', price: '₵135/kg', category: 'produce', image: '/fresh plantain.webp', seller: 'Banana Growers' },
+    { id: 6, name: 'Groundnuts', price: '₵315/kg', category: 'crops', image: '/Groundnut.webp', seller: 'Legume Farmers' },
+    { id: 7, name: 'Leafy Greens', price: '₵120/bundle', category: 'produce', image: '/leafy greens.jpeg', seller: 'Vegetable Farmers' },
+    { id: 8, name: 'Mixed Grains', price: '₵290/kg', category: 'grains', image: '/grains.jpeg', seller: 'Grain Cooperatives' },
   ];
 
   const categories = [

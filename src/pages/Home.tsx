@@ -190,14 +190,14 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <ProductCard image="/apple.png" name="Fresh Apples" price="₵675/kg" />
-            <ProductCard image="/ripe tomatoes.jpeg" name="Ripe Tomatoes" price="₵525/kg" />
-            <ProductCard image="/carrots.webp" name="Carrots" price="₵420/kg" />
-            <ProductCard image="/red chilli.jpg" name="Red Chilli" price="₵975/kg" />
-            <ProductCard image="/fresh maize.webp" name="Fresh Maize" price="₵330/kg" />
-            <ProductCard image="/fresh plantain.webp" name="Fresh Plantain" price="₵270/kg" />
-            <ProductCard image="/Groundnut.webp" name="Groundnuts" price="₵630/kg" />
-            <ProductCard image="/grains.jpeg" name="Grains Mix" price="₵570/kg" />
+            <ProductCard image="/apple.png" name="Fresh Apples" price="₵350/kg" />
+            <ProductCard image="/ripe tomatoes.jpeg" name="Ripe Tomatoes" price="₵250/kg" />
+            <ProductCard image="/carrots.webp" name="Carrots" price="₵200/kg" />
+            <ProductCard image="/red chilli.jpg" name="Red Chilli" price="₵500/kg" />
+            <ProductCard image="/fresh maize.webp" name="Fresh Maize" price="₵150/kg" />
+            <ProductCard image="/fresh plantain.webp" name="Fresh Plantain" price="₵135/kg" />
+            <ProductCard image="/Groundnut.webp" name="Groundnuts" price="₵315/kg" />
+            <ProductCard image="/grains.jpeg" name="Grains Mix" price="₵290/kg" />
           </div>
 
           <div className="text-center mt-12">
