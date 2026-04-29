@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { DataProvider } from '@/context/DataContext';
 import { OnlineStatusProvider } from '@/context/OnlineStatusContext';
 import { Toaster } from '@/components/ui/toaster';
+import FloatingChatBot from '@/components/FloatingChatBot';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import Overview from '@/pages/dashboard/Overview';
@@ -89,6 +90,7 @@ function App() {
           <OnlineStatusProvider>
             <AppRoutes />
             <Toaster />
+            <FloatingChatBot />
           </OnlineStatusProvider>
         </DataProvider>
       </AuthProvider>
