@@ -54,7 +54,7 @@ export default function About() {
       </section>
 
       {/* Mission Section */}
-      <section className="py-20">
+      <section className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="animate-slide-in-left">
@@ -107,7 +107,7 @@ export default function About() {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 bg-gradient-to-br from-slate-50 to-emerald-50">
+      <section className="py-12 bg-gradient-to-br from-slate-50 to-emerald-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-slate-900 mb-16 animate-slide-down">Our Guiding Principles</h2>
           <div className="grid md:grid-cols-4 gap-6">
@@ -136,7 +136,7 @@ export default function About() {
       </section>
 
       {/* Team Section */}
-      <section className="py-20 bg-gradient-to-r from-emerald-50 via-green-50 to-teal-50">
+      <section className="py-12 bg-gradient-to-r from-emerald-50 via-green-50 to-teal-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-slate-900 mb-16 animate-slide-down">Meet Our Team</h2>
           <div className="grid md:grid-cols-4 gap-8">
@@ -169,7 +169,7 @@ export default function About() {
       </section>
 
       {/* Stats Section */}
-      <section className="bg-gradient-to-br from-emerald-600 via-green-600 to-teal-600 text-white py-16">
+      <section className="bg-gradient-to-br from-emerald-600 via-green-600 to-teal-600 text-white py-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-12 text-center">
             <div className="animate-slide-up">
@@ -189,7 +189,7 @@ export default function About() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-emerald-50 to-green-50">
+      <section className="py-12 bg-gradient-to-r from-emerald-50 to-green-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-6 animate-fade-in">
             JOIN OUR COMMUNITY

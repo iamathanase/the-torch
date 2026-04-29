@@ -49,7 +49,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-32 pb-12 text-center">
           <div className="max-w-4xl mx-auto">
             <div
               className={`transition-all duration-700 ${
@@ -121,7 +121,7 @@ export default function Home() {
                 }}
                 size="lg"
                 variant="outline"
-                className="border-white/50 text-white hover:bg-white/10 backdrop-blur-sm font-semibold"
+                className="border-white text-white hover:bg-emerald-600 hover:text-white hover:border-emerald-600 backdrop-blur-sm font-semibold bg-transparent"
               >
                 Browse Products
               </Button>
@@ -131,7 +131,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 lg:py-20 bg-gradient-to-r from-emerald-50 via-green-50 to-teal-50">
+      <section className="py-10 lg:py-12 bg-gradient-to-r from-emerald-50 via-green-50 to-teal-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
             <StatCard value={statsData.farmers} label="Trained Farmers" suffix="+" />
@@ -142,7 +142,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50/30">
+      <section className="py-12 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
@@ -180,7 +180,7 @@ export default function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-20 bg-gradient-to-r from-white via-emerald-50 to-green-50">
+      <section className="py-12 bg-gradient-to-r from-white via-emerald-50 to-green-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Featured Products</h2>
@@ -190,7 +190,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <ProductCard image="/apple.png" name="Fresh Apples" price="₵350/kg" />
+            <ProductCard image="/appleBest.jpeg" name="Fresh Apples" price="₵350/kg" />
             <ProductCard image="/ripe tomatoes.jpeg" name="Ripe Tomatoes" price="₵250/kg" />
             <ProductCard image="/carrots.webp" name="Carrots" price="₵200/kg" />
             <ProductCard image="/red chilli.jpg" name="Red Chilli" price="₵500/kg" />
@@ -213,7 +213,7 @@ export default function Home() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 bg-gradient-to-b from-teal-50 to-emerald-50">
+      <section className="py-12 bg-gradient-to-b from-teal-50 to-emerald-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl md:text-5xl font-bold text-center text-slate-900 mb-16">Our Commitment to Communities</h2>
           <div className="grid md:grid-cols-3 gap-10">
@@ -238,7 +238,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section
-        className="py-20 text-white relative overflow-hidden"
+        className="py-12 text-white relative overflow-hidden"
         style={{
           backgroundImage: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
         }}

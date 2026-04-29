@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Product, Order, Message, Lesson, OrderStatus, User, DeliveryStatus } from '@/data/types';
-import { mockProducts, mockOrders, mockMessages, mockLessons, mockUsers } from '@/data/mockData';
+import { mockMessages, mockLessons, mockUsers } from '@/data/mockData';
 import { generateAIResponse, getAITypingDelay } from '@/utils/aiAssistant';
+import { productsApi, ordersApi } from '@/lib/api';
 
 interface DataContextType {
   // Products
@@ -9,12 +10,14 @@ interface DataContextType {
   addProduct: (product: Product) => void;
   updateProduct: (id: string, product: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
+  loadingProducts: boolean;
   
   // Orders
   orders: Order[];
   addOrder: (order: Order) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
   cancelOrder: (orderId: string) => void;
+  loadingOrders: boolean;
   
   // Messages
   messages: Message[];
@@ -36,36 +39,163 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [lessons] = useState<Lesson[]>(mockLessons);
   const [users, setUsers] = useState<User[]>(mockUsers);
+  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+
+  // Load products from backend on mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoadingProducts(true);
+      try {
+        const response = await productsApi.getAll();
+        if (response.data && response.data.products) {
+          // Map backend products to frontend format
+          const mappedProducts = response.data.products.map((p: any) => ({
+            id: p._id,
+            title: p.name,
+            description: p.description,
+            price: p.price,
+            image: p.image || '/placeholder-product.jpg',
+            category: p.category,
+            sellerId: p.seller,
+            sellerName: p.sellerName || 'Unknown Seller',
+            stock: p.stock,
+            sold: p.sold || 0,
+            rating: p.rating || 0,
+            reviews: p.reviews || 0,
+          }));
+          setProducts(mappedProducts);
+        }
+      } catch (error) {
+        console.error('Failed to load products:', error);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // Load orders from backend on mount
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setLoadingOrders(true);
+      try {
+        const response = await ordersApi.getAll();
+        if (response.data && response.data.orders) {
+          // Map backend orders to frontend format
+          const mappedOrders = response.data.orders.map((o: any) => ({
+            id: o._id,
+            productId: o.product,
+            productTitle: o.productName || 'Product',
+            productImage: o.productImage || '/placeholder-product.jpg',
+            buyerId: o.buyer,
+            buyerName: o.buyerName || 'Customer',
+            sellerId: o.seller,
+            sellerName: o.sellerName || 'Seller',
+            quantity: o.quantity,
+            total: o.totalPrice,
+            status: o.status,
+            date: new Date(o.createdAt).toLocaleDateString(),
+          }));
+          setOrders(mappedOrders);
+        }
+      } catch (error) {
+        console.error('Failed to load orders:', error);
+      } finally {
+        setLoadingOrders(false);
+      }
+    };
+    fetchOrders();
+  }, []);
 
   // Product operations
-  const addProduct = useCallback((product: Product) => {
-    setProducts(prev => [...prev, product]);
+  const addProduct = useCallback(async (product: Product) => {
+    try {
+      const response = await productsApi.create({
+        name: product.title,
+        description: product.description,
+        price: product.price,
+        category: product.category,
+        stock: product.stock,
+        image: product.image,
+      });
+      if (response.data) {
+        setProducts(prev => [...prev, product]);
+      }
+    } catch (error) {
+      console.error('Failed to add product:', error);
+      throw error;
+    }
   }, []);
 
-  const updateProduct = useCallback((id: string, updates: Partial<Product>) => {
-    setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+  const updateProduct = useCallback(async (id: string, updates: Partial<Product>) => {
+    try {
+      const backendUpdates: any = {};
+      if (updates.title) backendUpdates.name = updates.title;
+      if (updates.description) backendUpdates.description = updates.description;
+      if (updates.price) backendUpdates.price = updates.price;
+      if (updates.category) backendUpdates.category = updates.category;
+      if (updates.stock) backendUpdates.stock = updates.stock;
+      if (updates.image) backendUpdates.image = updates.image;
+
+      await productsApi.update(id, backendUpdates);
+      setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+    } catch (error) {
+      console.error('Failed to update product:', error);
+      throw error;
+    }
   }, []);
 
-  const deleteProduct = useCallback((id: string) => {
-    setProducts(prev => prev.filter(p => p.id !== id));
+  const deleteProduct = useCallback(async (id: string) => {
+    try {
+      await productsApi.delete(id);
+      setProducts(prev => prev.filter(p => p.id !== id));
+    } catch (error) {
+      console.error('Failed to delete product:', error);
+      throw error;
+    }
   }, []);
 
   // Order operations
-  const addOrder = useCallback((order: Order) => {
-    setOrders(prev => [...prev, order]);
+  const addOrder = useCallback(async (order: Order) => {
+    try {
+      const response = await ordersApi.create({
+        product: order.productId,
+        quantity: order.quantity,
+        totalPrice: order.total,
+      });
+      if (response.data) {
+        setOrders(prev => [...prev, order]);
+      }
+    } catch (error) {
+      console.error('Failed to create order:', error);
+      throw error;
+    }
   }, []);
 
-  const updateOrderStatus = useCallback((orderId: string, status: OrderStatus) => {
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+  const updateOrderStatus = useCallback(async (orderId: string, status: OrderStatus) => {
+    try {
+      await ordersApi.update(orderId, { status });
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+      throw error;
+    }
   }, []);
 
-  const cancelOrder = useCallback((orderId: string) => {
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'cancelled' as OrderStatus } : o));
+  const cancelOrder = useCallback(async (orderId: string) => {
+    try {
+      await ordersApi.update(orderId, { status: 'cancelled' });
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'cancelled' as OrderStatus } : o));
+    } catch (error) {
+      console.error('Failed to cancel order:', error);
+      throw error;
+    }
   }, []);
 
   // Message operations
@@ -161,10 +291,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       addProduct,
       updateProduct,
       deleteProduct,
+      loadingProducts,
       orders,
       addOrder,
       updateOrderStatus,
       cancelOrder,
+      loadingOrders,
       messages,
       sendMessage,
       markMessageAsRead,

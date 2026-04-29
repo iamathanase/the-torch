@@ -50,7 +50,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-teal-50 to-white">
-      <PublicNavbar />
+      <PublicNavbar alwaysWhite={true} />
       {/* Navigation removed - using PublicNavbar instead */}
       {/*<nav className="sticky top-0 z-50 border-b border-border/20 bg-background/80 backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -221,7 +221,7 @@ export default function Contact() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-harvest to-harvest/80 text-harvest-foreground py-16">
+      <section className="bg-gradient-to-r from-harvest to-harvest/80 text-harvest-foreground py-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Join The Torch?</h2>
           <p className="text-lg mb-8 opacity-90">

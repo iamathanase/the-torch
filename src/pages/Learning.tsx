@@ -103,7 +103,7 @@ export default function Learning() {
       </nav>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 animate-fade-in">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
         <div className="mb-12 animate-slide-down">
           <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">Learning Hub</h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
@@ -161,7 +161,7 @@ export default function Learning() {
       </section>
 
       {/* Stats Section */}
-      <section className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 py-16">
+      <section className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 text-center text-white">
             <StatBox number="50+" label="Expert Courses" />
