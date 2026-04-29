@@ -7,6 +7,7 @@ import { MessageSquare, Send, Check, CheckCheck, Clock, Dot, Zap, Paperclip } fr
 import { Message } from "@/data/types";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
+import Swal from 'sweetalert2';
 
 export default function Messages() {
   const { user } = useAuth();
@@ -355,7 +356,22 @@ export default function Messages() {
                       <Button 
                         size="sm" 
                         variant="ghost"
-                        onClick={() => deleteMessage(m.id)}
+                        onClick={() => {
+                          Swal.fire({
+                            title: 'Delete Message?',
+                            text: 'This message will be permanently deleted.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#dc2626',
+                            cancelButtonColor: '#6b7280',
+                            confirmButtonText: 'Yes, Delete'
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              deleteMessage(m.id);
+                              toast.success('Message deleted');
+                            }
+                          });
+                        }}
                         className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
                       >
                         ×
