@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { Product, Order, Message, Lesson, OrderStatus, User, DeliveryStatus } from '@/data/types';
 import { mockMessages, mockLessons, mockUsers } from '@/data/mockData';
 import { generateAIResponse, getAITypingDelay } from '@/utils/aiAssistant';
-import { productsApi, ordersApi } from '@/lib/api';
+import { productsApi, ordersApi, api } from '@/lib/api';
 
 interface DataContextType {
   // Products
@@ -80,9 +80,16 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     fetchProducts();
   }, []);
 
-  // Load orders from backend on mount
+  // Load orders from backend on mount (only if authenticated)
   useEffect(() => {
     const fetchOrders = async () => {
+      // Only fetch orders if user is authenticated
+      const token = api.getToken();
+      if (!token) {
+        setLoadingOrders(false);
+        return;
+      }
+
       setLoadingOrders(true);
       try {
         const response = await ordersApi.getAll();
