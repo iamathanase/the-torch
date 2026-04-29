@@ -4,7 +4,7 @@ import { useData } from "@/context/DataContext";
 import { Button } from "@/components/ui/button";
 import { Order } from "@/data/types";
 import NewOrderModal from "@/components/modals/NewOrderModal";
-import { toast } from "sonner";
+import Swal from 'sweetalert2';
 import { ShoppingCart } from "lucide-react";
 
 const statuses: Order["status"][] = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
@@ -38,13 +38,34 @@ export default function Orders() {
 
   const handleCancelOrder = (orderId: string, orderStatus: Order["status"]) => {
     if (orderStatus === "delivered" || orderStatus === "cancelled") {
-      toast.error("Cannot cancel this order");
+      Swal.fire({
+        icon: 'error',
+        title: 'Cannot Cancel',
+        text: 'This order cannot be cancelled in its current status',
+        confirmButtonColor: '#059669'
+      });
       return;
     }
-    if (confirm("Are you sure you want to cancel this order?")) {
-      cancelOrder(orderId);
-      toast.success("Order cancelled successfully");
-    }
+    Swal.fire({
+      title: 'Cancel Order?',
+      text: 'This action cannot be undone. Your order will be cancelled.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, Cancel Order'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cancelOrder(orderId);
+        Swal.fire({
+          icon: 'success',
+          title: 'Cancelled!',
+          text: 'Your order has been cancelled successfully.',
+          confirmButtonColor: '#059669',
+          timer: 1500
+        });
+      }
+    });
   };
 
   return (
@@ -62,17 +83,17 @@ export default function Orders() {
         )}
       </div>
       
-      <div className="flex gap-2 border-b border-border">
+      <div className="flex gap-2 border-b border-emerald-200 dark:border-slate-700">
         <button 
           onClick={() => setTab("buying")} 
-          className={`-mb-px border-b-2 px-4 py-3 text-sm font-medium capitalize transition-all ${tab === "buying" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+          className={`-mb-px border-b-2 px-4 py-3 text-sm font-medium capitalize transition-all ${tab === "buying" ? "border-emerald-600 dark:border-emerald-400 text-emerald-600 dark:text-emerald-400" : "border-transparent text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400"}`}
         >
           {isCustomer ? "My Orders" : "Purchasing"}
         </button>
         {isSeller && (
           <button 
             onClick={() => setTab("selling")} 
-            className={`-mb-px border-b-2 px-4 py-3 text-sm font-medium capitalize transition-all ${tab === "selling" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            className={`-mb-px border-b-2 px-4 py-3 text-sm font-medium capitalize transition-all ${tab === "selling" ? "border-emerald-600 dark:border-emerald-400 text-emerald-600 dark:text-emerald-400" : "border-transparent text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400"}`}
           >
             {user!.role === "farmer" ? "Sales" : user!.role === "vendor" ? "Sales" : "Sales"}
           </button>

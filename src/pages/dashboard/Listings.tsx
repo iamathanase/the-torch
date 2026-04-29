@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Product } from "@/data/types";
 import AddProductModal from "@/components/modals/AddProductModal";
 import EditProductModal from "@/components/modals/EditProductModal";
-import { toast } from "sonner";
+import Swal from 'sweetalert2';
 
 export default function Listings() {
   const { user } = useAuth();
@@ -34,16 +34,36 @@ export default function Listings() {
     addButtonText = "+ Add Product";
   }
 
+  const handleAddClick = () => {
+    setShowAddModal(true);
+  };
+
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
     setShowEditModal(true);
   };
 
   const handleDelete = (productId: string) => {
-    if (confirm("Are you sure you want to delete this product?")) {
-      deleteProduct(productId);
-      toast.success("Product deleted successfully!");
-    }
+    Swal.fire({
+      title: 'Delete Product?',
+      text: 'This action cannot be undone. Your product will be permanently removed.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, Delete'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteProduct(productId);
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Your product has been deleted successfully.',
+          confirmButtonColor: '#059669',
+          timer: 1500
+        });
+      }
+    });
   };
 
   return (
@@ -53,7 +73,7 @@ export default function Listings() {
           <h1 className="font-display text-4xl font-bold">{pageTitle}</h1>
           <p className="mt-2 text-base text-muted-foreground">{pageDescription}</p>
         </div>
-        <Button variant="hero" className="whitespace-nowrap" onClick={() => setShowAddModal(true)}>
+        <Button variant="hero" className="whitespace-nowrap" onClick={handleAddClick}>
           {addButtonText}
         </Button>
       </div>

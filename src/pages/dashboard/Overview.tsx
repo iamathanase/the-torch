@@ -5,6 +5,7 @@ import { Package, ShoppingBasket, MessageSquare, TrendingUp, Sprout, Users, Book
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Swal from 'sweetalert2';
 
 export default function Overview() {
   const { user } = useAuth();
@@ -75,6 +76,16 @@ export default function Overview() {
     ];
   }
 
+  const handleActionClick = (actionName: string) => {
+    Swal.fire({
+      icon: 'info',
+      title: actionName,
+      text: 'You will be navigated to the ' + actionName + ' section',
+      confirmButtonColor: '#059669',
+      confirmButtonText: 'Proceed'
+    });
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
@@ -85,18 +96,18 @@ export default function Overview() {
         </div>
         <div className="flex flex-wrap gap-3">
           {(user!.role === "farmer" || user!.role === "vendor" || user!.role === "gardener") && (
-            <Button asChild variant="hero"><Link to="/dashboard/listings">+ Add {user!.role === "vendor" ? "Equipment" : "Listing"}</Link></Button>
+            <Button variant="hero" onClick={() => handleActionClick("Add New Listing")} asChild><Link to="/dashboard/listings">+ Add {user!.role === "vendor" ? "Equipment" : "Listing"}</Link></Button>
           )}
           {user!.role === "customer" && (
-            <Button asChild variant="hero"><Link to="/dashboard/marketplace">Start Shopping</Link></Button>
+            <Button variant="hero" onClick={() => handleActionClick("Start Shopping")} asChild><Link to="/dashboard/marketplace">Start Shopping</Link></Button>
           )}
           {user!.role === "admin" && (
-            <Button asChild variant="hero"><Link to="/dashboard/users">Manage Users</Link></Button>
+            <Button variant="hero" onClick={() => handleActionClick("Manage Users")} asChild><Link to="/dashboard/users">Manage Users</Link></Button>
           )}
           {user!.role === "gardener" && (
-            <Button asChild variant="hero"><Link to="/dashboard/learn">Browse Courses</Link></Button>
+            <Button variant="hero" onClick={() => handleActionClick("Browse Courses")} asChild><Link to="/dashboard/learn">Browse Courses</Link></Button>
           )}
-          <Button asChild variant="soft"><Link to="/dashboard/messages">Messages</Link></Button>
+          <Button variant="soft" onClick={() => handleActionClick("Messages")} asChild><Link to="/dashboard/messages">Messages</Link></Button>
         </div>
       </div>
 
