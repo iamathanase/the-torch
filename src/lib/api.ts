@@ -66,7 +66,17 @@ class ApiClient {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'API request failed');
+        console.error('API Error:', {
+          endpoint,
+          status: response.status,
+          statusText: response.statusText,
+          data
+        });
+        
+        return {
+          status: response.status,
+          error: data.message || data.error || 'API request failed',
+        };
       }
 
       return {
@@ -76,6 +86,11 @@ class ApiClient {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('API Request Failed:', {
+        endpoint,
+        error: errorMessage
+      });
+      
       return {
         status: 500,
         error: errorMessage,

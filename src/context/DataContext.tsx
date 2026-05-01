@@ -404,6 +404,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       
       console.log('📦 Order creation response:', response);
       
+      // Check for error in response
+      if (response.error) {
+        console.error('❌ Backend error:', response.error);
+        throw new Error(response.error);
+      }
+      
       if (response.data && response.data.order) {
         const backendOrder = response.data.order;
         console.log('✅ Backend order received:', backendOrder);
@@ -438,7 +444,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         return mappedOrder;
       } else {
         console.error('❌ No order data in response:', response);
-        throw new Error('No order data returned from server');
+        throw new Error(response.error || 'No order data returned from server');
       }
     } catch (error) {
       console.error('❌ Failed to create order:', error);
