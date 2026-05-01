@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 const getYouTubeVideoId = (url: string): string | null => {
   if (!url) return null;
   
+  console.log('Extracting video ID from URL:', url);
+  
   // Handle different YouTube URL formats
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
@@ -18,10 +20,12 @@ const getYouTubeVideoId = (url: string): string | null => {
   for (const pattern of patterns) {
     const match = url.match(pattern);
     if (match && match[1]) {
+      console.log('Extracted video ID:', match[1]);
       return match[1];
     }
   }
   
+  console.log('Could not extract video ID from URL');
   return null;
 };
 
@@ -276,20 +280,27 @@ export default function Learning() {
             
             <div className="p-6 space-y-6">
               {/* Video Player */}
-              {getYouTubeVideoId(viewingLesson.videoUrl) && (
+              {getYouTubeVideoId(viewingLesson.videoUrl) ? (
                 <div className="aspect-video w-full rounded-lg overflow-hidden bg-black">
                   <iframe
                     width="100%"
                     height="100%"
-                    src={`https://www.youtube.com/embed/${getYouTubeVideoId(viewingLesson.videoUrl)}`}
+                    src={`https://www.youtube.com/embed/${getYouTubeVideoId(viewingLesson.videoUrl)}?rel=0&modestbranding=1`}
                     title={viewingLesson.title}
                     frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     className="w-full h-full"
                   ></iframe>
                 </div>
-              )}
+              ) : viewingLesson.videoUrl ? (
+                <div className="aspect-video w-full rounded-lg overflow-hidden bg-muted flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <p className="text-muted-foreground mb-2">Invalid YouTube URL</p>
+                    <p className="text-xs text-muted-foreground">URL: {viewingLesson.videoUrl}</p>
+                  </div>
+                </div>
+              ) : null}
 
               {/* Lesson Info */}
               <div className="flex items-center gap-4 flex-wrap">
