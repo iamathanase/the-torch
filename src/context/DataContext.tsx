@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Product, Order, Message, Lesson, OrderStatus, User, DeliveryStatus } from '@/data/types';
-import { mockMessages, mockLessons, mockUsers } from '@/data/mockData';
+import { mockMessages } from '@/data/mockData';
 import { generateAIResponse, getAITypingDelay } from '@/utils/aiAssistant';
 import { productsApi, ordersApi, api } from '@/lib/api';
 
@@ -28,6 +28,10 @@ interface DataContextType {
   
   // Lessons
   lessons: Lesson[];
+  addLesson: (lesson: Lesson) => void;
+  updateLesson: (id: string, lesson: Partial<Lesson>) => void;
+  deleteLesson: (id: string) => void;
+  loadingLessons: boolean;
   
   // Users (for admin)
   users: User[];
@@ -42,11 +46,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<Message[]>(mockMessages);
-  const [lessons] = useState<Lesson[]>(mockLessons);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [loadingLessons, setLoadingLessons] = useState(false);
 
   // Load products from backend on mount
   useEffect(() => {
@@ -162,6 +167,38 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       }
     };
     fetchUsers();
+  }, []);
+
+  // Load lessons from backend
+  useEffect(() => {
+    const fetchLessons = async () => {
+      setLoadingLessons(true);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/lessons`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.data && data.data.lessons) {
+            // Map backend lessons to frontend format
+            const mappedLessons = data.data.lessons.map((l: any) => ({
+              id: l._id,
+              title: l.title,
+              category: l.category,
+              content: l.content,
+              image: l.image || '/placeholder-lesson.jpg',
+              durationMin: l.durationMin,
+              level: l.level,
+              createdAt: l.createdAt,
+            }));
+            setLessons(mappedLessons);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load lessons:', error);
+      } finally {
+        setLoadingLessons(false);
+      }
+    };
+    fetchLessons();
   }, []);
 
   // Product operations
@@ -336,6 +373,65 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setUsers(prev => prev.filter(u => u.id !== id));
   }, []);
 
+  // Lesson operations (admin)
+  const addLesson = useCallback(async (lesson: Lesson) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/lessons`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+        body: JSON.stringify({
+          title: lesson.title,
+          category: lesson.category,
+          content: lesson.content,
+          image: lesson.image,
+          durationMin: lesson.durationMin,
+          level: lesson.level,
+        }),
+      });
+      if (response.ok) {
+        setLessons(prev => [...prev, lesson]);
+      }
+    } catch (error) {
+      console.error('Failed to add lesson:', error);
+      throw error;
+    }
+  }, []);
+
+  const updateLesson = useCallback(async (id: string, updates: Partial<Lesson>) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/lessons/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+        body: JSON.stringify(updates),
+      });
+      setLessons(prev => prev.map(l => l.id === id ? { ...l, ...updates } : l));
+    } catch (error) {
+      console.error('Failed to update lesson:', error);
+      throw error;
+    }
+  }, []);
+
+  const deleteLesson = useCallback(async (id: string) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/lessons/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+      });
+      setLessons(prev => prev.filter(l => l.id !== id));
+    } catch (error) {
+      console.error('Failed to delete lesson:', error);
+      throw error;
+    }
+  }, []);
+
   return (
     <DataContext.Provider value={{
       products,
@@ -354,6 +450,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       deleteMessage,
       updateMessageDeliveryStatus,
       lessons,
+      addLesson,
+      updateLesson,
+      deleteLesson,
+      loadingLessons,
       users,
       addUser,
       updateUser,
