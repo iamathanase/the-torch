@@ -33,13 +33,22 @@ exports.uploadProfilePicture = async (req, res) => {
       });
     }
 
-    // Upload to Cloudinary
-    const result = await uploadToCloudinary(req.file.buffer, 'profile-pictures');
-    user.profilePicture = result.secure_url;
+    try {
+      // Try to upload to Cloudinary
+      const result = await uploadToCloudinary(req.file.buffer, 'profile-pictures');
+      user.profilePicture = result.secure_url;
+      console.log('Profile picture uploaded to Cloudinary:', result.secure_url);
+    } catch (cloudinaryError) {
+      console.error('Cloudinary upload failed:', cloudinaryError.message);
+      // Fallback: Convert to base64 data URL (for small images)
+      const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+      user.profilePicture = base64Image;
+      console.log('Using base64 fallback for profile picture');
+    }
 
     await user.save();
 
-    console.log('Profile picture updated:', user._id, result.secure_url);
+    console.log('Profile picture updated for user:', user._id);
 
     res.json({
       status: 200,
@@ -91,13 +100,22 @@ exports.uploadCoverImage = async (req, res) => {
       });
     }
 
-    // Upload to Cloudinary
-    const result = await uploadToCloudinary(req.file.buffer, 'cover-images');
-    user.coverImage = result.secure_url;
+    try {
+      // Try to upload to Cloudinary
+      const result = await uploadToCloudinary(req.file.buffer, 'cover-images');
+      user.coverImage = result.secure_url;
+      console.log('Cover image uploaded to Cloudinary:', result.secure_url);
+    } catch (cloudinaryError) {
+      console.error('Cloudinary upload failed:', cloudinaryError.message);
+      // Fallback: Convert to base64 data URL (for small images)
+      const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+      user.coverImage = base64Image;
+      console.log('Using base64 fallback for cover image');
+    }
 
     await user.save();
 
-    console.log('Cover image updated:', user._id, result.secure_url);
+    console.log('Cover image updated for user:', user._id);
 
     res.json({
       status: 200,
