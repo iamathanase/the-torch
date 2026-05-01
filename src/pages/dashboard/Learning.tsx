@@ -4,6 +4,7 @@ import { useData } from "@/context/DataContext";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Plus, Edit, Trash2, Play } from "lucide-react";
 import Swal from 'sweetalert2';
+import { toast } from 'sonner';
 
 // Helper function to extract YouTube video ID from URL
 const getYouTubeVideoId = (url: string): string | null => {
@@ -120,10 +121,10 @@ export default function Learning() {
           createdAt: new Date().toISOString(),
         });
         await refreshLessons(); // Refresh to get the latest lessons from backend
-        Swal.fire('Success!', 'Lesson added successfully', 'success');
+        toast.success('Lesson added successfully! 📚');
       } catch (error) {
         console.error('Add lesson error:', error);
-        Swal.fire('Error!', 'Failed to add lesson', 'error');
+        toast.error('Failed to add lesson. Please try again.');
       }
     }
   };
@@ -181,10 +182,10 @@ export default function Learning() {
         console.log('Updating lesson', lesson.id, 'with data:', formValues);
         await updateLesson(lesson.id, formValues);
         await refreshLessons(); // Refresh to get the latest lessons from backend
-        Swal.fire('Success!', 'Lesson updated successfully', 'success');
+        toast.success('Lesson updated successfully! ✏️');
       } catch (error) {
         console.error('Update lesson error:', error);
-        Swal.fire('Error!', 'Failed to update lesson', 'error');
+        toast.error('Failed to update lesson. Please try again.');
       }
     }
   };
@@ -204,10 +205,10 @@ export default function Learning() {
       try {
         await deleteLesson(lessonId);
         await refreshLessons(); // Refresh to get the latest lessons from backend
-        Swal.fire('Deleted!', 'Lesson deleted successfully', 'success');
+        toast.success('Lesson deleted successfully! 🗑️');
       } catch (error) {
         console.error('Delete lesson error:', error);
-        Swal.fire('Error!', 'Failed to delete lesson', 'error');
+        toast.error('Failed to delete lesson. Please try again.');
       }
     }
   };

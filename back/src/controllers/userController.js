@@ -65,6 +65,11 @@ exports.uploadProfilePicture = async (req, res) => {
     await user.save();
 
     console.log('✅ Profile picture saved to database for user:', user._id);
+    console.log('✅ Profile picture URL:', user.profilePicture);
+
+    // Verify it was saved by fetching again
+    const verifyUser = await User.findById(userId);
+    console.log('✅ Verification - Profile picture in DB:', verifyUser.profilePicture);
 
     res.json({
       status: 200,
@@ -172,30 +177,45 @@ exports.getUserProfile = async (req, res) => {
   try {
     const { userId } = req.params;
     
+    console.log('📖 Fetching profile for user:', userId);
+    
     const user = await User.findById(userId);
     if (!user) {
+      console.log('❌ User not found:', userId);
       return res.status(404).json({ 
         status: 404, 
         message: 'User not found' 
       });
     }
 
+    console.log('✅ User profile found:', {
+      id: user._id,
+      email: user.email,
+      profilePicture: user.profilePicture,
+      hasProfilePicture: !!user.profilePicture,
+      profilePictureLength: user.profilePicture ? user.profilePicture.length : 0
+    });
+
+    const responseData = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      profilePicture: user.profilePicture,
+      coverImage: user.coverImage,
+      bio: user.bio,
+      isVerified: user.isVerified,
+      createdAt: user.createdAt
+    };
+
+    console.log('📤 Sending response with profilePicture:', responseData.profilePicture ? 'YES' : 'NO');
+
     res.json({
       status: 200,
       message: 'User profile retrieved successfully',
-      data: {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        profilePicture: user.profilePicture,
-        coverImage: user.coverImage,
-        bio: user.bio,
-        isVerified: user.isVerified,
-        createdAt: user.createdAt
-      }
+      data: responseData
     });
   } catch (error) {
     console.error('Get user profile error:', error);
@@ -209,20 +229,15 @@ exports.getUserProfile = async (req, res) => {
 
 /**
  * @route   GET /api/users
- * @desc    Get all users (admin only)
- * @access  Private (admin only)
+ * @desc    Get all users (accessible to all authenticated users for browsing and messaging)
+ * @access  Private (requires authentication)
  */
 exports.getAllUsers = async (req, res) => {
   try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({
-        status: 403,
-        message: 'Forbidden: Admin access required'
-      });
-    }
-
-    // Fetch all users, excluding password
+    // All authenticated users can browse other users
+    // This is needed for messaging and community features
+    
+    // Fetch all users, excluding password and sensitive fields
     const users = await User.find({ isActive: true })
       .select('-passwordHash')
       .sort({ createdAt: -1 });

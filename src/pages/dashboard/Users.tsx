@@ -6,6 +6,7 @@ import AddUserModal from "@/components/modals/AddUserModal";
 import { useState } from "react";
 import Swal from 'sweetalert2';
 import { Trash2, UserPlus } from "lucide-react";
+import { toast } from 'sonner';
 
 export default function Users() {
   const { user } = useAuth();
@@ -16,17 +17,13 @@ export default function Users() {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleDeleteUser = (userId: string, userName: string) => {
+  const handleDeleteUser = async (userId: string, userName: string) => {
     if (userId === user.id) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Cannot Delete',
-        text: 'You cannot delete your own account',
-        confirmButtonColor: '#059669'
-      });
+      toast.error('You cannot delete your own account');
       return;
     }
-    Swal.fire({
+    
+    const result = await Swal.fire({
       title: 'Delete User?',
       text: `This will permanently delete ${userName}'s account. This action cannot be undone.`,
       icon: 'warning',
@@ -34,18 +31,16 @@ export default function Users() {
       confirmButtonColor: '#dc2626',
       cancelButtonColor: '#6b7280',
       confirmButtonText: 'Yes, Delete User'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteUser(userId);
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'User has been deleted successfully.',
-          confirmButtonColor: '#059669',
-          timer: 1500
-        });
-      }
     });
+    
+    if (result.isConfirmed) {
+      try {
+        await deleteUser(userId);
+        toast.success('User deleted successfully! 👤');
+      } catch (error) {
+        toast.error('Failed to delete user. Please try again.');
+      }
+    }
   };
 
   return (

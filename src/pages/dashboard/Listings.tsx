@@ -48,8 +48,8 @@ export default function Listings() {
     setShowEditModal(true);
   };
 
-  const handleDelete = (productId: string) => {
-    Swal.fire({
+  const handleDelete = async (productId: string) => {
+    const result = await Swal.fire({
       title: 'Delete Product?',
       text: 'This action cannot be undone. Your product will be permanently removed.',
       icon: 'warning',
@@ -57,9 +57,11 @@ export default function Listings() {
       confirmButtonColor: '#dc2626',
       cancelButtonColor: '#6b7280',
       confirmButtonText: 'Yes, Delete'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteProduct(productId);
+    });
+    
+    if (result.isConfirmed) {
+      try {
+        await deleteProduct(productId);
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
@@ -67,8 +69,15 @@ export default function Listings() {
           confirmButtonColor: '#059669',
           timer: 1500
         });
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to delete product. Please try again.',
+          confirmButtonColor: '#dc2626'
+        });
       }
-    });
+    }
   };
 
   return (
