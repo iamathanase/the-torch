@@ -120,7 +120,7 @@ export default function Messages() {
     conv.personName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!newMessageText.trim() && !attachmentFile) {
@@ -158,11 +158,16 @@ export default function Messages() {
       uploadedAt: new Date().toISOString(),
     };
 
-    sendMessage(newMsg);
-    setNewMessageText('');
-    setAttachmentFile(null);
-    setAttachmentPreview(null);
-    toast.success('Message sent!');
+    try {
+      await sendMessage(newMsg);
+      setNewMessageText('');
+      setAttachmentFile(null);
+      setAttachmentPreview(null);
+      toast.success('Message sent!');
+    } catch (error) {
+      console.error('Send message error:', error);
+      toast.error('Failed to send message. Please try again.');
+    }
   };
 
   const handleNewMessage = async () => {

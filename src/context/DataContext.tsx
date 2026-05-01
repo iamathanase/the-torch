@@ -245,7 +245,13 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         setLoadingMessages(false);
       }
     };
+    
     fetchMessages();
+    
+    // Auto-refresh messages every 5 seconds
+    const interval = setInterval(fetchMessages, 5000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   // Product operations
@@ -389,6 +395,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   // Message operations
   const sendMessage = useCallback(async (message: Message) => {
     try {
+      console.log('Sending message:', { toId: message.toId, content: message.content });
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/messages`, {
         method: 'POST',
         headers: {
@@ -404,14 +412,20 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Message sent successfully:', data);
         if (data.data && data.data.message) {
+          // Add the backend message to state
           setMessages(prev => [...prev, data.data.message]);
+          return data.data.message;
         }
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to send message:', errorData);
+        throw new Error(errorData.message || 'Failed to send message');
       }
     } catch (error) {
       console.error('Failed to send message:', error);
-      // Fallback to local state if API fails
-      setMessages(prev => [...prev, message]);
+      throw error;
     }
   }, []);
 
