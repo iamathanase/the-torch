@@ -26,6 +26,9 @@ export default function Settings() {
       if (!user?.id) return;
       
       try {
+        console.log('Loading profile for user:', user.id);
+        console.log('Current user avatar from context:', user.avatar);
+        
         const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/users/${user.id}`, {
           headers: {
             'Authorization': `Bearer ${api.getToken()}`,
@@ -36,6 +39,11 @@ export default function Settings() {
         
         if (response.ok && data.data) {
           const userData = data.data;
+          console.log('Profile loaded from backend:', {
+            profilePicture: userData.profilePicture,
+            coverImage: userData.coverImage
+          });
+          
           setFormData({
             firstName: userData.firstName || '',
             lastName: userData.lastName || '',
@@ -93,7 +101,8 @@ export default function Settings() {
       }
 
       const newProfilePicture = data.data.profilePicture;
-      console.log('Profile picture uploaded successfully:', newProfilePicture);
+      console.log('✅ Profile picture uploaded successfully:', newProfilePicture);
+      console.log('✅ Profile picture is Cloudinary URL:', newProfilePicture?.startsWith('https://res.cloudinary.com/'));
       
       // Update local state immediately
       setProfileImage(newProfilePicture);
@@ -107,24 +116,33 @@ export default function Settings() {
       
       if (profileResponse.ok) {
         const profileData = await profileResponse.json();
-        const freshProfilePicture = profileData.data.profilePicture;
+        const freshUserData = profileData.data;
         
-        console.log('Fresh profile data from backend:', freshProfilePicture);
+        console.log('Fresh profile data from backend:', freshUserData);
         
-        // Update auth context with fresh data
+        // Create complete updated user object matching AuthContext structure
         const updatedUser = {
-          ...user!,
-          avatar: freshProfilePicture,
+          id: user!.id,
+          name: `${freshUserData.firstName} ${freshUserData.lastName}`,
+          email: freshUserData.email,
+          role: user!.role,
+          verified: user!.verified,
+          avatar: freshUserData.profilePicture, // Map profilePicture to avatar
+          coverImage: freshUserData.coverImage,
+          bio: freshUserData.bio,
+          createdAt: user!.createdAt,
         };
         
-        // Update localStorage first
+        console.log('Updated user object:', updatedUser);
+        
+        // Update localStorage with complete user object
         localStorage.setItem('userData', JSON.stringify(updatedUser));
         
-        // Then update context
-        updateUserProfile({ avatar: freshProfilePicture });
+        // Update context
+        updateUserProfile({ avatar: freshUserData.profilePicture });
         
         // Update local display
-        setProfileImage(freshProfilePicture);
+        setProfileImage(freshUserData.profilePicture);
         
         toast.success('Profile picture updated successfully!');
         
@@ -207,24 +225,33 @@ export default function Settings() {
       
       if (profileResponse.ok) {
         const profileData = await profileResponse.json();
-        const freshCoverImage = profileData.data.coverImage;
+        const freshUserData = profileData.data;
         
-        console.log('Fresh cover image from backend:', freshCoverImage);
+        console.log('Fresh cover image from backend:', freshUserData.coverImage);
         
-        // Update auth context with fresh data
+        // Create complete updated user object matching AuthContext structure
         const updatedUser = {
-          ...user!,
-          coverImage: freshCoverImage,
+          id: user!.id,
+          name: `${freshUserData.firstName} ${freshUserData.lastName}`,
+          email: freshUserData.email,
+          role: user!.role,
+          verified: user!.verified,
+          avatar: freshUserData.profilePicture, // Map profilePicture to avatar
+          coverImage: freshUserData.coverImage,
+          bio: freshUserData.bio,
+          createdAt: user!.createdAt,
         };
         
-        // Update localStorage first
+        console.log('Updated user object:', updatedUser);
+        
+        // Update localStorage with complete user object
         localStorage.setItem('userData', JSON.stringify(updatedUser));
         
-        // Then update context
-        updateUserProfile({ coverImage: freshCoverImage });
+        // Update context
+        updateUserProfile({ coverImage: freshUserData.coverImage });
         
         // Update local display
-        setCoverImage(freshCoverImage);
+        setCoverImage(freshUserData.coverImage);
         
         toast.success('Cover image updated successfully!');
         

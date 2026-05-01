@@ -32,12 +32,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     const userData = localStorage.getItem('userData');
+    
+    console.log('AuthContext: Initializing...');
+    console.log('AuthContext: Token exists:', !!token);
+    console.log('AuthContext: UserData exists:', !!userData);
+    
     if (token && userData) {
       try {
-        setUser(JSON.parse(userData));
+        const parsedUser = JSON.parse(userData);
+        console.log('AuthContext: Loaded user from localStorage:', {
+          id: parsedUser.id,
+          name: parsedUser.name,
+          avatar: parsedUser.avatar,
+          hasAvatar: !!parsedUser.avatar
+        });
+        setUser(parsedUser);
         api.setToken(token);
       } catch (err) {
-        console.error('Failed to restore session:', err);
+        console.error('AuthContext: Failed to restore session:', err);
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
       }
@@ -174,10 +186,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const updateUserProfile = useCallback((updates: Partial<User>) => {
+    console.log('AuthContext: updateUserProfile called with:', updates);
     setUser(prev => {
-      if (!prev) return prev;
+      if (!prev) {
+        console.log('AuthContext: No previous user, skipping update');
+        return prev;
+      }
       const updated = { ...prev, ...updates };
+      console.log('AuthContext: Updated user:', {
+        id: updated.id,
+        name: updated.name,
+        avatar: updated.avatar,
+        hasAvatar: !!updated.avatar
+      });
       localStorage.setItem('userData', JSON.stringify(updated));
+      console.log('AuthContext: Saved to localStorage');
       return updated;
     });
   }, []);
