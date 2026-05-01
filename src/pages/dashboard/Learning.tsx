@@ -212,6 +212,12 @@ export default function Learning() {
             ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
             : l.image;
 
+          console.log(`Lesson "${l.title}":`, {
+            videoUrl: l.videoUrl,
+            extractedVideoId: videoId,
+            thumbnailUrl
+          });
+
           return (
             <div 
               key={l.id} 

@@ -22,6 +22,13 @@ const getLessons = async (req, res) => {
       .sort({ createdAt: -1 });
 
     console.log(`Found ${lessons.length} lessons`);
+    
+    // Log video URLs for debugging
+    lessons.forEach(lesson => {
+      if (lesson.videoUrl) {
+        console.log(`Lesson "${lesson.title}" has videoUrl:`, lesson.videoUrl);
+      }
+    });
 
     return res.status(200).json({
       status: 200,

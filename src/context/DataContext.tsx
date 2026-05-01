@@ -203,6 +203,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
               level: l.level,
               createdAt: l.createdAt,
             }));
+            console.log('Lessons loaded from backend:', mappedLessons);
+            mappedLessons.forEach((lesson: any) => {
+              if (lesson.videoUrl) {
+                console.log(`Lesson "${lesson.title}" videoUrl:`, lesson.videoUrl);
+              }
+            });
             setLessons(mappedLessons);
           }
         }
