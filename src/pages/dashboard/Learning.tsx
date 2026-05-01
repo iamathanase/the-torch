@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 
 export default function Learning() {
   const { user } = useAuth();
-  const { lessons, addLesson, updateLesson, deleteLesson } = useData();
+  const { lessons, addLesson, updateLesson, deleteLesson, refreshLessons } = useData();
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingLesson, setEditingLesson] = useState<any>(null);
 
@@ -73,8 +73,10 @@ export default function Learning() {
           ...formValues,
           createdAt: new Date().toISOString(),
         });
+        await refreshLessons(); // Refresh to get the latest lessons from backend
         Swal.fire('Success!', 'Lesson added successfully', 'success');
       } catch (error) {
+        console.error('Add lesson error:', error);
         Swal.fire('Error!', 'Failed to add lesson', 'error');
       }
     }
@@ -119,8 +121,10 @@ export default function Learning() {
     if (formValues) {
       try {
         await updateLesson(lesson.id, formValues);
+        await refreshLessons(); // Refresh to get the latest lessons from backend
         Swal.fire('Success!', 'Lesson updated successfully', 'success');
       } catch (error) {
+        console.error('Update lesson error:', error);
         Swal.fire('Error!', 'Failed to update lesson', 'error');
       }
     }
@@ -140,8 +144,10 @@ export default function Learning() {
     if (result.isConfirmed) {
       try {
         await deleteLesson(lessonId);
+        await refreshLessons(); // Refresh to get the latest lessons from backend
         Swal.fire('Deleted!', 'Lesson deleted successfully', 'success');
       } catch (error) {
+        console.error('Delete lesson error:', error);
         Swal.fire('Error!', 'Failed to delete lesson', 'error');
       }
     }

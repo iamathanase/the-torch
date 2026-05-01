@@ -31,6 +31,7 @@ interface DataContextType {
   addLesson: (lesson: Lesson) => void;
   updateLesson: (id: string, lesson: Partial<Lesson>) => void;
   deleteLesson: (id: string) => void;
+  refreshLessons: () => Promise<void>;
   loadingLessons: boolean;
   
   // Users (for admin)
@@ -549,8 +550,33 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
           level: lesson.level,
         }),
       });
+      
       if (response.ok) {
-        setLessons(prev => [...prev, lesson]);
+        const data = await response.json();
+        console.log('Lesson created:', data);
+        
+        if (data.data && data.data.lesson) {
+          // Map backend lesson to frontend format
+          const backendLesson = data.data.lesson;
+          const mappedLesson: Lesson = {
+            id: backendLesson._id,
+            title: backendLesson.title,
+            category: backendLesson.category,
+            content: backendLesson.content,
+            image: backendLesson.image || '/placeholder-lesson.jpg',
+            durationMin: backendLesson.durationMin,
+            level: backendLesson.level,
+            createdAt: backendLesson.createdAt,
+          };
+          
+          // Add the backend lesson to state
+          setLessons(prev => [...prev, mappedLesson]);
+          return mappedLesson;
+        }
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to create lesson:', errorData);
+        throw new Error(errorData.message || 'Failed to create lesson');
       }
     } catch (error) {
       console.error('Failed to add lesson:', error);
@@ -590,6 +616,34 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const refreshLessons = useCallback(async () => {
+    setLoadingLessons(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/lessons`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Lessons refreshed:', data);
+        if (data.data && data.data.lessons) {
+          const mappedLessons = data.data.lessons.map((l: any) => ({
+            id: l._id,
+            title: l.title,
+            category: l.category,
+            content: l.content,
+            image: l.image || '/placeholder-lesson.jpg',
+            durationMin: l.durationMin,
+            level: l.level,
+            createdAt: l.createdAt,
+          }));
+          setLessons(mappedLessons);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to refresh lessons:', error);
+    } finally {
+      setLoadingLessons(false);
+    }
+  }, []);
+
   return (
     <DataContext.Provider value={{
       products,
@@ -612,6 +666,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       addLesson,
       updateLesson,
       deleteLesson,
+      refreshLessons,
       loadingLessons,
       users,
       addUser,
