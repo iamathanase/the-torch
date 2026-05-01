@@ -38,6 +38,7 @@ interface DataContextType {
   addUser: (user: User) => void;
   updateUser: (id: string, user: Partial<User>) => void;
   deleteUser: (id: string) => void;
+  refreshUsers: () => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -145,6 +146,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         
         if (response.ok) {
           const data = await response.json();
+          console.log('Users loaded:', data); // Debug log
           if (data.data && data.data.users) {
             // Map backend users to frontend format
             const mappedUsers = data.data.users.map((u: any) => ({
@@ -157,8 +159,11 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
               bio: u.bio || '',
               createdAt: u.createdAt,
             }));
+            console.log('Mapped users:', mappedUsers); // Debug log
             setUsers(mappedUsers);
           }
+        } else {
+          console.error('Failed to fetch users:', response.status, response.statusText);
         }
       } catch (error) {
         console.error('Failed to load users:', error);
@@ -166,8 +171,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         setLoadingUsers(false);
       }
     };
+    
+    // Fetch users when component mounts and when token changes
     fetchUsers();
-  }, []);
+  }, []); // Keep empty dependency array but token check inside
 
   // Load lessons from backend
   useEffect(() => {
@@ -373,6 +380,42 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setUsers(prev => prev.filter(u => u.id !== id));
   }, []);
 
+  const refreshUsers = useCallback(async () => {
+    const token = api.getToken();
+    if (!token) return;
+
+    setLoadingUsers(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/users`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Users refreshed:', data);
+        if (data.data && data.data.users) {
+          const mappedUsers = data.data.users.map((u: any) => ({
+            id: u._id,
+            name: `${u.firstName} ${u.lastName}`,
+            email: u.email,
+            role: u.role,
+            avatar: u.profilePicture || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.firstName}`,
+            verified: u.isVerified,
+            bio: u.bio || '',
+            createdAt: u.createdAt,
+          }));
+          setUsers(mappedUsers);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to refresh users:', error);
+    } finally {
+      setLoadingUsers(false);
+    }
+  }, []);
+
   // Lesson operations (admin)
   const addLesson = useCallback(async (lesson: Lesson) => {
     try {
@@ -458,6 +501,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       addUser,
       updateUser,
       deleteUser,
+      refreshUsers,
     }}>
       {children}
     </DataContext.Provider>

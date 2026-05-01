@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { useOnlineStatus } from '@/context/OnlineStatusContext';
@@ -9,11 +9,18 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Browse() {
   const { user } = useAuth();
-  const { users } = useData();
+  const { users, refreshUsers } = useData();
   const { isUserOnline } = useOnlineStatus();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState<string>('all');
+
+  // Refresh users when component mounts (for admin)
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      refreshUsers();
+    }
+  }, [user?.role, refreshUsers]);
 
   // Check if user is admin
   if (user?.role !== 'admin') {
