@@ -43,9 +43,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [lessons] = useState<Lesson[]>(mockLessons);
-  const [users, setUsers] = useState<User[]>(mockUsers);
+  const [users, setUsers] = useState<User[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
+  const [loadingUsers, setLoadingUsers] = useState(false);
 
   // Load products from backend on mount
   useEffect(() => {
@@ -118,6 +119,49 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       }
     };
     fetchOrders();
+  }, []);
+
+  // Load users from backend (admin only)
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const token = api.getToken();
+      if (!token) {
+        setLoadingUsers(false);
+        return;
+      }
+
+      setLoadingUsers(true);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/users`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.data && data.data.users) {
+            // Map backend users to frontend format
+            const mappedUsers = data.data.users.map((u: any) => ({
+              id: u._id,
+              name: `${u.firstName} ${u.lastName}`,
+              email: u.email,
+              role: u.role,
+              avatar: u.profilePicture || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.firstName}`,
+              verified: u.isVerified,
+              bio: u.bio || '',
+              createdAt: u.createdAt,
+            }));
+            setUsers(mappedUsers);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load users:', error);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+    fetchUsers();
   }, []);
 
   // Product operations

@@ -15,6 +15,23 @@ export default function Browse() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState<string>('all');
 
+  // Check if user is admin
+  if (user?.role !== 'admin') {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="font-display text-4xl font-bold">Browse Users</h1>
+          <p className="mt-2 text-base text-muted-foreground">Discover and connect with farmers, customers, vendors, and gardeners.</p>
+        </div>
+        <div className="rounded-lg border border-dashed border-border bg-card/50 p-12 text-center">
+          <Users className="h-12 w-12 mx-auto opacity-30 mb-4" />
+          <p className="text-muted-foreground font-medium">Admin Access Required</p>
+          <p className="mt-2 text-sm text-muted-foreground/60">Only administrators can browse all users.</p>
+        </div>
+      </div>
+    );
+  }
+
   // Filter users
   const filteredUsers = users.filter(u => {
     if (u.id === user!.id) return false; // Exclude current user
