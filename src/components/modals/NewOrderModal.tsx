@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { Order, Product } from '@/data/types';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface NewOrderModalProps {
   isOpen: boolean;
@@ -15,14 +16,24 @@ interface NewOrderModalProps {
 
 export default function NewOrderModal({ isOpen, onClose, product, productId = '' }: NewOrderModalProps) {
   const { user } = useAuth();
-  const { products, addOrder } = useData();
+  const { products, addOrder, refreshProducts } = useData();
+  const navigate = useNavigate();
   const [selectedProductId, setSelectedProductId] = useState(product?.id || productId);
   const [quantity, setQuantity] = useState('1');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Reset form when modal opens with a new product
+  useEffect(() => {
+    if (isOpen && product) {
+      setSelectedProductId(product.id);
+      setQuantity('1');
+    }
+  }, [isOpen, product]);
 
   const selectedProduct = product || products.find(p => p.id === selectedProductId);
   const total = selectedProduct ? selectedProduct.price * Number(quantity) : 0;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedProductId || !quantity) {
       toast.error('Please select product and quantity');
@@ -55,11 +66,35 @@ export default function NewOrderModal({ isOpen, onClose, product, productId = ''
       createdAt: new Date().toISOString().split('T')[0],
     };
 
-    addOrder(newOrder);
-    toast.success('Order placed successfully!');
-    setSelectedProductId(productId);
-    setQuantity('1');
-    onClose();
+    setIsSubmitting(true);
+    try {
+      await addOrder(newOrder);
+      
+      // Show success toast with action to view orders
+      toast.success('Order placed successfully! 🎉', {
+        description: 'Your order has been submitted and is pending confirmation.',
+        action: {
+          label: 'View Orders',
+          onClick: () => navigate('/dashboard/orders')
+        },
+        duration: 5000,
+      });
+      
+      // Refresh products to update stock
+      await refreshProducts();
+      
+      // Reset form
+      setSelectedProductId('');
+      setQuantity('1');
+      
+      // Close modal
+      onClose();
+    } catch (error) {
+      console.error('Order creation error:', error);
+      toast.error('Failed to place order. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -132,11 +167,23 @@ export default function NewOrderModal({ isOpen, onClose, product, productId = ''
           )}
 
           <div className="flex gap-3 pt-4">
-            <Button variant="outline" onClick={onClose} className="flex-1">
+            <Button 
+              type="button"
+              variant="outline" 
+              onClick={onClose} 
+              className="flex-1"
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
-            <Button variant="hero" onClick={handleSubmit} disabled={!selectedProductId} className="flex-1">
-              Place Order
+            <Button 
+              type="submit"
+              variant="hero" 
+              onClick={handleSubmit} 
+              disabled={!selectedProductId || isSubmitting} 
+              className="flex-1"
+            >
+              {isSubmitting ? 'Placing Order...' : 'Place Order'}
             </Button>
           </div>
         </form>

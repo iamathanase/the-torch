@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { useData } from "@/context/DataContext";
 import { useAuth } from "@/context/AuthContext";
-import { Star, ShoppingCart, Search } from "lucide-react";
+import { Star, ShoppingCart, Search, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NewOrderModal from "@/components/modals/NewOrderModal";
 import { Product } from "@/data/types";
+import { useNavigate } from "react-router-dom";
 
 export default function Marketplace() {
   const { user } = useAuth();
   const { products, refreshProducts, loadingProducts } = useData();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showOrderModal, setShowOrderModal] = useState(false);
@@ -44,9 +46,19 @@ export default function Marketplace() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-4xl font-bold">Browse Market</h1>
-        <p className="mt-2 text-base text-muted-foreground">Discover and purchase products from sellers across FarmDialogue.</p>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="font-display text-4xl font-bold">Browse Market</h1>
+          <p className="mt-2 text-base text-muted-foreground">Discover and purchase products from sellers across FarmDialogue.</p>
+        </div>
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/dashboard/orders')}
+          className="gap-2"
+        >
+          <Package className="h-4 w-4" />
+          View My Orders
+        </Button>
       </div>
 
       {/* Search and Filter Section */}
