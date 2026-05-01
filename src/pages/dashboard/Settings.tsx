@@ -92,25 +92,60 @@ export default function Settings() {
         throw new Error(data.message || 'Upload failed');
       }
 
-      console.log('Profile picture uploaded successfully:', data.data.profilePicture);
+      const newProfilePicture = data.data.profilePicture;
+      console.log('Profile picture uploaded successfully:', newProfilePicture);
       
-      // Update local state
-      setProfileImage(data.data.profilePicture);
+      // Update local state immediately
+      setProfileImage(newProfilePicture);
       
-      // Update auth context and localStorage
-      const updatedUser = {
-        ...user!,
-        avatar: data.data.profilePicture
-      };
-      localStorage.setItem('userData', JSON.stringify(updatedUser));
-      updateUserProfile({ avatar: data.data.profilePicture });
+      // Fetch fresh user data from backend to ensure consistency
+      const profileResponse = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/users/${user!.id}`, {
+        headers: {
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+      });
       
-      toast.success('Profile picture updated! Refreshing page...');
-      
-      // Force page reload after 1.5 seconds
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      if (profileResponse.ok) {
+        const profileData = await profileResponse.json();
+        const freshProfilePicture = profileData.data.profilePicture;
+        
+        console.log('Fresh profile data from backend:', freshProfilePicture);
+        
+        // Update auth context with fresh data
+        const updatedUser = {
+          ...user!,
+          avatar: freshProfilePicture,
+        };
+        
+        // Update localStorage first
+        localStorage.setItem('userData', JSON.stringify(updatedUser));
+        
+        // Then update context
+        updateUserProfile({ avatar: freshProfilePicture });
+        
+        // Update local display
+        setProfileImage(freshProfilePicture);
+        
+        toast.success('Profile picture updated successfully!');
+        
+        // Reload page to ensure all components update
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        // Fallback if profile fetch fails
+        const updatedUser = {
+          ...user!,
+          avatar: newProfilePicture,
+        };
+        localStorage.setItem('userData', JSON.stringify(updatedUser));
+        updateUserProfile({ avatar: newProfilePicture });
+        
+        toast.success('Profile picture updated!');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
     } catch (error) {
       console.error('Upload error:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to upload profile picture');
@@ -140,6 +175,8 @@ export default function Settings() {
       const formData = new FormData();
       formData.append('image', file);
 
+      console.log('Uploading cover image for user:', user!.id);
+
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/users/${user!.id}/cover-image`, {
         method: 'POST',
         headers: {
@@ -149,25 +186,66 @@ export default function Settings() {
       });
 
       const data = await response.json();
+      console.log('Upload response:', response.status, data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Upload failed');
       }
 
-      console.log('Cover image uploaded:', data.data.coverImage);
+      const newCoverImage = data.data.coverImage;
+      console.log('Cover image uploaded successfully:', newCoverImage);
       
-      // Update local state
-      setCoverImage(data.data.coverImage);
+      // Update local state immediately
+      setCoverImage(newCoverImage);
       
-      // Update auth context
-      updateUserProfile({ coverImage: data.data.coverImage });
+      // Fetch fresh user data from backend
+      const profileResponse = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/users/${user!.id}`, {
+        headers: {
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+      });
       
-      toast.success('Cover image updated successfully!');
-      
-      // Force page reload after 1 second to ensure all components update
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      if (profileResponse.ok) {
+        const profileData = await profileResponse.json();
+        const freshCoverImage = profileData.data.coverImage;
+        
+        console.log('Fresh cover image from backend:', freshCoverImage);
+        
+        // Update auth context with fresh data
+        const updatedUser = {
+          ...user!,
+          coverImage: freshCoverImage,
+        };
+        
+        // Update localStorage first
+        localStorage.setItem('userData', JSON.stringify(updatedUser));
+        
+        // Then update context
+        updateUserProfile({ coverImage: freshCoverImage });
+        
+        // Update local display
+        setCoverImage(freshCoverImage);
+        
+        toast.success('Cover image updated successfully!');
+        
+        // Reload page to ensure all components update
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        // Fallback
+        const updatedUser = {
+          ...user!,
+          coverImage: newCoverImage,
+        };
+        localStorage.setItem('userData', JSON.stringify(updatedUser));
+        updateUserProfile({ coverImage: newCoverImage });
+        
+        toast.success('Cover image updated!');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
     } catch (error) {
       console.error('Upload error:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to upload cover image');
