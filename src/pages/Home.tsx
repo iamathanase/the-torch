@@ -89,7 +89,7 @@ export default function Home() {
                 Get Started <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button
-                onClick={() => navigate('/browse')}
+                onClick={() => navigate('/auth/login')}
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-emerald-600 hover:text-white hover:border-emerald-600 backdrop-blur-sm font-semibold bg-transparent"

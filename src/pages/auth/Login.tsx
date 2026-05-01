@@ -70,9 +70,6 @@ export default function Login() {
           
           {/* Overlay Content */}
           <div className="relative z-10 text-white text-center px-8">
-            <div className="mb-8">
-              <img src="/logooo.png" alt="The Torch" className="h-16 mx-auto mb-6 drop-shadow-lg" />
-            </div>
             <h2 className="text-4xl font-bold mb-4">Welcome to The Torch</h2>
             <p className="text-lg text-emerald-100 mb-8">
               Building Food Security Through Agricultural Education & Digital Marketplace
@@ -111,14 +108,6 @@ export default function Login() {
 
         {/* Right Side - Login Form */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-8 lg:px-10 py-8 overflow-y-auto">
-          {/* Mobile Logo */}
-          <div className="lg:hidden mb-6">
-            <div className="flex items-center gap-3">
-              <img src="/logooo.png" alt="The Torch" className="h-10" />
-              <h1 className="text-2xl font-bold text-slate-900">The Torch</h1>
-            </div>
-          </div>
-
           {/* Form Header */}
           <div className="mb-6">
             <h2 className="text-3xl font-bold text-slate-900 mb-2">Sign In</h2>
