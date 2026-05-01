@@ -75,6 +75,8 @@ export default function Settings() {
       const formData = new FormData();
       formData.append('image', file);
 
+      console.log('Uploading profile picture for user:', user!.id);
+
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/users/${user!.id}/profile-picture`, {
         method: 'POST',
         headers: {
@@ -84,25 +86,31 @@ export default function Settings() {
       });
 
       const data = await response.json();
+      console.log('Upload response:', response.status, data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Upload failed');
       }
 
-      console.log('Profile picture uploaded:', data.data.profilePicture);
+      console.log('Profile picture uploaded successfully:', data.data.profilePicture);
       
       // Update local state
       setProfileImage(data.data.profilePicture);
       
-      // Update auth context
+      // Update auth context and localStorage
+      const updatedUser = {
+        ...user!,
+        avatar: data.data.profilePicture
+      };
+      localStorage.setItem('userData', JSON.stringify(updatedUser));
       updateUserProfile({ avatar: data.data.profilePicture });
       
-      toast.success('Profile picture updated successfully!');
+      toast.success('Profile picture updated! Refreshing page...');
       
-      // Force page reload after 1 second to ensure all components update
+      // Force page reload after 1.5 seconds
       setTimeout(() => {
         window.location.reload();
-      }, 1000);
+      }, 1500);
     } catch (error) {
       console.error('Upload error:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to upload profile picture');
