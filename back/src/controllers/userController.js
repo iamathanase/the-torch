@@ -10,8 +10,11 @@ exports.uploadProfilePicture = async (req, res) => {
   try {
     const { userId } = req.params;
     
+    console.log('Profile picture upload request for user:', userId);
+    
     // Check if user is updating their own profile or is admin
     if (req.user.userId !== userId && req.user.role !== 'admin') {
+      console.log('Forbidden: User', req.user.userId, 'trying to update', userId);
       return res.status(403).json({ 
         status: 403, 
         message: 'Forbidden: You can only update your own profile' 
@@ -19,36 +22,49 @@ exports.uploadProfilePicture = async (req, res) => {
     }
 
     if (!req.file) {
+      console.log('No file provided in request');
       return res.status(400).json({ 
         status: 400, 
         message: 'No image file provided' 
       });
     }
 
+    console.log('File received:', req.file.mimetype, req.file.size, 'bytes');
+
     const user = await User.findById(userId);
     if (!user) {
+      console.log('User not found:', userId);
       return res.status(404).json({ 
         status: 404, 
         message: 'User not found' 
       });
     }
 
+    let imageUrl;
+    
     try {
       // Try to upload to Cloudinary
-      const result = await uploadToCloudinary(req.file.buffer, 'profile-pictures');
-      user.profilePicture = result.secure_url;
-      console.log('Profile picture uploaded to Cloudinary:', result.secure_url);
+      console.log('Attempting Cloudinary upload...');
+      const result = await uploadToCloudinary(req.file.buffer, 'thetorch/profile-pictures');
+      imageUrl = result.secure_url;
+      console.log('✅ Cloudinary upload successful:', imageUrl);
     } catch (cloudinaryError) {
-      console.error('Cloudinary upload failed:', cloudinaryError.message);
-      // Fallback: Convert to base64 data URL (for small images)
-      const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-      user.profilePicture = base64Image;
-      console.log('Using base64 fallback for profile picture');
+      console.error('❌ Cloudinary upload failed:', cloudinaryError.message);
+      
+      // Fallback: Convert to base64 data URL (works but not ideal for large images)
+      if (req.file.size < 500000) { // Only use base64 for images < 500KB
+        imageUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+        console.log('⚠️  Using base64 fallback (image size:', req.file.size, 'bytes)');
+      } else {
+        throw new Error('Image too large for base64 fallback and Cloudinary upload failed');
+      }
     }
 
+    // Update user profile picture
+    user.profilePicture = imageUrl;
     await user.save();
 
-    console.log('Profile picture updated for user:', user._id);
+    console.log('✅ Profile picture saved to database for user:', user._id);
 
     res.json({
       status: 200,
@@ -59,11 +75,11 @@ exports.uploadProfilePicture = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Profile picture upload error:', error);
+    console.error('❌ Profile picture upload error:', error);
     res.status(500).json({
       status: 500,
       message: 'Error uploading profile picture',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
     });
   }
 };
@@ -76,6 +92,8 @@ exports.uploadProfilePicture = async (req, res) => {
 exports.uploadCoverImage = async (req, res) => {
   try {
     const { userId } = req.params;
+    
+    console.log('Cover image upload request for user:', userId);
     
     // Check if user is updating their own profile or is admin
     if (req.user.userId !== userId && req.user.role !== 'admin') {
@@ -92,6 +110,8 @@ exports.uploadCoverImage = async (req, res) => {
       });
     }
 
+    console.log('File received:', req.file.mimetype, req.file.size, 'bytes');
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ 
@@ -100,22 +120,30 @@ exports.uploadCoverImage = async (req, res) => {
       });
     }
 
+    let imageUrl;
+    
     try {
       // Try to upload to Cloudinary
-      const result = await uploadToCloudinary(req.file.buffer, 'cover-images');
-      user.coverImage = result.secure_url;
-      console.log('Cover image uploaded to Cloudinary:', result.secure_url);
+      console.log('Attempting Cloudinary upload...');
+      const result = await uploadToCloudinary(req.file.buffer, 'thetorch/cover-images');
+      imageUrl = result.secure_url;
+      console.log('✅ Cloudinary upload successful:', imageUrl);
     } catch (cloudinaryError) {
-      console.error('Cloudinary upload failed:', cloudinaryError.message);
-      // Fallback: Convert to base64 data URL (for small images)
-      const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-      user.coverImage = base64Image;
-      console.log('Using base64 fallback for cover image');
+      console.error('❌ Cloudinary upload failed:', cloudinaryError.message);
+      
+      // Fallback: Convert to base64 data URL
+      if (req.file.size < 500000) {
+        imageUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+        console.log('⚠️  Using base64 fallback');
+      } else {
+        throw new Error('Image too large for base64 fallback and Cloudinary upload failed');
+      }
     }
 
+    user.coverImage = imageUrl;
     await user.save();
 
-    console.log('Cover image updated for user:', user._id);
+    console.log('✅ Cover image saved to database for user:', user._id);
 
     res.json({
       status: 200,
@@ -126,11 +154,11 @@ exports.uploadCoverImage = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Cover image upload error:', error);
+    console.error('❌ Cover image upload error:', error);
     res.status(500).json({
       status: 500,
       message: 'Error uploading cover image',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
     });
   }
 };
