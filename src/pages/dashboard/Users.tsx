@@ -1,17 +1,16 @@
-import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AddUserModal from "@/components/modals/AddUserModal";
-import { toast } from "sonner";
+import { useState } from "react";
+import Swal from 'sweetalert2';
 import { Trash2, UserPlus } from "lucide-react";
 
 export default function Users() {
   const { user } = useAuth();
-  const { deleteUser } = useData();
+  const { users, deleteUser } = useData();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [users] = useState<any[]>([]);
 
   if (user?.role !== "admin") {
     return <Navigate to="/dashboard" replace />;
@@ -19,13 +18,34 @@ export default function Users() {
 
   const handleDeleteUser = (userId: string, userName: string) => {
     if (userId === user.id) {
-      toast.error("Cannot delete your own account");
+      Swal.fire({
+        icon: 'error',
+        title: 'Cannot Delete',
+        text: 'You cannot delete your own account',
+        confirmButtonColor: '#059669'
+      });
       return;
     }
-    if (confirm(`Are you sure you want to delete ${userName}?`)) {
-      deleteUser(userId);
-      toast.success("User deleted successfully!");
-    }
+    Swal.fire({
+      title: 'Delete User?',
+      text: `This will permanently delete ${userName}'s account. This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, Delete User'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteUser(userId);
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'User has been deleted successfully.',
+          confirmButtonColor: '#059669',
+          timer: 1500
+        });
+      }
+    });
   };
 
   return (
