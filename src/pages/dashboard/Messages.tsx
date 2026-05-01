@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { useOnlineStatus } from "@/context/OnlineStatusContext";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Send, Check, CheckCheck, Clock, Dot, Zap, Paperclip } from "lucide-react";
+import { MessageSquare, Send, Check, CheckCheck, Clock, Dot, Zap, Paperclip, Users } from "lucide-react";
 import { Message } from "@/data/types";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
@@ -165,6 +165,39 @@ export default function Messages() {
     toast.success('Message sent!');
   };
 
+  const handleNewMessage = async () => {
+    const availableUsers = users.filter(u => u.id !== user!.id);
+    
+    if (availableUsers.length === 0) {
+      toast.error('No users available to message');
+      return;
+    }
+
+    const { value: selectedUserId } = await Swal.fire({
+      title: 'Start New Conversation',
+      html: `
+        <select id="user-select" class="swal2-input">
+          <option value="">Select a user...</option>
+          ${availableUsers.map(u => `
+            <option value="${u.id}">${u.name} (${u.role})</option>
+          `).join('')}
+        </select>
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: 'Start Chat',
+      preConfirm: () => {
+        const select = document.getElementById('user-select') as HTMLSelectElement;
+        return select.value;
+      }
+    });
+
+    if (selectedUserId) {
+      setSelectedConversationId(selectedUserId);
+      toast.success('Conversation started!');
+    }
+  };
+
   const handleAttachmentSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -198,22 +231,34 @@ export default function Messages() {
           <h1 className="font-display text-4xl font-bold">Messages</h1>
           <p className="mt-2 text-base text-muted-foreground">Connect with your community. Message anyone directly!</p>
         </div>
-        {unreadMessages.length > 0 && (
-          <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
-            <p className="text-sm font-semibold text-primary">{unreadMessages.length} unread</p>
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          {unreadMessages.length > 0 && (
+            <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
+              <p className="text-sm font-semibold text-primary">{unreadMessages.length} unread</p>
+            </div>
+          )}
+          <Button variant="hero" onClick={handleNewMessage} className="gap-2">
+            <MessageSquare className="h-4 w-4" />
+            New Message
+          </Button>
+        </div>
       </div>
 
       {myMessages.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border bg-card/50 p-12 text-center">
           <MessageSquare className="h-12 w-12 mx-auto opacity-30 mb-4" />
           <p className="text-muted-foreground font-medium">No messages yet.</p>
-          <p className="mt-2 text-sm text-muted-foreground/60">Visit the Browse page to find users and start messaging!</p>
-          <Button variant="hero" className="mt-4 gap-2">
-            <Send className="h-4 w-4" />
-            Browse Users
-          </Button>
+          <p className="mt-2 text-sm text-muted-foreground/60">Click "New Message" above or visit the Browse page to find users and start messaging!</p>
+          <div className="flex gap-3 justify-center mt-4">
+            <Button variant="hero" onClick={handleNewMessage} className="gap-2">
+              <MessageSquare className="h-4 w-4" />
+              New Message
+            </Button>
+            <Button variant="outline" onClick={() => window.location.href = '/dashboard/browse'} className="gap-2">
+              <Users className="h-4 w-4" />
+              Browse Users
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="grid gap-4 lg:grid-cols-3 flex-1 overflow-hidden">

@@ -91,6 +91,7 @@ export interface Lesson {
   category: string;
   content: string;
   image: string;
+  videoUrl?: string;
   durationMin: number;
   level: 'beginner' | 'intermediate' | 'advanced';
   createdAt: string;
