@@ -304,6 +304,8 @@ function FeatureCard({
 }
 
 function ProductCard({ image, name, price }: { image: string; name: string; price: string }) {
+  const navigate = useNavigate();
+  
   return (
     <div className="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition-all group">
       <div className="bg-gradient-to-br from-green-100 to-emerald-100 h-32 flex items-center justify-center overflow-hidden">
@@ -315,7 +317,14 @@ function ProductCard({ image, name, price }: { image: string; name: string; pric
       </div>
       <div className="p-4">
         <h3 className="font-semibold text-slate-900 mb-1">{name}</h3>
-        <p className="text-green-600 font-bold text-lg">{price}</p>
+        <p className="text-green-600 font-bold text-lg mb-3">{price}</p>
+        <Button
+          onClick={() => navigate('/auth/login')}
+          size="sm"
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+        >
+          Buy Now
+        </Button>
       </div>
     </div>
   );

@@ -155,6 +155,8 @@ export default function Browse() {
 }
 
 function ProductCard({ name, price, category, image, seller }: any) {
+  const navigate = useNavigate();
+  
   return (
     <div className="bg-white rounded-lg border border-slate-200 overflow-hidden hover:border-green-300 hover:shadow-lg transition-all group">
       <div className="bg-gradient-to-br from-slate-100 to-slate-200 h-40 flex items-center justify-center overflow-hidden">
@@ -167,12 +169,17 @@ function ProductCard({ name, price, category, image, seller }: any) {
       <div className="p-4">
         <h3 className="font-semibold text-slate-900 mb-1">{name}</h3>
         <p className="text-sm text-slate-600 mb-3">{seller}</p>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-3">
           <span className="text-lg font-bold text-green-600">{price}</span>
-          <button className="p-2 bg-green-100 rounded-lg hover:bg-green-200 transition-colors">
-            <ShoppingCart className="h-4 w-4 text-green-600" />
-          </button>
         </div>
+        <Button
+          onClick={() => navigate('/auth/login')}
+          size="sm"
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2"
+        >
+          <ShoppingCart className="h-4 w-4" />
+          Buy Now
+        </Button>
       </div>
     </div>
   );
