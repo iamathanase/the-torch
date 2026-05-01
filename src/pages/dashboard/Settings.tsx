@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { Upload, Loader2 } from "lucide-react";
 
 export default function Settings() {
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [uploadingProfile, setUploadingProfile] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
@@ -90,6 +90,7 @@ export default function Settings() {
       }
 
       setProfileImage(data.data.profilePicture);
+      updateUserProfile({ avatar: data.data.profilePicture });
       toast.success('Profile picture updated successfully!');
     } catch (error) {
       console.error('Upload error:', error);
@@ -135,6 +136,7 @@ export default function Settings() {
       }
 
       setCoverImage(data.data.coverImage);
+      updateUserProfile({ coverImage: data.data.coverImage });
       toast.success('Cover image updated successfully!');
     } catch (error) {
       console.error('Upload error:', error);

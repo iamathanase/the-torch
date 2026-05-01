@@ -91,6 +91,7 @@ export default function DashboardLayout() {
         <div className="border-t border-emerald-200 dark:border-slate-700 p-4 bg-emerald-50 dark:bg-slate-900">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
+              <AvatarImage src={user!.avatar} alt={user!.name} />
               <AvatarFallback className="bg-emerald-600 text-white text-sm font-semibold">{initials}</AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
@@ -144,6 +145,7 @@ export default function DashboardLayout() {
             <div className="border-t border-emerald-200 dark:border-slate-700 p-4 bg-emerald-50 dark:bg-slate-900">
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
+                  <AvatarImage src={user!.avatar} alt={user!.name} />
                   <AvatarFallback className="bg-emerald-600 text-white text-sm font-semibold">{initials}</AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">

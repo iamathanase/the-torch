@@ -16,6 +16,7 @@ interface AuthContextType {
     phone?: string
   ) => Promise<void>;
   logout: () => void;
+  updateUserProfile: (updates: Partial<User>) => void;
   error: string | null;
   clearError: () => void;
 }
@@ -61,18 +62,64 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       api.setToken(token);
       localStorage.setItem('authToken', token);
 
-      // Create user object and store it
-      const userData: User = {
-        id: userId,
-        name: userName,
-        email: email,
-        role: userRole as any,
-        verified: isVerified,
-        createdAt: new Date().toISOString(),
-      };
+      // Fetch full user profile to get profile picture
+      try {
+        const profileResponse = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/users/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json();
+          const fullUserData = profileData.data;
+          
+          // Create user object with profile picture
+          const userData: User = {
+            id: userId,
+            name: `${fullUserData.firstName} ${fullUserData.lastName}`,
+            email: fullUserData.email,
+            role: userRole as any,
+            verified: isVerified,
+            avatar: fullUserData.profilePicture || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`,
+            coverImage: fullUserData.coverImage,
+            bio: fullUserData.bio,
+            createdAt: fullUserData.createdAt || new Date().toISOString(),
+          };
 
-      localStorage.setItem('userData', JSON.stringify(userData));
-      setUser(userData);
+          localStorage.setItem('userData', JSON.stringify(userData));
+          setUser(userData);
+        } else {
+          // Fallback if profile fetch fails
+          const userData: User = {
+            id: userId,
+            name: userName,
+            email: email,
+            role: userRole as any,
+            verified: isVerified,
+            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`,
+            createdAt: new Date().toISOString(),
+          };
+
+          localStorage.setItem('userData', JSON.stringify(userData));
+          setUser(userData);
+        }
+      } catch (profileErr) {
+        console.error('Failed to fetch profile:', profileErr);
+        // Fallback user data
+        const userData: User = {
+          id: userId,
+          name: userName,
+          email: email,
+          role: userRole as any,
+          verified: isVerified,
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`,
+          createdAt: new Date().toISOString(),
+        };
+
+        localStorage.setItem('userData', JSON.stringify(userData));
+        setUser(userData);
+      }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Login failed';
       setError(errorMsg);
@@ -126,6 +173,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
   }, []);
 
+  const updateUserProfile = useCallback((updates: Partial<User>) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...updates };
+      localStorage.setItem('userData', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -135,6 +191,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         register,
         logout,
+        updateUserProfile,
         error,
         clearError,
       }}
