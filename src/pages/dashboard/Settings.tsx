@@ -89,9 +89,20 @@ export default function Settings() {
         throw new Error(data.message || 'Upload failed');
       }
 
+      console.log('Profile picture uploaded:', data.data.profilePicture);
+      
+      // Update local state
       setProfileImage(data.data.profilePicture);
+      
+      // Update auth context
       updateUserProfile({ avatar: data.data.profilePicture });
+      
       toast.success('Profile picture updated successfully!');
+      
+      // Force page reload after 1 second to ensure all components update
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error('Upload error:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to upload profile picture');
@@ -135,9 +146,20 @@ export default function Settings() {
         throw new Error(data.message || 'Upload failed');
       }
 
+      console.log('Cover image uploaded:', data.data.coverImage);
+      
+      // Update local state
       setCoverImage(data.data.coverImage);
+      
+      // Update auth context
       updateUserProfile({ coverImage: data.data.coverImage });
+      
       toast.success('Cover image updated successfully!');
+      
+      // Force page reload after 1 second to ensure all components update
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error('Upload error:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to upload cover image');
