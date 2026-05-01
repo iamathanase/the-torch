@@ -89,20 +89,31 @@ export default function Learning() {
       showCancelButton: true,
       confirmButtonText: 'Add Lesson',
       preConfirm: () => {
+        const title = (document.getElementById('title') as HTMLInputElement).value;
+        const category = (document.getElementById('category') as HTMLSelectElement).value;
+        const content = (document.getElementById('content') as HTMLTextAreaElement).value;
+        const image = (document.getElementById('image') as HTMLInputElement).value;
+        const videoUrl = (document.getElementById('videoUrl') as HTMLInputElement).value;
+        const durationMin = parseInt((document.getElementById('duration') as HTMLInputElement).value);
+        const level = (document.getElementById('level') as HTMLSelectElement).value;
+        
+        console.log('Form values collected:', { title, category, content: content.substring(0, 50), image, videoUrl, durationMin, level });
+        
         return {
-          title: (document.getElementById('title') as HTMLInputElement).value,
-          category: (document.getElementById('category') as HTMLSelectElement).value,
-          content: (document.getElementById('content') as HTMLTextAreaElement).value,
-          image: (document.getElementById('image') as HTMLInputElement).value,
-          videoUrl: (document.getElementById('videoUrl') as HTMLInputElement).value,
-          durationMin: parseInt((document.getElementById('duration') as HTMLInputElement).value),
-          level: (document.getElementById('level') as HTMLSelectElement).value,
+          title,
+          category,
+          content,
+          image: image || null,
+          videoUrl: videoUrl || null,
+          durationMin,
+          level,
         };
       }
     });
 
     if (formValues) {
       try {
+        console.log('Adding lesson with data:', formValues);
         await addLesson({
           id: String(Date.now()),
           ...formValues,
@@ -143,20 +154,31 @@ export default function Learning() {
       showCancelButton: true,
       confirmButtonText: 'Update Lesson',
       preConfirm: () => {
+        const title = (document.getElementById('title') as HTMLInputElement).value;
+        const category = (document.getElementById('category') as HTMLSelectElement).value;
+        const content = (document.getElementById('content') as HTMLTextAreaElement).value;
+        const image = (document.getElementById('image') as HTMLInputElement).value;
+        const videoUrl = (document.getElementById('videoUrl') as HTMLInputElement).value;
+        const durationMin = parseInt((document.getElementById('duration') as HTMLInputElement).value);
+        const level = (document.getElementById('level') as HTMLSelectElement).value;
+        
+        console.log('Edit form values collected:', { title, category, content: content.substring(0, 50), image, videoUrl, durationMin, level });
+        
         return {
-          title: (document.getElementById('title') as HTMLInputElement).value,
-          category: (document.getElementById('category') as HTMLSelectElement).value,
-          content: (document.getElementById('content') as HTMLTextAreaElement).value,
-          image: (document.getElementById('image') as HTMLInputElement).value,
-          videoUrl: (document.getElementById('videoUrl') as HTMLInputElement).value,
-          durationMin: parseInt((document.getElementById('duration') as HTMLInputElement).value),
-          level: (document.getElementById('level') as HTMLSelectElement).value,
+          title,
+          category,
+          content,
+          image: image || null,
+          videoUrl: videoUrl || null,
+          durationMin,
+          level,
         };
       }
     });
 
     if (formValues) {
       try {
+        console.log('Updating lesson', lesson.id, 'with data:', formValues);
         await updateLesson(lesson.id, formValues);
         await refreshLessons(); // Refresh to get the latest lessons from backend
         Swal.fire('Success!', 'Lesson updated successfully', 'success');
@@ -208,13 +230,19 @@ export default function Learning() {
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {lessons.map((l) => {
           const videoId = getYouTubeVideoId(l.videoUrl || '');
-          const thumbnailUrl = videoId 
-            ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-            : l.image;
+          
+          // Priority: YouTube thumbnail > custom image > gradient placeholder
+          let thumbnailUrl = null;
+          if (videoId) {
+            thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+          } else if (l.image) {
+            thumbnailUrl = l.image;
+          }
 
           console.log(`Lesson "${l.title}":`, {
             videoUrl: l.videoUrl,
             extractedVideoId: videoId,
+            image: l.image,
             thumbnailUrl
           });
 
@@ -225,11 +253,17 @@ export default function Learning() {
               onClick={() => setViewingLesson(l)}
             >
               <div className="overflow-hidden relative">
-                <img 
-                  src={thumbnailUrl} 
-                  alt={l.title} 
-                  className="h-40 w-full object-cover transition-transform group-hover:scale-105" 
-                />
+                {thumbnailUrl ? (
+                  <img 
+                    src={thumbnailUrl} 
+                    alt={l.title} 
+                    className="h-40 w-full object-cover transition-transform group-hover:scale-105" 
+                  />
+                ) : (
+                  <div className="h-40 w-full bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
+                    <BookOpen className="h-16 w-16 text-white/80" />
+                  </div>
+                )}
                 {videoId && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
                     <div className="bg-red-600 rounded-full p-3">

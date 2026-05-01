@@ -197,7 +197,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
               title: l.title,
               category: l.category,
               content: l.content,
-              image: l.image || '/placeholder-lesson.jpg',
+              image: l.image || null, // Don't use placeholder, let component handle it
               videoUrl: l.videoUrl,
               durationMin: l.durationMin,
               level: l.level,
