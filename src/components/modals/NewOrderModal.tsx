@@ -2,23 +2,24 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
-import { Order } from '@/data/types';
+import { Order, Product } from '@/data/types';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
 
 interface NewOrderModalProps {
   isOpen: boolean;
   onClose: () => void;
+  product?: Product;
   productId?: string;
 }
 
-export default function NewOrderModal({ isOpen, onClose, productId = '' }: NewOrderModalProps) {
+export default function NewOrderModal({ isOpen, onClose, product, productId = '' }: NewOrderModalProps) {
   const { user } = useAuth();
   const { products, addOrder } = useData();
-  const [selectedProductId, setSelectedProductId] = useState(productId);
+  const [selectedProductId, setSelectedProductId] = useState(product?.id || productId);
   const [quantity, setQuantity] = useState('1');
 
-  const selectedProduct = products.find(p => p.id === selectedProductId);
+  const selectedProduct = product || products.find(p => p.id === selectedProductId);
   const total = selectedProduct ? selectedProduct.price * Number(quantity) : 0;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -76,29 +77,33 @@ export default function NewOrderModal({ isOpen, onClose, productId = '' }: NewOr
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Select Product</label>
-            <select
-              value={selectedProductId}
-              onChange={(e) => setSelectedProductId(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option value="">Choose a product...</option>
-              {availableProducts.map(p => (
-                <option key={p.id} value={p.id}>
-                  {p.title} - ₵{p.price.toLocaleString()} ({p.stock} available)
-                </option>
-              ))}
-            </select>
-          </div>
+          {!product && (
+            <div>
+              <label className="block text-sm font-medium mb-2">Select Product</label>
+              <select
+                value={selectedProductId}
+                onChange={(e) => setSelectedProductId(e.target.value)}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="">Choose a product...</option>
+                {availableProducts.map(p => (
+                  <option key={p.id} value={p.id}>
+                    {p.title} - ₵{p.price.toLocaleString()} ({p.stock} available)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {selectedProduct && (
             <div className="rounded-lg border border-border/60 p-3 bg-muted/30">
               <img src={selectedProduct.image} alt={selectedProduct.title} className="w-full h-32 object-cover rounded-md mb-3" />
+              <h3 className="font-semibold text-foreground mb-1">{selectedProduct.title}</h3>
               <p className="text-sm text-muted-foreground mb-2">{selectedProduct.description}</p>
-              <p className="text-sm">
-                From: <span className="font-semibold">{selectedProduct.sellerName}</span>
-              </p>
+              <div className="flex items-center justify-between text-sm">
+                <span>From: <span className="font-semibold">{selectedProduct.sellerName}</span></span>
+                <span className="text-primary font-bold">₵{selectedProduct.price.toLocaleString()}</span>
+              </div>
             </div>
           )}
 
@@ -112,6 +117,11 @@ export default function NewOrderModal({ isOpen, onClose, productId = '' }: NewOr
               onChange={(e) => setQuantity(e.target.value)}
               className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
+            {selectedProduct && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                {selectedProduct.stock} available
+              </p>
+            )}
           </div>
 
           {selectedProduct && (
