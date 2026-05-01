@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Sprout, ShoppingBasket, Users, BookOpen, ArrowRight, Leaf, TrendingUp, Award } from 'lucide-react';
 import PublicNavbar from '@/components/PublicNavbar';
 import { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
 import { toast } from 'sonner';
 
 export default function Home() {
@@ -83,42 +82,14 @@ export default function Home() {
               }`}
             >
               <Button
-                onClick={() => {
-                  Swal.fire({
-                    title: 'Welcome!',
-                    text: 'Let\'s get you started with The Torch. Ready to join our agricultural community?',
-                    icon: 'info',
-                    confirmButtonText: 'Get Started',
-                    confirmButtonColor: '#059669',
-                    showCancelButton: true,
-                    cancelButtonText: 'Maybe Later'
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      navigate('/auth/register');
-                    }
-                  });
-                }}
+                onClick={() => navigate('/auth/register')}
                 size="lg"
                 className="bg-white text-green-600 hover:bg-slate-100 shadow-lg hover:shadow-xl font-semibold"
               >
                 Get Started <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button
-                onClick={() => {
-                  Swal.fire({
-                    title: 'Browse Products',
-                    text: 'Explore fresh agricultural products from our trusted farmers and vendors.',
-                    icon: 'info',
-                    confirmButtonText: 'Continue',
-                    confirmButtonColor: '#059669',
-                    showCancelButton: true,
-                    cancelButtonText: 'Cancel'
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      navigate('/dashboard/browse');
-                    }
-                  });
-                }}
+                onClick={() => navigate('/browse')}
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-emerald-600 hover:text-white hover:border-emerald-600 backdrop-blur-sm font-semibold bg-transparent"
