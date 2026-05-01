@@ -17,6 +17,7 @@ export default function AddProductModal({ isOpen, onClose }: AddProductModalProp
   const { addProduct } = useData();
   const [imagePreview, setImagePreview] = useState<string>('');
   const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -80,40 +81,55 @@ export default function AddProductModal({ isOpen, onClose }: AddProductModalProp
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.description || !formData.price || !formData.stock) {
       toast.error('Please fill all fields');
       return;
     }
 
-    const newProduct: Product = {
-      id: String(Date.now()),
-      title: formData.title,
-      description: formData.description,
-      price: Number(formData.price),
-      category: formData.category,
-      image: imagePreview,
-      images: imagePreview ? [imagePreview] : [],
-      sellerId: user!.id,
-      sellerName: user!.name,
-      stock: Number(formData.stock),
-      sold: 0,
-      createdAt: new Date().toISOString().split('T')[0],
-      uploadedAt: new Date().toISOString(),
-    };
+    if (!imagePreview) {
+      toast.error('Please upload a product image');
+      return;
+    }
 
-    addProduct(newProduct);
-    toast.success('Product added successfully!');
-    setFormData({
-      title: '',
-      description: '',
-      price: '',
-      stock: '',
-      category: 'agricultural',
-    });
-    setImagePreview('');
-    onClose();
+    setSubmitting(true);
+    try {
+      const newProduct: Product = {
+        id: String(Date.now()),
+        title: formData.title,
+        description: formData.description,
+        price: Number(formData.price),
+        category: formData.category,
+        image: imagePreview,
+        images: imagePreview ? [imagePreview] : [],
+        sellerId: user!.id,
+        sellerName: user!.name,
+        stock: Number(formData.stock),
+        sold: 0,
+        createdAt: new Date().toISOString().split('T')[0],
+        uploadedAt: new Date().toISOString(),
+      };
+
+      await addProduct(newProduct);
+      toast.success('Product added successfully!');
+      
+      // Reset form
+      setFormData({
+        title: '',
+        description: '',
+        price: '',
+        stock: '',
+        category: 'agricultural',
+      });
+      setImagePreview('');
+      onClose();
+    } catch (error) {
+      console.error('Error adding product:', error);
+      toast.error('Failed to add product. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -230,11 +246,30 @@ export default function AddProductModal({ isOpen, onClose }: AddProductModalProp
           </div>
 
           <div className="flex gap-3 pt-4">
-            <Button variant="outline" onClick={onClose} className="flex-1">
+            <Button 
+              type="button"
+              variant="outline" 
+              onClick={onClose} 
+              className="flex-1"
+              disabled={submitting}
+            >
               Cancel
             </Button>
-            <Button variant="hero" onClick={handleSubmit} className="flex-1">
-              Add Product
+            <Button 
+              type="submit"
+              variant="hero" 
+              onClick={handleSubmit} 
+              className="flex-1"
+              disabled={submitting || uploading}
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Adding...
+                </>
+              ) : (
+                'Add Product'
+              )}
             </Button>
           </div>
         </form>

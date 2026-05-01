@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Product, Order, Message, Lesson, OrderStatus, User, DeliveryStatus } from '@/data/types';
-import { mockMessages } from '@/data/mockData';
 import { generateAIResponse, getAITypingDelay } from '@/utils/aiAssistant';
 import { productsApi, ordersApi, api } from '@/lib/api';
 
@@ -46,13 +45,14 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export function DataProvider({ children }: { children: React.ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingLessons, setLoadingLessons] = useState(false);
+  const [loadingMessages, setLoadingMessages] = useState(false);
 
   // Load products from backend on mount
   useEffect(() => {
@@ -208,6 +208,39 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     fetchLessons();
   }, []);
 
+  // Load messages from backend
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const token = api.getToken();
+      if (!token) {
+        setLoadingMessages(false);
+        return;
+      }
+
+      setLoadingMessages(true);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/messages`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Messages loaded:', data);
+          if (data.data && data.data.messages) {
+            setMessages(data.data.messages);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+      } finally {
+        setLoadingMessages(false);
+      }
+    };
+    fetchMessages();
+  }, []);
+
   // Product operations
   const addProduct = useCallback(async (product: Product) => {
     try {
@@ -219,8 +252,28 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         stock: product.stock,
         image: product.image,
       });
-      if (response.data) {
-        setProducts(prev => [...prev, product]);
+      
+      if (response.data && response.data.product) {
+        // Map backend product to frontend format
+        const backendProduct = response.data.product;
+        const mappedProduct: Product = {
+          id: backendProduct._id,
+          title: backendProduct.productName,
+          description: backendProduct.description,
+          price: backendProduct.price,
+          category: backendProduct.category,
+          image: backendProduct.image || '/placeholder-product.jpg',
+          images: backendProduct.images || [],
+          sellerId: backendProduct.userId,
+          sellerName: product.sellerName, // Use from input since backend might not populate
+          stock: backendProduct.quantityAvailable,
+          sold: 0,
+          createdAt: new Date(backendProduct.createdAt).toISOString().split('T')[0],
+        };
+        
+        // Add the backend product to state
+        setProducts(prev => [...prev, mappedProduct]);
+        return mappedProduct;
       }
     } catch (error) {
       console.error('Failed to add product:', error);
@@ -294,77 +347,101 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Message operations
-  const sendMessage = useCallback((message: Message) => {
-    setMessages(prev => [...prev, message]);
-    
-    // Simulate delivery status progression
-    setTimeout(() => {
-      updateMessageDeliveryStatus(message.id, 'delivered', new Date().toISOString());
-    }, 500);
-    
-    setTimeout(() => {
-      updateMessageDeliveryStatus(message.id, 'received', new Date().toISOString());
-    }, 1500);
+  const sendMessage = useCallback(async (message: Message) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+        body: JSON.stringify({
+          toId: message.toId,
+          content: message.content,
+          attachments: message.attachments || [],
+        }),
+      });
 
-    // If message is sent to AI assistant, generate AI response
-    if (message.toId === 'ai-001') {
-      const typingDelay = getAITypingDelay();
-      setTimeout(() => {
-        const aiResponse: Message = {
-          id: String(Date.now() + Math.random()),
-          fromId: 'ai-001',
-          fromName: 'FarmDialogue Assistant',
-          toId: message.fromId,
-          toName: message.fromName,
-          content: generateAIResponse(message.content),
-          read: false,
-          deliveryStatus: 'sent',
-          sentAt: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-        };
-        
-        setMessages(prev => [...prev, aiResponse]);
-        
-        // Auto-deliver AI response
-        setTimeout(() => {
-          updateMessageDeliveryStatus(aiResponse.id, 'delivered', new Date().toISOString());
-        }, 300);
-      }, typingDelay);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.data && data.data.message) {
+          setMessages(prev => [...prev, data.data.message]);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      // Fallback to local state if API fails
+      setMessages(prev => [...prev, message]);
     }
   }, []);
 
-  const markMessageAsRead = useCallback((messageId: string) => {
-    setMessages(prev => prev.map(m => m.id === messageId ? { 
-      ...m, 
-      read: true,
-      deliveryStatus: 'read',
-      readAt: new Date().toISOString(),
-    } : m));
+  const markMessageAsRead = useCallback(async (messageId: string) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/messages/${messageId}/read`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+      });
+      
+      setMessages(prev => prev.map(m => m.id === messageId ? { 
+        ...m, 
+        read: true,
+        deliveryStatus: 'read',
+        readAt: new Date().toISOString(),
+      } : m));
+    } catch (error) {
+      console.error('Failed to mark message as read:', error);
+    }
   }, []);
 
-  const deleteMessage = useCallback((messageId: string) => {
-    setMessages(prev => prev.filter(m => m.id !== messageId));
+  const deleteMessage = useCallback(async (messageId: string) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/messages/${messageId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+      });
+      
+      setMessages(prev => prev.filter(m => m.id !== messageId));
+    } catch (error) {
+      console.error('Failed to delete message:', error);
+    }
   }, []);
 
-  const updateMessageDeliveryStatus = useCallback((messageId: string, status: DeliveryStatus, timestamp?: string) => {
-    const ts = timestamp || new Date().toISOString();
-    setMessages(prev => prev.map(m => {
-      if (m.id === messageId) {
-        const updated: Message = { ...m, deliveryStatus: status };
-        
-        if (status === 'delivered' && !m.deliveredAt) {
-          updated.deliveredAt = ts;
-        } else if (status === 'received' && !m.receivedAt) {
-          updated.receivedAt = ts;
-        } else if (status === 'read' && !m.readAt) {
-          updated.readAt = ts;
-          updated.read = true;
+  const updateMessageDeliveryStatus = useCallback(async (messageId: string, status: DeliveryStatus, timestamp?: string) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL || 'https://thetorchbackend.vercel.app/api'}/messages/${messageId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${api.getToken()}`,
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const ts = timestamp || new Date().toISOString();
+      setMessages(prev => prev.map(m => {
+        if (m.id === messageId) {
+          const updated: Message = { ...m, deliveryStatus: status };
+          
+          if (status === 'delivered' && !m.deliveredAt) {
+            updated.deliveredAt = ts;
+          } else if (status === 'received' && !m.receivedAt) {
+            updated.receivedAt = ts;
+          } else if (status === 'read' && !m.readAt) {
+            updated.readAt = ts;
+            updated.read = true;
+          }
+          
+          return updated;
         }
-        
-        return updated;
-      }
-      return m;
-    }));
+        return m;
+      }));
+    } catch (error) {
+      console.error('Failed to update delivery status:', error);
+    }
   }, []);
 
   // User operations (admin)
