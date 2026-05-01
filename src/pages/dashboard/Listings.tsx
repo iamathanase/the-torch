@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,15 @@ import Swal from 'sweetalert2';
 
 export default function Listings() {
   const { user } = useAuth();
-  const { products, deleteProduct } = useData();
+  const { products, deleteProduct, refreshProducts } = useData();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  
+  // Refresh products when component mounts
+  useEffect(() => {
+    refreshProducts();
+  }, [refreshProducts]);
   
   const myListings = products.filter((p) => p.sellerId === user!.id);
 

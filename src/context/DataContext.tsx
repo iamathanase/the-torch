@@ -9,6 +9,7 @@ interface DataContextType {
   addProduct: (product: Product) => void;
   updateProduct: (id: string, product: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
+  refreshProducts: () => Promise<void>;
   loadingProducts: boolean;
   
   // Orders
@@ -60,22 +61,26 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setLoadingProducts(true);
       try {
         const response = await productsApi.getAll();
+        console.log('Products response:', response); // Debug log
         if (response.data && response.data.products) {
           // Map backend products to frontend format
           const mappedProducts = response.data.products.map((p: any) => ({
             id: p._id,
-            title: p.name,
+            title: p.productName, // Backend uses productName
             description: p.description,
             price: p.price,
             image: p.image || '/placeholder-product.jpg',
             category: p.category,
-            sellerId: p.seller,
-            sellerName: p.sellerName || 'Unknown Seller',
-            stock: p.stock,
-            sold: p.sold || 0,
-            rating: p.rating || 0,
-            reviews: p.reviews || 0,
+            sellerId: p.userId?._id || p.userId, // Backend uses userId
+            sellerName: p.userId?.firstName && p.userId?.lastName 
+              ? `${p.userId.firstName} ${p.userId.lastName}` 
+              : 'Unknown Seller',
+            stock: p.quantityAvailable, // Backend uses quantityAvailable
+            sold: 0, // Not tracked yet
+            rating: 0,
+            reviews: 0,
           }));
+          console.log('Mapped products:', mappedProducts); // Debug log
           setProducts(mappedProducts);
         }
       } catch (error) {
@@ -264,8 +269,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
           category: backendProduct.category,
           image: backendProduct.image || '/placeholder-product.jpg',
           images: backendProduct.images || [],
-          sellerId: backendProduct.userId,
-          sellerName: product.sellerName, // Use from input since backend might not populate
+          sellerId: backendProduct.userId?._id || backendProduct.userId,
+          sellerName: backendProduct.userId?.firstName && backendProduct.userId?.lastName
+            ? `${backendProduct.userId.firstName} ${backendProduct.userId.lastName}`
+            : product.sellerName,
           stock: backendProduct.quantityAvailable,
           sold: 0,
           createdAt: new Date(backendProduct.createdAt).toISOString().split('T')[0],
@@ -278,6 +285,37 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Failed to add product:', error);
       throw error;
+    }
+  }, []);
+
+  const refreshProducts = useCallback(async () => {
+    setLoadingProducts(true);
+    try {
+      const response = await productsApi.getAll();
+      console.log('Products refreshed:', response);
+      if (response.data && response.data.products) {
+        const mappedProducts = response.data.products.map((p: any) => ({
+          id: p._id,
+          title: p.productName,
+          description: p.description,
+          price: p.price,
+          image: p.image || '/placeholder-product.jpg',
+          category: p.category,
+          sellerId: p.userId?._id || p.userId,
+          sellerName: p.userId?.firstName && p.userId?.lastName 
+            ? `${p.userId.firstName} ${p.userId.lastName}` 
+            : 'Unknown Seller',
+          stock: p.quantityAvailable,
+          sold: 0,
+          rating: 0,
+          reviews: 0,
+        }));
+        setProducts(mappedProducts);
+      }
+    } catch (error) {
+      console.error('Failed to refresh products:', error);
+    } finally {
+      setLoadingProducts(false);
     }
   }, []);
 
@@ -558,6 +596,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       addProduct,
       updateProduct,
       deleteProduct,
+      refreshProducts,
       loadingProducts,
       orders,
       addOrder,

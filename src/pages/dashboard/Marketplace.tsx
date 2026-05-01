@@ -1,10 +1,17 @@
+import { useEffect } from "react";
 import { useData } from "@/context/DataContext";
 import { Star, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 export default function Marketplace() {
-  const { products } = useData();
+  const { products, refreshProducts } = useData();
+  
+  // Refresh products when component mounts
+  useEffect(() => {
+    refreshProducts();
+  }, [refreshProducts]);
+  
   const topProducts = products.slice(0, 6);
 
   return (
