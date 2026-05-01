@@ -98,39 +98,65 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     const fetchOrders = async () => {
       // Only fetch orders if user is authenticated
       const token = api.getToken();
+      console.log('🔍 Fetching orders - Token exists:', !!token);
+      
       if (!token) {
+        console.log('❌ No token found, skipping order fetch');
         setLoadingOrders(false);
         return;
       }
 
       setLoadingOrders(true);
       try {
+        console.log('📡 Calling ordersApi.getAll()...');
         const response = await ordersApi.getAll();
+        console.log('📦 Orders API response:', response);
+        
         if (response.data && response.data.orders) {
+          console.log('✅ Orders data found:', response.data.orders.length, 'orders');
+          console.log('📋 Raw orders:', response.data.orders);
+          
           // Map backend orders to frontend format
-          const mappedOrders = response.data.orders.map((o: any) => ({
-            id: o._id,
-            productId: o.product,
-            productTitle: o.productName || 'Product',
-            productImage: o.productImage || '/placeholder-product.jpg',
-            buyerId: o.buyer,
-            buyerName: o.buyerName || 'Customer',
-            sellerId: o.seller,
-            sellerName: o.sellerName || 'Seller',
-            quantity: o.quantity,
-            total: o.totalPrice,
-            status: o.status,
-            date: new Date(o.createdAt).toLocaleDateString(),
-          }));
+          const mappedOrders = response.data.orders.map((o: any) => {
+            const mapped = {
+              id: o._id,
+              productId: o.product,
+              productTitle: o.productName || 'Product',
+              productImage: o.productImage || '/placeholder-product.jpg',
+              buyerId: o.buyer,
+              buyerName: o.buyerName || 'Customer',
+              sellerId: o.seller,
+              sellerName: o.sellerName || 'Seller',
+              quantity: o.quantity,
+              total: o.totalPrice,
+              status: o.status,
+              date: new Date(o.createdAt).toLocaleDateString(),
+            };
+            console.log('🔄 Mapped order:', mapped);
+            return mapped;
+          });
+          
+          console.log('✅ All mapped orders:', mappedOrders);
           setOrders(mappedOrders);
+        } else {
+          console.log('⚠️ No orders data in response, setting empty array');
+          console.log('Response structure:', response);
+          setOrders([]);
         }
       } catch (error) {
-        console.error('Failed to load orders:', error);
+        console.error('❌ Failed to load orders:', error);
+        setOrders([]);
       } finally {
         setLoadingOrders(false);
+        console.log('✅ Order loading complete');
       }
     };
+    
     fetchOrders();
+    
+    // Auto-refresh orders every 10 seconds
+    const interval = setInterval(fetchOrders, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   // Load users from backend (admin only)
@@ -364,16 +390,58 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   // Order operations
   const addOrder = useCallback(async (order: Order) => {
     try {
+      console.log('🛒 Creating order:', {
+        product: order.productId,
+        quantity: order.quantity,
+        totalPrice: order.total
+      });
+      
       const response = await ordersApi.create({
         product: order.productId,
         quantity: order.quantity,
         totalPrice: order.total,
       });
-      if (response.data) {
-        setOrders(prev => [...prev, order]);
+      
+      console.log('📦 Order creation response:', response);
+      
+      if (response.data && response.data.order) {
+        const backendOrder = response.data.order;
+        console.log('✅ Backend order received:', backendOrder);
+        
+        const item = backendOrder.items[0];
+        
+        // Map backend order to frontend format
+        const mappedOrder: Order = {
+          id: backendOrder._id,
+          productId: item.productId,
+          productTitle: item.productName,
+          productImage: order.productImage, // Use from original order
+          buyerId: backendOrder.userId._id || backendOrder.userId,
+          buyerName: backendOrder.userId.firstName 
+            ? `${backendOrder.userId.firstName} ${backendOrder.userId.lastName}`
+            : order.buyerName,
+          sellerId: order.sellerId,
+          sellerName: order.sellerName,
+          quantity: item.quantity,
+          total: backendOrder.totalAmount,
+          status: backendOrder.status,
+          date: new Date(backendOrder.createdAt).toLocaleDateString(),
+          createdAt: new Date(backendOrder.createdAt).toISOString().split('T')[0],
+        };
+        
+        console.log('🔄 Mapped new order:', mappedOrder);
+        setOrders(prev => {
+          const updated = [...prev, mappedOrder];
+          console.log('✅ Orders state updated, total orders:', updated.length);
+          return updated;
+        });
+        return mappedOrder;
+      } else {
+        console.error('❌ No order data in response:', response);
+        throw new Error('No order data returned from server');
       }
     } catch (error) {
-      console.error('Failed to create order:', error);
+      console.error('❌ Failed to create order:', error);
       throw error;
     }
   }, []);
