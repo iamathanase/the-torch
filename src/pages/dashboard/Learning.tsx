@@ -13,19 +13,27 @@ const getYouTubeVideoId = (url: string): string | null => {
   
   // Handle different YouTube URL formats
   const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-    /^([a-zA-Z0-9_-]{11})$/ // Direct video ID
+    // youtu.be/VIDEO_ID or youtu.be/VIDEO_ID?si=xxx
+    /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    // youtube.com/watch?v=VIDEO_ID
+    /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+    // youtube.com/embed/VIDEO_ID
+    /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    // youtube.com/v/VIDEO_ID
+    /(?:youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/,
+    // Direct video ID (11 characters)
+    /^([a-zA-Z0-9_-]{11})$/
   ];
   
   for (const pattern of patterns) {
     const match = url.match(pattern);
     if (match && match[1]) {
-      console.log('Extracted video ID:', match[1]);
+      console.log('✅ Extracted video ID:', match[1]);
       return match[1];
     }
   }
   
-  console.log('Could not extract video ID from URL');
+  console.log('❌ Could not extract video ID from URL');
   return null;
 };
 
@@ -285,7 +293,7 @@ export default function Learning() {
                   <iframe
                     width="100%"
                     height="100%"
-                    src={`https://www.youtube.com/embed/${getYouTubeVideoId(viewingLesson.videoUrl)}?rel=0&modestbranding=1`}
+                    src={`https://www.youtube.com/embed/${getYouTubeVideoId(viewingLesson.videoUrl)}?rel=0&modestbranding=1&autoplay=0`}
                     title={viewingLesson.title}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -296,9 +304,16 @@ export default function Learning() {
               ) : viewingLesson.videoUrl ? (
                 <div className="aspect-video w-full rounded-lg overflow-hidden bg-muted flex items-center justify-center">
                   <div className="text-center p-6">
-                    <p className="text-muted-foreground mb-2">Invalid YouTube URL</p>
-                    <p className="text-xs text-muted-foreground">URL: {viewingLesson.videoUrl}</p>
+                    <p className="text-muted-foreground mb-2">⚠️ Invalid YouTube URL</p>
+                    <p className="text-xs text-muted-foreground break-all">URL: {viewingLesson.videoUrl}</p>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Supported formats: youtu.be/VIDEO_ID or youtube.com/watch?v=VIDEO_ID
+                    </p>
                   </div>
+                </div>
+              ) : viewingLesson.image ? (
+                <div className="aspect-video w-full rounded-lg overflow-hidden">
+                  <img src={viewingLesson.image} alt={viewingLesson.title} className="w-full h-full object-cover" />
                 </div>
               ) : null}
 
